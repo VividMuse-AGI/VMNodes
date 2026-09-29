@@ -1,0 +1,37 @@
+{
+  "note": "权重不在 ZIP 内。Qwen、可选 SAM 与人物校验权重的 SHA256 沿用既有记录，本轮未重新计算权重哈希。请按发布方说明获取模型。",
+  "models": [
+    {
+      "path_under_comfyui_models": "checkpoints/sam3.1_multiplex_fp16.safetensors",
+      "bytes": 1745546848,
+      "sha256": "9ba99c92703c2e8b4f47de2d34a539bb8e18923049e238b780d70dbe6368eb03",
+      "source": "https://huggingface.co/Comfy-Org/sam3.1/blob/main/checkpoints/sam3.1_multiplex_fp16.safetensors",
+      "only_for": "可选：细化到物体模式；默认粗选和严格遮罩不需要"
+    },
+    {
+      "path_under_comfyui_models": "diffusion_models/Qwen/qwen_image_2.1_int8_convrot.safetensors",
+      "bytes": 7256783064,
+      "sha256": "cb74113cb03faecd79611b01fd7fd642f0aa60d6f0b95086abee214d75eaa57d",
+      "source": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/blob/main/diffusion_models/qwen_image_2.1_int8_convrot.safetensors"
+    },
+    {
+      "path_under_comfyui_models": "text_encoders/qwen3vl_8b_int8_convrot.safetensors",
+      "bytes": 9350798360,
+      "sha256": "8bfd0f6e12abf2d2d697ecc888e5e90b0d6741d6708f05799f53afa560452e8f",
+      "source": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/blob/main/text_encoders/qwen3vl_8b_int8_convrot.safetensors"
+    },
+    {
+      "path_under_comfyui_models": "vae/Qwen/qwen_image_2.1_vae_bf16.safetensors",
+      "bytes": 675509688,
+      "sha256": "bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9",
+      "source": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/blob/main/vae/qwen_image_2.1_vae_bf16.safetensors"
+    },
+    {
+      "path_under_comfyui_models": "ultralytics/segm/person_yolov8m-seg.pt",
+      "bytes": 54827683,
+      "sha256": "c8ab26f517173b1fe8342d336a09f443eb61cb08dcbfc78d53fff4c2547ae81e",
+      "source": "https://huggingface.co/MidnightRunner/Ultralytics/blob/main/segm/person_yolov8m-seg.pt",
+      "only_for": "可选：SAM 细化路线中的整个人物独立校验"
+    }
+  ]
+}

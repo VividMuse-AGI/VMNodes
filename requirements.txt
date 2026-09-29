@@ -1,0 +1,2 @@
+# No unconditional packages: install.py reuses any compatible OpenCV variant.
+# Run `python install.py` with ComfyUI's Python for conditional setup.

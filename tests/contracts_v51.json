@@ -1,0 +1,459 @@
+{
+  "schemas": {
+    "VMImageEdit": {
+      "inputs": {
+        "required": {
+          "image": [
+            "IMAGE"
+          ],
+          "edit_mask": [
+            "MASK"
+          ],
+          "prompt": [
+            "STRING",
+            {
+              "multiline": true,
+              "default": "把上衣改成深红色，保留脸和手。"
+            }
+          ],
+          "selection_mode": [
+            [
+              "自动选中目标",
+              "使用所画遮罩"
+            ]
+          ],
+          "run_mode": [
+            [
+              "直接生成",
+              "仅预览范围"
+            ]
+          ],
+          "model": [
+            "MODEL",
+            {
+              "lazy": true
+            }
+          ],
+          "clip": [
+            "CLIP",
+            {
+              "lazy": true
+            }
+          ],
+          "vae": [
+            "VAE",
+            {
+              "lazy": true
+            }
+          ],
+          "seed": [
+            "INT",
+            {
+              "default": 1001,
+              "min": 0,
+              "max": 18446744073709551615
+            }
+          ]
+        },
+        "optional": {
+          "sam_model": [
+            "MODEL",
+            {
+              "lazy": true
+            }
+          ],
+          "sam_clip": [
+            "CLIP",
+            {
+              "lazy": true
+            }
+          ],
+          "protect_mask": [
+            "MASK"
+          ],
+          "reference_image": [
+            "IMAGE"
+          ],
+          "image_context": [
+            "VM_IMAGE_CONTEXT"
+          ]
+        }
+      },
+      "RETURN_TYPES": [
+        "IMAGE",
+        "MASK",
+        "IMAGE"
+      ],
+      "RETURN_NAMES": [
+        "最终图像",
+        "允许区遮罩",
+        "范围预览"
+      ],
+      "FUNCTION": "edit",
+      "CATEGORY": "VMNodes/Image",
+      "OUTPUT_NODE": null,
+      "DEV_ONLY": true
+    },
+    "VMImageResizeAlign": {
+      "inputs": {
+        "required": {
+          "image": [
+            "IMAGE"
+          ],
+          "resize_mode": [
+            [
+              "保持原尺寸",
+              "按长边",
+              "按宽度",
+              "按高度"
+            ]
+          ],
+          "target_size": [
+            "INT",
+            {
+              "default": 1024,
+              "min": 32,
+              "max": 8192
+            }
+          ],
+          "interpolation": [
+            [
+              "nearest-exact",
+              "bilinear",
+              "area",
+              "bicubic",
+              "lanczos"
+            ],
+            {
+              "default": "bicubic"
+            }
+          ],
+          "divisible_by": [
+            [
+              1,
+              8,
+              16,
+              32,
+              64
+            ],
+            {
+              "default": 32
+            }
+          ]
+        },
+        "optional": {
+          "edit_mask": [
+            "MASK"
+          ],
+          "protect_mask": [
+            "MASK"
+          ]
+        }
+      },
+      "RETURN_TYPES": [
+        "IMAGE",
+        "MASK",
+        "MASK",
+        "VM_IMAGE_CONTEXT",
+        "STRING"
+      ],
+      "RETURN_NAMES": [
+        "图像",
+        "编辑遮罩",
+        "保护遮罩",
+        "尺寸上下文",
+        "尺寸信息"
+      ],
+      "FUNCTION": "run",
+      "CATEGORY": "VMNodes/Image",
+      "OUTPUT_NODE": true,
+      "DEV_ONLY": null
+    },
+    "VMFinalizeEdit": {
+      "inputs": {
+        "required": {
+          "plan": [
+            "VM_EDIT_PLAN"
+          ],
+          "generated_pre": [
+            "IMAGE"
+          ]
+        },
+        "optional": {
+          "seam_harmonization": [
+            [
+              "off",
+              "auto"
+            ],
+            {
+              "default": "off"
+            }
+          ]
+        }
+      },
+      "RETURN_TYPES": [
+        "IMAGE"
+      ],
+      "RETURN_NAMES": null,
+      "FUNCTION": "finish",
+      "CATEGORY": "VMNodes/Internal",
+      "OUTPUT_NODE": null,
+      "DEV_ONLY": true
+    },
+    "VMImageEditBridge": {
+      "inputs": {
+        "required": {
+          "image": [
+            "IMAGE"
+          ],
+          "prompt": [
+            "STRING",
+            {
+              "multiline": true,
+              "default": "把白色上衣改成深红色，保留脸和手。"
+            }
+          ],
+          "selection_mode": [
+            [
+              "auto_target",
+              "drawn_mask",
+              "coarse_region",
+              "full_image"
+            ],
+            {
+              "default": "coarse_region"
+            }
+          ],
+          "run_mode": [
+            [
+              "generate",
+              "preview"
+            ]
+          ],
+          "filename_prefix": [
+            "STRING",
+            {
+              "default": "VMNodes/Edit"
+            }
+          ]
+        },
+        "optional": {
+          "edit_mask": [
+            "MASK"
+          ],
+          "sam_model": [
+            "MODEL"
+          ],
+          "sam_clip": [
+            "CLIP"
+          ],
+          "protect_mask": [
+            "MASK"
+          ],
+          "image_context": [
+            "VM_IMAGE_CONTEXT"
+          ],
+          "generated_pre": [
+            "IMAGE"
+          ],
+          "seam_harmonization": [
+            [
+              "off",
+              "auto"
+            ],
+            {
+              "default": "off"
+            }
+          ]
+        }
+      },
+      "RETURN_TYPES": [
+        "IMAGE",
+        "MASK",
+        "STRING",
+        "IMAGE",
+        "MASK",
+        "IMAGE",
+        "IMAGE",
+        "STRING"
+      ],
+      "RETURN_NAMES": [
+        "padded_image",
+        "noise_mask",
+        "edit_prompt",
+        "preview_image",
+        "allowed_mask",
+        "final_image",
+        "guide_image",
+        "generation_prompt"
+      ],
+      "FUNCTION": "needs_frontend",
+      "CATEGORY": "VMNodes/Image",
+      "OUTPUT_NODE": true,
+      "DEV_ONLY": null
+    },
+    "VMEditPlan": {
+      "inputs": {
+        "required": {
+          "image": [
+            "IMAGE"
+          ],
+          "prompt": [
+            "STRING",
+            {
+              "multiline": true
+            }
+          ],
+          "selection_mode": [
+            [
+              "auto_target",
+              "drawn_mask",
+              "coarse_region",
+              "full_image"
+            ]
+          ]
+        },
+        "optional": {
+          "edit_mask": [
+            "MASK",
+            {
+              "lazy": true
+            }
+          ],
+          "sam_model": [
+            "MODEL",
+            {
+              "lazy": true
+            }
+          ],
+          "sam_clip": [
+            "CLIP",
+            {
+              "lazy": true
+            }
+          ],
+          "protect_mask": [
+            "MASK"
+          ],
+          "image_context": [
+            "VM_IMAGE_CONTEXT"
+          ],
+          "canvas_policy": [
+            [
+              "legacy",
+              "external"
+            ],
+            {
+              "default": "legacy"
+            }
+          ],
+          "backend": [
+            [
+              "qwen21",
+              "manual_image"
+            ],
+            {
+              "default": "qwen21"
+            }
+          ]
+        }
+      },
+      "RETURN_TYPES": [
+        "VM_EDIT_PLAN",
+        "IMAGE",
+        "MASK",
+        "STRING",
+        "IMAGE",
+        "MASK",
+        "IMAGE",
+        "STRING"
+      ],
+      "RETURN_NAMES": [
+        "plan",
+        "padded_image",
+        "noise_mask",
+        "edit_prompt",
+        "preview_image",
+        "allowed_mask",
+        "guide_image",
+        "generation_prompt"
+      ],
+      "FUNCTION": "build",
+      "CATEGORY": "VMNodes/Internal",
+      "OUTPUT_NODE": null,
+      "DEV_ONLY": true
+    },
+    "VMEditFinish": {
+      "inputs": {
+        "required": {
+          "plan": [
+            "VM_EDIT_PLAN"
+          ],
+          "run_mode": [
+            [
+              "generate",
+              "preview"
+            ]
+          ],
+          "filename_prefix": [
+            "STRING",
+            {
+              "default": "VMNodes/Edit"
+            }
+          ]
+        },
+        "optional": {
+          "generated_pre": [
+            "IMAGE",
+            {
+              "lazy": true
+            }
+          ],
+          "frontend_session": [
+            "STRING",
+            {
+              "default": ""
+            }
+          ],
+          "seam_harmonization": [
+            [
+              "off",
+              "auto"
+            ],
+            {
+              "default": "off"
+            }
+          ]
+        },
+        "hidden": {
+          "prompt": "PROMPT",
+          "extra_pnginfo": "EXTRA_PNGINFO",
+          "unique_id": "UNIQUE_ID"
+        }
+      },
+      "RETURN_TYPES": [
+        "IMAGE",
+        "MASK",
+        "IMAGE"
+      ],
+      "RETURN_NAMES": [
+        "final_image",
+        "allowed_mask",
+        "preview_image"
+      ],
+      "FUNCTION": "finish",
+      "CATEGORY": "VMNodes/Internal",
+      "OUTPUT_NODE": true,
+      "DEV_ONLY": true
+    }
+  },
+  "display_names": {
+    "VMImageEdit": "VM Image Edit",
+    "VMImageResizeAlign": "VM Image Resize & Align",
+    "VMFinalizeEdit": "VM Internal Composite",
+    "VMImageEditBridge": "VM Image Edit",
+    "VMEditPlan": "VM Internal Range Plan",
+    "VMEditFinish": "VM Internal Preview & Composite"
+  },
+  "workflow_sha256": "0bb7f64e800424b3a1eea2a004b5be83d0f927700023ef09f3b98eb8ad7f7d0b"
+}

@@ -1,0 +1,8 @@
+{
+  "VMImageEditBridge": {"display_name": "VM Image Edit"},
+  "VMImageResizeAlign": {"display_name": "VM Image Resize & Align"},
+  "VMImageEdit": {"display_name": "VM Image Edit"},
+  "VMFinalizeEdit": {"display_name": "VM Internal Composite"},
+  "VMEditPlan": {"display_name": "VM Internal Range Plan"},
+  "VMEditFinish": {"display_name": "VM Internal Preview & Composite"}
+}

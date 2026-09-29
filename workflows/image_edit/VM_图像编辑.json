@@ -1,0 +1,1419 @@
+{
+  "id": "6df0fc48-f0f5-442f-aab0-bfaa38f256d4",
+  "revision": 0,
+  "last_node_id": 134,
+  "last_link_id": 60,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        100
+      ],
+      "size": [
+        340,
+        440
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "选择文件上传",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            30
+          ]
+        },
+        {
+          "localized_name": "遮罩",
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            31
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example_garment_coarse.png",
+        "image"
+      ],
+      "widgets_values_named": {
+        "image": "example_garment_coarse.png",
+        "upload": "image"
+      }
+    },
+    {
+      "id": 2,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        470,
+        1490
+      ],
+      "size": [
+        350,
+        160
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "Checkpoint名称",
+          "name": "ckpt_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "ckpt_name"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "模型",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            23
+          ]
+        },
+        {
+          "localized_name": "CLIP",
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            24
+          ]
+        },
+        {
+          "localized_name": "VAE",
+          "name": "VAE",
+          "type": "VAE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "sam3.1_multiplex_fp16.safetensors"
+      ],
+      "widgets_values_named": {
+        "ckpt_name": "sam3.1_multiplex_fp16.safetensors"
+      }
+    },
+    {
+      "id": 4,
+      "type": "UNETLoader",
+      "pos": [
+        1200,
+        100
+      ],
+      "size": [
+        315,
+        180
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "UNet名称",
+          "name": "unet_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "unet_name"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "数据类型",
+          "name": "weight_dtype",
+          "type": "COMBO",
+          "widget": {
+            "name": "weight_dtype"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "模型",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "Qwen\\qwen_image_2.1_int8_convrot.safetensors",
+        "default"
+      ],
+      "widgets_values_named": {
+        "unet_name": "Qwen\\qwen_image_2.1_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    {
+      "id": 5,
+      "type": "CLIPLoader",
+      "pos": [
+        1650,
+        100
+      ],
+      "size": [
+        315,
+        180
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "CLIP名称",
+          "name": "clip_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "clip_name"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "类型",
+          "name": "type",
+          "type": "COMBO",
+          "widget": {
+            "name": "type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "设备",
+          "name": "device",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "device"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "CLIP",
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "qwen3vl_8b_int8_convrot.safetensors",
+        "qwen_image",
+        "default"
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen3vl_8b_int8_convrot.safetensors",
+        "type": "qwen_image",
+        "device": "default"
+      }
+    },
+    {
+      "id": 6,
+      "type": "VAELoader",
+      "pos": [
+        2100,
+        100
+      ],
+      "size": [
+        315,
+        180
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "vae名称",
+          "name": "vae_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "vae_name"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "VAE",
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            6,
+            10,
+            18
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "Qwen\\qwen_image_2.1_vae_bf16.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "Qwen\\qwen_image_2.1_vae_bf16.safetensors"
+      }
+    },
+    {
+      "id": 7,
+      "type": "TextEncodeQwenImage21",
+      "pos": [
+        1200,
+        490
+      ],
+      "size": [
+        315,
+        180
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 25,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "clip",
+          "name": "clip",
+          "type": "CLIP",
+          "link": 5
+        },
+        {
+          "localized_name": "image_1",
+          "name": "images.image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 25
+        },
+        {
+          "localized_name": "image_2",
+          "name": "images.image_2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 33
+        },
+        {
+          "localized_name": "image_3",
+          "name": "images.image_3",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": 6
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 28
+        },
+        {
+          "localized_name": "negative_prompt",
+          "name": "negative_prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "negative_prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "resolution",
+          "name": "resolution",
+          "type": "INT",
+          "widget": {
+            "name": "resolution"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "positive",
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            14
+          ]
+        },
+        {
+          "localized_name": "negative",
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [
+            15
+          ]
+        },
+        {
+          "localized_name": "latent",
+          "name": "latent",
+          "type": "LATENT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TextEncodeQwenImage21"
+      },
+      "widgets_values": [
+        "",
+        "",
+        0
+      ],
+      "widgets_values_named": {
+        "prompt": "",
+        "negative_prompt": "",
+        "resolution": 0
+      }
+    },
+    {
+      "id": 8,
+      "type": "VAEEncode",
+      "pos": [
+        1650,
+        490
+      ],
+      "size": [
+        315,
+        180
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "像素",
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 26
+        },
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "type": "VAE",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "Latent",
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncode"
+      }
+    },
+    {
+      "id": 9,
+      "type": "SetLatentNoiseMask",
+      "pos": [
+        2100,
+        490
+      ],
+      "size": [
+        315,
+        180
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "Latent",
+          "name": "samples",
+          "type": "LATENT",
+          "link": 11
+        },
+        {
+          "localized_name": "遮罩",
+          "name": "mask",
+          "type": "MASK",
+          "link": 27
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "Latent",
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            16
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SetLatentNoiseMask"
+      }
+    },
+    {
+      "id": 10,
+      "type": "KSampler",
+      "pos": [
+        1200,
+        880
+      ],
+      "size": [
+        315,
+        180
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "模型",
+          "name": "model",
+          "type": "MODEL",
+          "link": 13
+        },
+        {
+          "localized_name": "正面条件",
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 14
+        },
+        {
+          "localized_name": "负面条件",
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 15
+        },
+        {
+          "localized_name": "Latent图像",
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 16
+        },
+        {
+          "localized_name": "种子",
+          "name": "seed",
+          "type": "INT",
+          "widget": {
+            "name": "seed"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "步数",
+          "name": "steps",
+          "type": "INT",
+          "widget": {
+            "name": "steps"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "cfg",
+          "name": "cfg",
+          "type": "FLOAT",
+          "widget": {
+            "name": "cfg"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "采样器名称",
+          "name": "sampler_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "sampler_name"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "调度器",
+          "name": "scheduler",
+          "type": "COMBO",
+          "widget": {
+            "name": "scheduler"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "降噪",
+          "name": "denoise",
+          "type": "FLOAT",
+          "widget": {
+            "name": "denoise"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "Latent",
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        1001,
+        "fixed",
+        25,
+        1,
+        "euler",
+        "simple",
+        1
+      ],
+      "widgets_values_named": {
+        "seed": 1001,
+        "control_after_generate": "fixed",
+        "steps": 25,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1
+      }
+    },
+    {
+      "id": 11,
+      "type": "VAEDecode",
+      "pos": [
+        1650,
+        880
+      ],
+      "size": [
+        315,
+        180
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "Latent",
+          "name": "samples",
+          "type": "LATENT",
+          "link": 17
+        },
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "type": "VAE",
+          "link": 18
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            29
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 20,
+      "type": "VMImageResizeAlign",
+      "pos": [
+        0,
+        620
+      ],
+      "size": [
+        300,
+        218
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 30
+        },
+        {
+          "localized_name": "编辑遮罩",
+          "name": "edit_mask",
+          "shape": 7,
+          "type": "MASK",
+          "link": 31
+        },
+        {
+          "localized_name": "保护遮罩",
+          "name": "protect_mask",
+          "shape": 7,
+          "type": "MASK",
+          "link": 34
+        },
+        {
+          "localized_name": "resize_mode",
+          "name": "resize_mode",
+          "type": "COMBO",
+          "widget": {
+            "name": "resize_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "target_size",
+          "name": "target_size",
+          "type": "INT",
+          "widget": {
+            "name": "target_size"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "interpolation",
+          "name": "interpolation",
+          "type": "COMBO",
+          "widget": {
+            "name": "interpolation"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "divisible_by",
+          "name": "divisible_by",
+          "type": "COMBO",
+          "widget": {
+            "name": "divisible_by"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "图像",
+          "type": "IMAGE",
+          "links": [
+            21
+          ]
+        },
+        {
+          "localized_name": "编辑遮罩",
+          "name": "编辑遮罩",
+          "type": "MASK",
+          "links": [
+            22
+          ]
+        },
+        {
+          "localized_name": "保护遮罩",
+          "name": "保护遮罩",
+          "type": "MASK",
+          "links": [
+            35
+          ]
+        },
+        {
+          "localized_name": "尺寸上下文",
+          "name": "尺寸上下文",
+          "type": "VM_IMAGE_CONTEXT",
+          "links": [
+            32
+          ]
+        },
+        {
+          "localized_name": "尺寸信息",
+          "name": "尺寸信息",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VMImageResizeAlign",
+        "vm_language": "auto",
+        "vm_resize_mode": "保持原尺寸",
+        "vm_last_title": "VM 图像缩放与对齐"
+      },
+      "widgets_values": [
+        "保持原尺寸",
+        1024,
+        "bicubic",
+        32,
+        "自动",
+        ""
+      ],
+      "widgets_values_named": {
+        "resize_mode": "保持原尺寸",
+        "target_size": 1024,
+        "interpolation": "bicubic",
+        "divisible_by": 32,
+        "vm_language": "auto",
+        "vm_size_status": ""
+      }
+    },
+    {
+      "id": 13,
+      "type": "VMImageEditBridge",
+      "pos": [
+        470,
+        100
+      ],
+      "size": [
+        480,
+        652
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 30,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "主图",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 21
+        },
+        {
+          "localized_name": "编辑遮罩",
+          "name": "edit_mask",
+          "shape": 7,
+          "type": "MASK",
+          "link": 22
+        },
+        {
+          "localized_name": "SAM 模型",
+          "name": "sam_model",
+          "shape": 7,
+          "type": "MODEL",
+          "link": 23
+        },
+        {
+          "localized_name": "SAM CLIP",
+          "name": "sam_clip",
+          "shape": 7,
+          "type": "CLIP",
+          "link": 24
+        },
+        {
+          "localized_name": "保护遮罩",
+          "name": "protect_mask",
+          "shape": 7,
+          "type": "MASK",
+          "link": 35
+        },
+        {
+          "localized_name": "尺寸上下文",
+          "name": "image_context",
+          "shape": 7,
+          "type": "VM_IMAGE_CONTEXT",
+          "link": 32
+        },
+        {
+          "localized_name": "生成 Pre",
+          "name": "generated_pre",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 29
+        },
+        {
+          "localized_name": "编辑需求",
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "选区方式",
+          "name": "selection_mode",
+          "type": "COMBO",
+          "widget": {
+            "name": "selection_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "执行方式",
+          "name": "run_mode",
+          "type": "COMBO",
+          "widget": {
+            "name": "run_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "保存路径",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "接缝协调",
+          "name": "seam_harmonization",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "seam_harmonization"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "工作图",
+          "name": "padded_image",
+          "type": "IMAGE",
+          "links": [
+            25,
+            26
+          ]
+        },
+        {
+          "localized_name": "噪声遮罩",
+          "name": "noise_mask",
+          "type": "MASK",
+          "links": [
+            27
+          ]
+        },
+        {
+          "localized_name": "原始需求",
+          "name": "edit_prompt",
+          "type": "STRING",
+          "links": [
+            28
+          ]
+        },
+        {
+          "localized_name": "范围预览",
+          "name": "preview_image",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "localized_name": "允许区遮罩",
+          "name": "allowed_mask",
+          "type": "MASK",
+          "links": null
+        },
+        {
+          "localized_name": "Final",
+          "name": "final_image",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "localized_name": "标注参考图",
+          "name": "guide_image",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "localized_name": "标注生成需求",
+          "name": "generation_prompt",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VMImageEditBridge",
+        "vm_language": "auto",
+        "vm_selection": "coarse_region",
+        "vm_run": "generate",
+        "vm_seam_harmonization": "off",
+        "vm_canvas_policy": "external",
+        "vm_preview_expanded": false,
+        "vm_advanced_expanded": false,
+        "vm_reference_mode": "none",
+        "vm_use_protection": false,
+        "vm_last_title": "VM 图像编辑",
+        "vm_unified": true,
+        "vm_widget_schema": 2,
+        "vm_backend": "qwen21"
+      },
+      "widgets_values": [
+        "把白色上衣改成深红色，保留人物和背景的其他细节。",
+        "按粗选范围",
+        "直接生成",
+        "VMNodes/Edit",
+        "关闭",
+        "自动",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "widgets_values_named": {
+        "prompt": "把白色上衣改成深红色，保留人物和背景的其他细节。",
+        "selection_mode": "coarse_region",
+        "run_mode": "generate",
+        "filename_prefix": "VMNodes/Edit",
+        "seam_harmonization": "off",
+        "vm_language": "auto",
+        "vm_protection_status": "",
+        "vm_guidance_status": "",
+        "vm_optional_inputs": "",
+        "vm_preview_panel": "",
+        "vm_preview_toggle": "",
+        "vm_advanced_toggle": ""
+      }
+    },
+    {
+      "id": 31,
+      "type": "LoadImage",
+      "pos": [
+        0,
+        1010
+      ],
+      "size": [
+        350,
+        400
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "选择文件上传",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            33
+          ]
+        },
+        {
+          "localized_name": "遮罩",
+          "name": "MASK",
+          "type": "MASK",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "",
+        "image"
+      ],
+      "widgets_values_named": {
+        "image": "",
+        "upload": "image"
+      }
+    },
+    {
+      "id": 28,
+      "type": "LoadImage",
+      "pos": [
+        470,
+        1010
+      ],
+      "size": [
+        350,
+        400
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "选择文件上传",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": []
+        },
+        {
+          "localized_name": "遮罩",
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            34
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "",
+        "image"
+      ],
+      "widgets_values_named": {
+        "image": "",
+        "upload": "image"
+      }
+    }
+  ],
+  "links": [
+    [
+      5,
+      5,
+      0,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      6,
+      6,
+      0,
+      7,
+      4,
+      "VAE"
+    ],
+    [
+      10,
+      6,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      11,
+      8,
+      0,
+      9,
+      0,
+      "LATENT"
+    ],
+    [
+      13,
+      4,
+      0,
+      10,
+      0,
+      "MODEL"
+    ],
+    [
+      14,
+      7,
+      0,
+      10,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      15,
+      7,
+      1,
+      10,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      16,
+      9,
+      0,
+      10,
+      3,
+      "LATENT"
+    ],
+    [
+      17,
+      10,
+      0,
+      11,
+      0,
+      "LATENT"
+    ],
+    [
+      18,
+      6,
+      0,
+      11,
+      1,
+      "VAE"
+    ],
+    [
+      21,
+      20,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ],
+    [
+      22,
+      20,
+      1,
+      13,
+      1,
+      "MASK"
+    ],
+    [
+      23,
+      2,
+      0,
+      13,
+      2,
+      "MODEL"
+    ],
+    [
+      24,
+      2,
+      1,
+      13,
+      3,
+      "CLIP"
+    ],
+    [
+      25,
+      13,
+      0,
+      7,
+      1,
+      "IMAGE"
+    ],
+    [
+      26,
+      13,
+      0,
+      8,
+      0,
+      "IMAGE"
+    ],
+    [
+      27,
+      13,
+      1,
+      9,
+      1,
+      "MASK"
+    ],
+    [
+      28,
+      13,
+      2,
+      7,
+      5,
+      "STRING"
+    ],
+    [
+      29,
+      11,
+      0,
+      13,
+      6,
+      "IMAGE"
+    ],
+    [
+      30,
+      1,
+      0,
+      20,
+      0,
+      "IMAGE"
+    ],
+    [
+      31,
+      1,
+      1,
+      20,
+      1,
+      "MASK"
+    ],
+    [
+      32,
+      20,
+      3,
+      13,
+      5,
+      "VM_IMAGE_CONTEXT"
+    ],
+    [
+      33,
+      31,
+      0,
+      7,
+      2,
+      "IMAGE"
+    ],
+    [
+      34,
+      28,
+      1,
+      20,
+      2,
+      "MASK"
+    ],
+    [
+      35,
+      20,
+      2,
+      13,
+      4,
+      "MASK"
+    ]
+  ],
+  "groups": [
+    {
+      "title": "主图与编辑 / Main image and editing",
+      "bounding": [
+        -40,
+        20,
+        1060,
+        850
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "可选输入 / Optional inputs",
+      "bounding": [
+        -40,
+        930,
+        1060,
+        800
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "Qwen Image 2.1",
+      "bounding": [
+        1160,
+        20,
+        1360,
+        1240
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6,
+      "offset": [
+        130,
+        100
+      ]
+    }
+  },
+  "version": 0.4
+}

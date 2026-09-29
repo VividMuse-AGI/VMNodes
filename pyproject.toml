@@ -1,0 +1,14 @@
+[project]
+name = "vmnodes"
+version = "0.1.4"
+description = "VMNodes: modular ComfyUI tools for image editing and resize/alignment."
+license = { file = "LICENSE" }
+readme = "README.md"
+dependencies = [] # install.py conditionally reuses/provisions OpenCV.
+
+[project.optional-dependencies]
+person-check = ["ultralytics==8.3.222"]
+
+# Set Repository URL and PublisherId before public release; no invented account.
+[tool.comfy]
+DisplayName = "VMNodes"

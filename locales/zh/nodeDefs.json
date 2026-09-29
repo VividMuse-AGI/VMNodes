@@ -1,0 +1,8 @@
+{
+  "VMImageEditBridge": {"display_name": "VM 图像编辑"},
+  "VMImageResizeAlign": {"display_name": "VM 图像缩放与对齐"},
+  "VMImageEdit": {"display_name": "VM 图像编辑"},
+  "VMFinalizeEdit": {"display_name": "VM 内部回贴"},
+  "VMEditPlan": {"display_name": "VM 内部范围规划"},
+  "VMEditFinish": {"display_name": "VM 内部预览与回贴"}
+}

@@ -1,0 +1,22 @@
+name: Checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  cpu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
+      - run: python -m pip install numpy pillow
+      - run: python install.py
+      - run: python tools/check_release.py
+      - run: python -m unittest discover -s tests -v
+      - run: node tests/frontend.cjs
+      - run: python tools/build_release.py

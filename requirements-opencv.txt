@@ -1,0 +1,2 @@
+# Fallback only when cv2 is absent. Never install beside a working variant.
+opencv-python-headless==4.10.0.84
