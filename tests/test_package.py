@@ -42,11 +42,29 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(actual, expected['schemas'])
         self.assertEqual(package.NODE_DISPLAY_NAME_MAPPINGS, expected['display_names'])
 
-    def test_workflow_unchanged_and_png_metadata_roundtrip(self):
+    def test_workflow_adds_only_final_saver_and_png_metadata_roundtrip(self):
         expected = json.loads((ROOT / 'tests/contracts_v51.json').read_text(encoding='utf-8'))
+        original = (ROOT / 'tests/fixtures/workflow_v016.json').read_bytes()
+        self.assertEqual(hashlib.sha256(original).hexdigest(), expected['workflow_sha256'])
+        baseline = json.loads(original)
         payload = (ROOT / 'workflows/image_edit/VM_图像编辑.json').read_bytes()
-        self.assertEqual(hashlib.sha256(payload).hexdigest(), expected['workflow_sha256'])
         workflow = json.loads(payload)
+        added = [n for n in workflow['nodes'] if n['id'] not in {x['id'] for x in baseline['nodes']}]
+        self.assertEqual(len(added), 1)
+        saver = added[0]
+        self.assertEqual(saver['type'], 'SaveImage')
+        self.assertNotIn('title', saver)
+        link = workflow['links'][-1]
+        self.assertEqual(link[1:], [13, 5, saver['id'], 0, 'IMAGE'])
+        self.assertEqual(saver['inputs'][0]['link'], link[0])
+        # Compare the whole original graph after removing precisely the allowed addition.
+        restored = json.loads(payload)
+        restored['nodes'].remove(next(n for n in restored['nodes'] if n['id'] == saver['id']))
+        next(n for n in restored['nodes'] if n['id'] == 13)['outputs'][5]['links'] = None
+        restored['links'].pop()
+        for key in ('last_node_id', 'last_link_id'):
+            restored[key] = baseline[key]
+        self.assertEqual(restored, baseline)
         info = PngImagePlugin.PngInfo()
         info.add_text('workflow', payload.decode('utf-8'))
         buffer = io.BytesIO()

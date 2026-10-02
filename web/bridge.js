@@ -30,14 +30,17 @@ const I18N = {
     reference_mode: "参考方式", ref_none: "不使用参考", ref_content: "内容参考图", ref_mask: "遮罩引导（实验）",
     use_protection: "启用保护遮罩", unified_plain: "画范围、写需求即可运行；也可先预览范围",
     protection_on: "硬保护已启用", optional_help: "启用后，在下方对应的加载图像节点选择图片。",
-    last_preview: "上次运行的范围预览 · 绿色可编辑 · 蓝色保护", last_final: "上次运行的 Final",
+    last_preview: "上次运行的范围预览 · 绿色可编辑 · 蓝色保护", last_final: "上次运行的 Final · 临时预览",
+    save_unconnected: "Final 未连接；保存请接“保存图像”",
+    save_downstream: "文件由下游保存节点写入；此处仅临时预览",
+    save_help: "保存图片：将 Final 接到“保存图像”，在那里设置文件名前缀。仅预览范围不会输出 Final；旧工作流也需接上保存节点。",
     stale_result: "输入已变化，请重新运行", no_result: "尚无运行结果",
     protection_warning: "保护提示：", protection_check: "；请检查范围", warning_hand: "未检出手",
     warning_semantic_protection: "文字保护仅作生成提示，硬保护以保护遮罩为准",
     warning_face: "脸", warning_hair: "头发", warning_dog: "狗", warning_text_protection: "未解析的文字保护（可连接保护遮罩）",
     missing_inputs: "请连接主图和编辑遮罩。",
     prompt_help: "完整描述编辑需求，无需固定物品名称或句式。", selection_mode_help: "粗选范围填充可靠闭合圈，不需要 SAM；细化到物体使用 SAM；严格模式仅使用实际白色笔迹。标注参考图与标注生成需求接入 Qwen 后才启用视觉引导。",
-    run_mode_help: "仅预览范围不会请求生成 Pre。", filename_prefix_help: "Preview 和 Final 的保存文件名前缀。",
+    run_mode_help: "仅预览范围不会请求生成 Pre，也不会向 Final 输出图片。", filename_prefix_help: "旧版兼容字段，已停用；请在外接“保存图像”节点设置文件名前缀。",
     vm_language_help: "自动跟随 ComfyUI 当前语言，只影响此节点。",
     resize_title: "VM 图像缩放与对齐", resize_mode: "缩放方式", target_size: "目标尺寸",
     interpolation: "图像插值", divisible_by: "尺寸整除", size_info: "尺寸信息",
@@ -72,14 +75,17 @@ const I18N = {
     reference_mode: "Reference mode", ref_none: "No reference", ref_content: "Content reference", ref_mask: "Mask guidance (experimental)",
     use_protection: "Use protection mask", unified_plain: "Draw a region and describe the edit; preview is optional",
     protection_on: "Hard protection enabled", optional_help: "When enabled, select the image in the matching loader below.",
-    last_preview: "Last run: range preview · Green: editable · Blue: protected", last_final: "Last run: Final",
+    last_preview: "Last run: range preview · Green: editable · Blue: protected", last_final: "Last run: Final · temporary preview",
+    save_unconnected: "Final is unconnected; connect Save Image to save",
+    save_downstream: "Files are written by downstream save nodes; this is a temporary preview",
+    save_help: "To save, connect Final to Save Image and set the filename prefix there. Preview range only emits no Final image. Older workflows also need a save node.",
     stale_result: "Inputs changed; run again", no_result: "No result yet",
     protection_warning: "Protection note: ", protection_check: "; check the range",
     warning_semantic_protection: "Text protection guides generation; hard protection comes from the protect mask",
     warning_hand: "hand", warning_face: "face", warning_hair: "hair", warning_dog: "dog", warning_text_protection: "unparsed text protection (connect a protect mask)",
     missing_inputs: "Connect the main image and edit mask.",
     prompt_help: "Describe the complete edit; no fixed object names or sentence pattern required.", selection_mode_help: "Coarse region fills reliable outlines without SAM; refine to object uses SAM; strict mode uses actual painted pixels. Connect the annotation reference and guided prompt to Qwen to enable visual guidance.",
-    run_mode_help: "Preview range only does not request the generated Pre.", filename_prefix_help: "File prefix for Preview and Final.",
+    run_mode_help: "Preview range only requests no generated Pre and emits no Final image.", filename_prefix_help: "Inactive compatibility field. Set the filename prefix on an external Save Image node.",
     vm_language_help: "Auto follows ComfyUI's current language for this node.",
     resize_title: "VM Image Resize & Align", resize_mode: "Resize mode", target_size: "Target size",
     interpolation: "Image interpolation", divisible_by: "Divisible by", size_info: "Size info",
@@ -258,13 +264,18 @@ function markResultStale(node) {
 function updateGuidanceStatus(node) {
   if (!node.vmGuidanceStatus) return;
   const graph = app.graph, t = I18N[actualLanguage(node)];
+  const saving = node.outputs?.[5]?.links?.length ? t.save_downstream : t.save_unconnected;
+  const show = message => {
+    node.vmGuidanceStatus.textContent = `${saving} · ${message}`;
+    node.vmGuidanceStatus.title = `${t.save_help}\n${message}`;
+  };
   if (node.properties?.vm_unified) {
     const notes = [];
     if (node.properties.vm_selection === "full_image") notes.push(t.full_help);
     if (node.properties.vm_reference_mode === "content") notes.push(t.ref_content);
     if (node.properties.vm_reference_mode === "mask") notes.push(t.ref_mask);
     if (node.properties.vm_use_protection) notes.push(t.protection_on);
-    node.vmGuidanceStatus.textContent = notes.join(" · ") || t.unified_plain;
+    show(notes.join(" · ") || t.unified_plain);
     return;
   }
   const getLink = id => graph?.links?.[id] || graph?.links?.get?.(id);
@@ -277,7 +288,7 @@ function updateGuidanceStatus(node) {
     return target?.type === "TextEncodeQwenImage21" && fromSlot(target, "images.image_1", 0) &&
       fromSlot(target, "images.image_2", 6) && fromSlot(target, "prompt", 7);
   });
-  node.vmGuidanceStatus.textContent = node.properties.vm_selection === "full_image" ? t.full_help : connected ? t.guidance_ready : t.guidance_plain;
+  show(node.properties.vm_selection === "full_image" ? t.full_help : connected ? t.guidance_ready : t.guidance_plain);
 }
 
 function nodes2Enabled() {
@@ -304,7 +315,8 @@ function applyAdvancedVisibility(node) {
   const toggle = node.widgets?.find(w => w.name === "vm_advanced_toggle");
   if (!prefix || !toggle) return;
   const unified = node.properties.vm_unified === true;
-  setWidgetHidden(node, prefix, unified);
+  // Preserve the old serialized slot without offering an inactive save control.
+  setWidgetHidden(node, prefix, true);
   setWidgetHidden(node, toggle, !unified);
   setWidgetHidden(node, node.widgets?.find(w => w.name === "vm_language"), false);
   node.vmLastNodes2 = nodes2Enabled();
@@ -394,9 +406,7 @@ function translateNode(node) {
     node.vmProtectionStatus.textContent = warnings.length ?
       `⚠ ${t.protection_warning}${warnings.map(code => t[`warning_${code}`] || code).join(actualLanguage(node) === "zh" ? "、" : ", ")}${t.protection_check}${node.vmResultStale ? ` · ${t.stale_result}` : ""}` : "";
   }
-  if (node.vmPrefixLabel) node.vmPrefixLabel.textContent = t.filename_prefix;
-  if (node.vmPrefixInput && document.activeElement !== node.vmPrefixInput)
-    node.vmPrefixInput.value = node.widgets?.find(w => w.name === "filename_prefix")?.value || "";
+  if (node.vmSaveHelp) node.vmSaveHelp.textContent = t.save_help;
   node.setDirtyCanvas?.(true, true);
 }
 
@@ -477,11 +487,9 @@ function installNodeUI(node) {
   check.onchange = () => { node.properties.vm_use_protection = check.checked; revealOptionalInputs(node); markResultStale(node); translateNode(node); };
   node.vmOptionalPanel = optional; node.vmReferenceSelect = refSelect; node.vmReferenceLabel = refLabel;
   node.vmProtectCheck = check; node.vmProtectLabel = protectText; node.vmOptionalHelp = help;
-  const prefixLabel = document.createElement("label"), prefixInput = document.createElement("input");
-  prefixInput.type = "text"; prefixInput.style.cssText = refSelect.style.cssText;
-  prefixInput.setAttribute("aria-label", "VM save prefix");
-  prefixInput.oninput = () => { const w=node.widgets?.find(w=>w.name==="filename_prefix"); if(w){w.value=prefixInput.value;w.callback?.(w.value);} };
-  optional.append(prefixLabel, prefixInput);node.vmPrefixLabel=prefixLabel;node.vmPrefixInput=prefixInput;
+  const saveHelp = document.createElement("div");
+  saveHelp.style.cssText = "margin-top:10px;color:#b8c8d0;font-size:12px;";
+  optional.append(saveHelp); node.vmSaveHelp = saveHelp;
   node.vmOptionalDialog = createPanelDialog(node, optional, "optional");
   const panel = document.createElement("div");
   panel.classList.add("vmn-inline-panel");

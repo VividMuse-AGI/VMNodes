@@ -113,6 +113,7 @@ Research IDs identify those records; they are not extra product modes.
 | V108 default coverage | Exact 0.1.4 ZIP; ComfyUI 0.38.1 / frontend 1.53.6 | Two executions; outside/protected/reconstruction/alpha-overrun counts all zero. Human: skirt usable; fitted top target complete but unusable because of residual fabric | Fixed-case acceptance, not a general success rate |
 | V110/V112 offline diagnosis | Frozen 0.1.5 compositor and earlier fixed generated tensors | Corrected coverage reduced a fragment; Strict drawn mask reduced blending at permitted pixels. Some old fabric remained outside permission. Skirt mode comparison showed no obvious assistant-observed regression | No new Qwen runs; top repair failed. Do not substitute assistant ratings for unavailable human feedback |
 | V114 delivery | Exact 0.1.6 candidate ZIP; ComfyUI 0.38.1 / frontend 1.53.6 | 16 package/install tests, clean imports, isolated 0.1.3 → 0.1.6 → 0.1.3 replacement, actual startup and workflow import, zh/en/auto controls | Existing host Python reused; no image inference, online validation or actual user installation replacement |
+| V115 separate saving | 0.1.7; ComfyUI 0.38.1 / frontend 1.53.6 | 27 CPU tests, 9 frontend checks, 5 real executor cases; standard Save Image pixels/metadata, preview blocking, no-save mode, old workflow loading, real PNG import and temporary preview display | Fixed synthetic Pre; no new model generation or image-quality acceptance |
 
 The V108 archive SHA256 is
 `17795672c927abc125ca34087782d73b8f7085ada74ad2e1077291b18cb35fd4`.
@@ -140,10 +141,23 @@ approved; passing a URL syntax check is not proof of an accessible repository.
 
 As of 2026-10-02, the owner has ended the recent quality-tuning route and chosen
 delivery stabilization. Keep image algorithms, defaults, user node IDs, titles,
-ports, dimensions, expansion state and example workflow bytes unchanged. Do not
+ports, dimensions and expansion state unchanged. The owner subsequently approved
+separate saving in 0.1.7: the example adds one standard Save Image node and a link
+from Final. All earlier nodes and links remain intact except that added connection.
+Do not
 promote experimental masks, narrow transitions, color corrections or lower
 denoise into defaults. Version 0.1.6 adds usage documentation and metadata only;
 its new build identity can invalidate caches without changing the image algorithm.
+
+In 0.1.7 the editor writes preview files under ComfyUI's temporary directory, using
+UI image type `temp`. The legacy filename_prefix field remains in the schemas and
+serialized widget positions but is hidden and ignored for preview paths. Older
+workflows must connect an external save node for persistent output. Keep Final
+blocked in range-preview mode; never substitute the mask visualization there.
+Standard Save Image preserves prompt/workflow metadata when host metadata is
+enabled. It does not copy the editor's custom `vmnodes` PNG diagnostic chunk;
+that chunk remains on the temporary preview. Do not treat it as durable audit
+storage or rely on temporary previews surviving a later host session.
 
 Keep technical acceptance separate from visual usability. Missing edit permission
 and inward blending can both leave old fabric; neither is a reason to bypass

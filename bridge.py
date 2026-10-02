@@ -2,6 +2,7 @@
 
 import json
 from pathlib import Path
+from uuid import uuid4
 
 import folder_paths
 from PIL import Image, PngImagePlugin
@@ -202,9 +203,12 @@ class VMEditFinish:
         else:
             raise ValueError("Invalid VMNodes run mode.")
 
-        prefix = filename_prefix.rstrip("/\\") + "_" + stage
+        # Keep filename_prefix in the old schema/widget position for workflow
+        # compatibility. Persistent output now belongs to downstream SaveImage.
+        # Never use the legacy path here; every editor image is a temp preview.
+        prefix = "VMNodes/preview_" + stage + "_" + uuid4().hex
         directory, name, counter, subfolder, _ = folder_paths.get_save_image_path(
-            prefix, folder_paths.get_output_directory(), image.shape[1], image.shape[0])
+            prefix, folder_paths.get_temp_directory(), image.shape[1], image.shape[0])
         target = Path(directory) / f"{name}_{counter:05}_.png"
         pnginfo = PngImagePlugin.PngInfo()
         if prompt is not None:
@@ -224,7 +228,7 @@ class VMEditFinish:
                                                 "node_id": str(unique_id),
                                                 "warnings": plan.get("warnings", [])}, ensure_ascii=False))
         Image.fromarray(image).save(target, pnginfo=pnginfo, compress_level=4)
-        return {"ui": {"images": [{"filename": target.name, "subfolder": subfolder, "type": "output"}],
+        return {"ui": {"images": [{"filename": target.name, "subfolder": subfolder, "type": "temp"}],
                        "vm_stage": [stage], "vm_session": [frontend_session],
                        "vm_selection": [plan.get("selection_evidence", {}).get("route", "")],
                        "vm_seam_status": [harmonization["status"]],

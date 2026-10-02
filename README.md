@@ -30,9 +30,11 @@ VMNodes 是一个持续扩展的 ComfyUI 节点工具包。整个包统一安装
 
 只用缩放节点，到这里即可。使用图像编辑时，继续按[编辑说明](docs/zh/nodes/image-edit.md)准备模型并导入[示例工作流](workflows/image_edit/VM_图像编辑.json)。示例中的图片请替换为自己的图片。
 
+保存图片时，将 **VM 图像编辑的 Final → 保存图像**。示例已接好；文件名前缀在保存节点里设置。编辑节点自身只显示临时预览。升级旧工作流时，也需要接上保存节点。
+
 普通粗选、严格遮罩和整图编辑不需要 SAM 或 Ultralytics；“细化到物体”所需的可选资源在编辑说明中单独列出。
 
-当前为首次发布候选 **0.1.6**，使用本地 ZIP 安装。拟发布到 `VividMuse-AGI/VMNodes`；该公开仓库及在线安装尚未启用，也尚未上架 Registry / Manager。
+当前为首次发布候选 **0.1.7**，使用本地 ZIP 安装。拟发布到 `VividMuse-AGI/VMNodes`；该公开仓库及在线安装尚未启用，也尚未上架 Registry / Manager。
 
 ## 更新
 

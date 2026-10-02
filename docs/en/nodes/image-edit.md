@@ -50,7 +50,17 @@ For example:
 
 Full-image editing is useful when surrounding content needs to change together with the target. It may also subtly change faces, clothing textures, or the background. Use local editing when you want to restrict where changes can occur.
 
-Results are saved to ComfyUI's `output/VMNodes` folder by default.
+## Save or continue processing the result
+
+Connect **VM Image Edit Final → Save Image**. The example already includes this connection and saves to ComfyUI's `output/VMNodes` folder. Set the subfolder and filename prefix on Save Image.
+
+The editor's preview is temporary and does not automatically write to `output`. To view without saving, leave out Save Image or connect Final to Preview Image. You can also process Final with other image nodes before saving.
+
+Preview range only emits no Final image, so the example's save node will not save a green/blue overlay as the final result. To save a range visualization intentionally, connect Range preview to a separate save node.
+
+In range-preview mode, Save Image may still display its previous image. This does not mean a new Final was saved.
+
+Upgrading from 0.1.6 or earlier: existing connections are preserved, but add **Final → Save Image** to your older workflow. The editor's old save-prefix control is inactive. Enter the desired prefix on Save Image to keep your naming convention.
 
 ## VM Image Edit: what each option does
 
@@ -73,7 +83,6 @@ Results are saved to ComfyUI's `output/VMNodes` folder by default.
 | **Show preview / Hide preview** | Opens or closes the separate viewer for the last result. Clicking it does not run the workflow |
 | **Seam harmonization → Auto** | Tries to reduce slight color differences along local edit edges. Start with Off; it is not used for full-image edits |
 | **Language** | Follows ComfyUI automatically, or uses Chinese or English. It does not translate your edit request |
-| **Save prefix** (in Optional features) | Sets the output subfolder and filename prefix. Leave it unchanged to use the default location |
 
 **Reading the range preview:** green means editable, and blue means protected. In full-image mode, the border indicates that the whole image is editable; it does not predict where the model will make changes. Run again after changing settings to update the preview.
 
@@ -111,4 +120,4 @@ Protection takes priority over editing. Writing “keep the face unchanged” al
 
 **Does switching seam harmonization regenerate the image?** Generation can be reused when upstream inputs are unchanged and cached results remain available. Changing the prompt, seed or other upstream settings, restarting, or losing the cache may require generation again.
 
-**How do I find the nodes or restore a workflow?** Search for `VMNodes`. Drag a saved result PNG back into ComfyUI to restore its workflow; keep the original inputs, reference images, and model files available.
+**How do I find the nodes or restore a workflow?** Search for `VMNodes`. Drag a PNG saved by standard Save Image back into ComfyUI to restore its workflow, provided image metadata is enabled. Keep the original inputs, reference images, and model files available.

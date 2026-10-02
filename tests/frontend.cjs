@@ -17,7 +17,7 @@ const fs = require('fs'), path = require('path'), vm = require('vm'), assert = r
       documentElement: {lang: 'en'} },
     navigator: { language: 'en' }, setInterval: () => ++intervals,
     localStorage: {getItem: () => null}, Symbol, URLSearchParams });
-  const run = () => vm.runInContext('(function(){' + source + '\n})()', context);
+  const run = () => vm.runInContext('(function(){' + source + '\n globalThis.savingTest = {applyAdvancedVisibility, updateGuidanceStatus, rewritePrompt}; })()', context);
   run(); run();
   assert.equal(extensions.length, 1, 'duplicate module registration');
   const extension = extensions[0];
@@ -41,6 +41,31 @@ const fs = require('fs'), path = require('path'), vm = require('vm'), assert = r
     assert.strictEqual(Node.prototype.onNodeCreated, created);
     assert.strictEqual(Node.prototype.onConfigure, configured);
   }
+  // An older manual graph retains its legacy field but cannot present it as an active save setting.
+  const edit = {id:13,type:'VMImageEditBridge',properties:{vm_language:'en',vm_selection:'coarse_region',vm_seam_harmonization:'off'},
+    widgets:[{name:'filename_prefix',value:'old/subdir'},{name:'vm_advanced_toggle'},{name:'vm_language'}],
+    outputs:Array.from({length:8},()=>({links:null})),vmGuidanceStatus:{},inputs:[]};
+  context.savingTest.applyAdvancedVisibility(edit);
+  assert.equal(edit.widgets[0].hidden,true); assert.equal(edit.widgets[0].value,'old/subdir');
+  context.savingTest.updateGuidanceStatus(edit);
+  assert.match(edit.vmGuidanceStatus.textContent,/Final is unconnected/);
+  edit.properties.vm_language='zh'; edit.properties.vm_unified=true;
+  context.savingTest.updateGuidanceStatus(edit);
+  assert.match(edit.vmGuidanceStatus.textContent,/Final 未连接/);
+  edit.outputs[5].links=[61]; context.savingTest.updateGuidanceStatus(edit);
+  assert.match(edit.vmGuidanceStatus.textContent,/临时预览/);
+  edit.properties.vm_unified=false; graph._nodes=[edit];
+  for(const mode of ['generate','preview']){
+    edit.properties.vm_run=mode;
+    const compiled=context.savingTest.rewritePrompt({output:{
+      '13':{class_type:'VMImageEditBridge',inputs:{image:['1',0],edit_mask:['1',1],prompt:'Edit',filename_prefix:'old/subdir',run_mode:mode}},
+      '135':{class_type:'SaveImage',inputs:{images:['13',5],filename_prefix:'chosen/subdir'}}}});
+    assert.equal(JSON.stringify(compiled.output['135'].inputs.images),JSON.stringify(['vm15f_13',0]));
+    assert.equal(compiled.output['135'].inputs.filename_prefix,'chosen/subdir');
+    assert.equal(compiled.output.vm15f_13.inputs.run_mode,mode);
+    assert.equal(compiled.output.vm15f_13.inputs.filename_prefix,'old/subdir');
+  }
   console.log(JSON.stringify({passed:true, checks:['single_registration','single_setup',
-    'single_timer_and_listeners','unrelated_prompt_unchanged','unrelated_node_untouched','idempotent_node_hooks']}));
+    'single_timer_and_listeners','unrelated_prompt_unchanged','unrelated_node_untouched','idempotent_node_hooks',
+    'legacy_prefix_hidden_preserved','bilingual_saving_notice','external_final_routing_both_modes']}));
 })().catch(error => { console.error(error); process.exitCode = 1; });

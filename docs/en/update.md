@@ -12,6 +12,10 @@
 
 Old Klein workflows still need migration to the Qwen workflow. Package migration does not convert them automatically. Keep downloaded model files.
 
+## 0.1.7: separate saving
+
+The editor now provides temporary previews and a Final output. The updated example includes standard Save Image. In your older workflow, connect **Final → Save Image** and set your desired filename prefix there. The editor displays a saving reminder. Without a save node, no persistent output is written. Legacy parameters remain readable without shifting language or other controls.
+
 ## Git updates
 
 Run `git status` in VMNodes. On a clean update branch, run:

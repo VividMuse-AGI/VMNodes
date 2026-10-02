@@ -1,8 +1,8 @@
 {
   "id": "6df0fc48-f0f5-442f-aab0-bfaa38f256d4",
   "revision": 0,
-  "last_node_id": 134,
-  "last_link_id": 60,
+  "last_node_id": 135,
+  "last_link_id": 61,
   "nodes": [
     {
       "id": 1,
@@ -976,7 +976,9 @@
           "localized_name": "Final",
           "name": "final_image",
           "type": "IMAGE",
-          "links": null
+          "links": [
+            61
+          ]
         },
         {
           "localized_name": "标注参考图",
@@ -1163,6 +1165,35 @@
         "image": "",
         "upload": "image"
       }
+    },
+    {
+      "id": 135,
+      "type": "SaveImage",
+      "pos": [
+        2550,
+        100
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 61
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "VMNodes/Edit"
+      ]
     }
   ],
   "links": [
@@ -1365,6 +1396,14 @@
       13,
       4,
       "MASK"
+    ],
+    [
+      61,
+      13,
+      5,
+      135,
+      0,
+      "IMAGE"
     ]
   ],
   "groups": [

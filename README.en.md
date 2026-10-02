@@ -32,7 +32,9 @@ That is all you need for resizing. For editing, follow the [edit guide](docs/en/
 
 Coarse-region, painted-mask and full-image edits do not need SAM or Ultralytics. Resources for optional object refinement are listed separately in the edit guide.
 
-This is an initial release candidate, **0.1.6**, installed from a local ZIP. The planned public repository is `VividMuse-AGI/VMNodes`; that repository, online installation and Registry / Manager listing are not available yet.
+This is an initial release candidate, **0.1.7**, installed from a local ZIP. The planned public repository is `VividMuse-AGI/VMNodes`; that repository, online installation and Registry / Manager listing are not available yet.
+
+To save images, connect **VM Image Edit Final → Save Image**. The example is already connected. Set the filename prefix on the save node; the editor itself only creates temporary previews. Older workflows also need a save node after upgrading.
 
 ## Updating
 

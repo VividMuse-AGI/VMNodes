@@ -1,5 +1,15 @@
 # Changelog / 更新记录
 
+## 0.1.7 — Unreleased / 尚未公开发布
+
+- Separates saving from editing: the editor writes temporary previews only; Final can feed Save Image, Preview Image or further processing.
+- Adds standard Save Image to the example, connected to Final. Existing nodes retain their names, ports, positions, sizes and collapse states.
+- Preview range only blocks Final, so the example cannot save a mask overlay as its final result.
+- Hides the inactive legacy save-prefix control, preserves old parameter positions, and adds Chinese/English upgrade guidance. Older workflows need an external save node.
+- Image generation, selection and compositing algorithms are unchanged. This release does not claim an image-quality improvement.
+
+保存功能独立：示例已接好 Final → 保存图像；旧工作流需自行补接。编辑节点保留临时预览，不再自动写入 output。尚未公开发布。
+
 ## 0.1.6 — Unreleased / 尚未公开发布
 
 - Freezes the current image-editing behavior and keeps the two independent user nodes and existing example workflow.
