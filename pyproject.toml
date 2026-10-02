@@ -1,6 +1,6 @@
 [project]
 name = "vmnodes"
-version = "0.1.5"
+version = "0.1.6"
 description = "VMNodes: modular ComfyUI tools for image editing and resize/alignment."
 license = { file = "LICENSE" }
 readme = "README.md"

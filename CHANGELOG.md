@@ -1,5 +1,14 @@
 # Changelog / 更新记录
 
+## 0.1.6 — Unreleased / 尚未公开发布
+
+- Freezes the current image-editing behavior and keeps the two independent user nodes and existing example workflow.
+- Adds Chinese/English usage examples and explains residual edges, selection coverage, and the limits of switching mask modes.
+- No image algorithm, default setting, node name, port, layout or workflow-byte changes. Recent experimental masks and compositing candidates are not product defaults.
+- Documentation and package version only; this is not a new image-quality fix. The build identity changes with the version, so generation caches may need rebuilding.
+
+冻结现有功能，补齐面向用户的效果边界。已停止近期画质调参实验；安装、升级与回退验证单独记录。尚未公开发布。
+
 ## 0.1.5 — Unreleased / 尚未公开发布
 
 - Prepares the VividMuse-AGI/VMNodes publication destination; the public repository and online update path still need activation and validation.

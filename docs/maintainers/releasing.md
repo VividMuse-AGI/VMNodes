@@ -110,7 +110,9 @@ Research IDs identify those records; they are not extra product modes.
 | V106 package and UI | 0.1.4; ComfyUI 0.38.1 / frontend 1.53.6 | Clean ZIP extraction, 16 package/install tests, actual startup, example import, zh/en/auto language and local upgrade simulation | Existing host Python reused; not a new dependency environment or actual user upgrade |
 | V107 default replay | 0.1.4; same recorded host | Prior M02 default Final and generation inputs reproduced exactly | Reproducibility does not make a failed image usable |
 | V107 low-denoise candidate | 0.1.4; two fixed 0.80 outputs | Parameter was effective; both edits were incomplete and rejected by the user | Closed research route, not a default change |
-| V108 default coverage | Exact 0.1.4 ZIP; ComfyUI 0.38.1 / frontend 1.53.6 | Two executions; outside/protected/reconstruction/alpha-overrun counts all zero | Assistant: skirt usable; fitted top has old-fabric residual. Human ratings pending |
+| V108 default coverage | Exact 0.1.4 ZIP; ComfyUI 0.38.1 / frontend 1.53.6 | Two executions; outside/protected/reconstruction/alpha-overrun counts all zero. Human: skirt usable; fitted top target complete but unusable because of residual fabric | Fixed-case acceptance, not a general success rate |
+| V110/V112 offline diagnosis | Frozen 0.1.5 compositor and earlier fixed generated tensors | Corrected coverage reduced a fragment; Strict drawn mask reduced blending at permitted pixels. Some old fabric remained outside permission. Skirt mode comparison showed no obvious assistant-observed regression | No new Qwen runs; top repair failed. Do not substitute assistant ratings for unavailable human feedback |
+| V114 delivery | Exact 0.1.6 candidate ZIP; ComfyUI 0.38.1 / frontend 1.53.6 | 16 package/install tests, clean imports, isolated 0.1.3 → 0.1.6 → 0.1.3 replacement, actual startup and workflow import, zh/en/auto controls | Existing host Python reused; no image inference, online validation or actual user installation replacement |
 
 The V108 archive SHA256 is
 `17795672c927abc125ca34087782d73b8f7085ada74ad2e1077291b18cb35fd4`.
@@ -133,6 +135,32 @@ not rule out a private repository. Treat the metadata URL as a publication
 destination until authenticated creation/access and remote checks are complete.
 Keep the candidate README status and Unreleased heading until publication is
 approved; passing a URL syntax check is not proof of an accessible repository.
+
+## Image-quality freeze and delivery work
+
+As of 2026-10-02, the owner has ended the recent quality-tuning route and chosen
+delivery stabilization. Keep image algorithms, defaults, user node IDs, titles,
+ports, dimensions, expansion state and example workflow bytes unchanged. Do not
+promote experimental masks, narrow transitions, color corrections or lower
+denoise into defaults. Version 0.1.6 adds usage documentation and metadata only;
+its new build identity can invalidate caches without changing the image algorithm.
+
+Keep technical acceptance separate from visual usability. Missing edit permission
+and inward blending can both leave old fabric; neither is a reason to bypass
+permission checks. A narrower transition is not a general repair. Archive failures
+without claiming they were resolved, and retain previously accepted cases.
+
+Further image-quality work needs new evidence of a reusable capability or a
+repeated real-user problem, a bounded experiment, and a no-regression criterion.
+Another feather radius, seed, or case-specific mask is not sufficient reason to
+restart the closed tuning loop. Installation faults and reproducible implementation
+errors remain normal maintenance tasks.
+
+Validate each new delivery ZIP independently: manifest, clean extraction, actual
+host imports, documented local upgrade and rollback, and preservation of user
+workflows. Local filesystem/Git simulations are not remote CI or online update
+evidence. The private delivery record contains package identities and logs; do not
+copy private evaluation media or absolute machine paths into the public package.
 
 Frontend 1.52.7 expands undersized nodes during import via
 [computeSize and setSize](https://github.com/Comfy-Org/ComfyUI_frontend/blob/v1.52.7/src/scripts/app.ts#L1350).

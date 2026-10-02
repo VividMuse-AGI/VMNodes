@@ -99,7 +99,9 @@ Protection takes priority over editing. Writing “keep the face unchanged” al
 
 **What should I do if the mask is empty?** For local editing, draw a region on the main image and save it. To edit without drawing, explicitly choose Full-image edit (no mask).
 
-**Why are some original colors, strands of hair, or shadows left behind?** Check whether the region is too tight. Expand it to include the whole target. For a major silhouette change, you can also try full-image editing.
+**Why are some original colors, strands of hair, or shadows left behind?** Preview the region and check for missed parts of the old target or its shadow. Content outside the selection stays unchanged; changing selection mode or seam harmonization cannot repair missing coverage. Where the old target touches hands, hair or patterned fabric, residual edges or seams may remain even with complete coverage. Do not keep expanding the region indefinitely. Full-image editing permits surrounding changes but is not guaranteed to improve the result. See [examples and result limits](../editing-examples.md).
+
+**Does Strict drawn mask always produce cleaner edges?** No. It uses the painted pixels and does not turn an empty outline into a filled selection. It also cannot remove fragments outside that selection. Choose the mode for the task, rather than treating a mode switch as a universal edge repair.
 
 **Why did the face or background change outside my intended edit?** Full-image mode allows changes throughout the image. Use local editing to restrict the area, or add a protection mask for important regions.
 
