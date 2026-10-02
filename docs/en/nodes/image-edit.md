@@ -36,6 +36,8 @@ For example:
 
 You do not need to trace the edges perfectly, but try to close the outline and include the entire target. Include shadows when removing an object, and leave room for the new silhouette when replacing it with something larger.
 
+When shortening a skirt or narrowing clothing, include the old silhouette and the background that must be revealed. Selecting only the new silhouette can leave old fabric behind. Check areas near hands, cuffs and occlusion boundaries in the preview.
+
 Clothing, skin or background included inside the region may also be regenerated. Start by covering the whole target; extra expansion and a protection image are not always necessary. Regular textures and fine hair boundaries may still change: the node does not guarantee preservation of every unrelated detail inside a coarse selection.
 
 ### Edit without drawing a mask

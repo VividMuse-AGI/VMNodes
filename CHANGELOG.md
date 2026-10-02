@@ -1,5 +1,14 @@
 # Changelog / 更新记录
 
+## 0.1.5 — Unreleased / 尚未公开发布
+
+- Prepares the VividMuse-AGI/VMNodes publication destination; the public repository and online update path still need activation and validation.
+- Adds Chinese/English guidance for old silhouettes, residual fabric and known limits of structural edits.
+- Updates the maintainer acceptance table to distinguish package checks, real default outputs, human approval and pending online validation.
+- Documentation, version/build and repository metadata only. Image algorithms, defaults, node names, ports and workflow bytes are identical to 0.1.4. The default image samples were produced by the frozen 0.1.4 ZIP.
+
+补齐交付说明与发布信息；不是新增接缝修复。公开发布和实际安装升级仍待验收。
+
 ## 0.1.4 — Unreleased / 尚未公开发布
 
 - Distinguishes unconfirmed people from malformed or incorrectly sized masks in optional SAM refinement; does not silently bypass person verification.

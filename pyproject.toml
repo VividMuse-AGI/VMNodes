@@ -1,6 +1,6 @@
 [project]
 name = "vmnodes"
-version = "0.1.4"
+version = "0.1.5"
 description = "VMNodes: modular ComfyUI tools for image editing and resize/alignment."
 license = { file = "LICENSE" }
 readme = "README.md"
@@ -9,6 +9,11 @@ dependencies = [] # install.py conditionally reuses/provisions OpenCV.
 [project.optional-dependencies]
 person-check = ["ultralytics==8.3.222"]
 
-# Set Repository URL and PublisherId before public release; no invented account.
+[project.urls]
+Homepage = "https://github.com/VividMuse-AGI"
+# Intended repository: create and verify it before public publication.
+Repository = "https://github.com/VividMuse-AGI/VMNodes"
+
+# PublisherId is needed only for a later Registry publication.
 [tool.comfy]
 DisplayName = "VMNodes"

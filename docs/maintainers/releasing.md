@@ -100,13 +100,46 @@ No runtime audit schema or compositing behavior changes in 0.1.3.
 
 ## Current acceptance scope
 
-The prior 0.1.2 baseline was exercised with ComfyUI 0.37.4 and frontend 1.52.7.
-The 0.1.3 changes are documentation and package metadata only. Do not describe
-prior real-host evidence as a new 0.1.3 model run. SAM inference, transparent-edit
-delivery, broader host compatibility and user visual acceptance remain unconfirmed.
+Acceptance records as of 2026-10-02 are maintained outside the public package.
+Research IDs identify those records; they are not extra product modes.
+
+| Evidence | Version and environment | Supported conclusion | Limit |
+| --- | --- | --- | --- |
+| Earlier host baseline | 0.1.2; ComfyUI 0.37.4 / frontend 1.52.7 | Historical host behavior | Not a new 0.1.3 or 0.1.5 model run |
+| V91 optional SAM | 0.1.4; four real range-preview cases | Error classification and some real previews; three previews succeeded | Ring-shaped object failed person verification; not broad refinement or generation acceptance |
+| V106 package and UI | 0.1.4; ComfyUI 0.38.1 / frontend 1.53.6 | Clean ZIP extraction, 16 package/install tests, actual startup, example import, zh/en/auto language and local upgrade simulation | Existing host Python reused; not a new dependency environment or actual user upgrade |
+| V107 default replay | 0.1.4; same recorded host | Prior M02 default Final and generation inputs reproduced exactly | Reproducibility does not make a failed image usable |
+| V107 low-denoise candidate | 0.1.4; two fixed 0.80 outputs | Parameter was effective; both edits were incomplete and rejected by the user | Closed research route, not a default change |
+| V108 default coverage | Exact 0.1.4 ZIP; ComfyUI 0.38.1 / frontend 1.53.6 | Two executions; outside/protected/reconstruction/alpha-overrun counts all zero | Assistant: skirt usable; fitted top has old-fabric residual. Human ratings pending |
+
+The V108 archive SHA256 is
+`17795672c927abc125ca34087782d73b8f7085ada74ad2e1077291b18cb35fd4`.
+0.1.5 changes only documentation, version/build and repository metadata. Reuse
+the unchanged-runtime evidence with its original identity; do not call the two
+0.1.4 samples new 0.1.5 model runs. New package checks must use the new ZIP identity.
+The user's separate existing installation remains 0.1.3 until an explicit,
+backed-up upgrade is performed.
+
+Structural edits, new skin, hair/fabric textures and cushion boundaries retain
+known visual failures. Single-main-image RGB editing with optional content
+references and Qwen Image 2.1 is the delivery scope. Multi-main-image editing,
+transparent editing and other model backends are not accepted capabilities.
+Full fresh-environment installation, wider host compatibility, remote CI,
+online installation/update and Registry / Manager remain pending.
+
+The intended repository is `VividMuse-AGI/VMNodes`. The account page was reachable
+on 2026-10-02, while the unauthenticated repository page returned 404. That does
+not rule out a private repository. Treat the metadata URL as a publication
+destination until authenticated creation/access and remote checks are complete.
+Keep the candidate README status and Unreleased heading until publication is
+approved; passing a URL syntax check is not proof of an accessible repository.
 
 Frontend 1.52.7 expands undersized nodes during import via
 [computeSize and setSize](https://github.com/Comfy-Org/ComfyUI_frontend/blob/v1.52.7/src/scripts/app.ts#L1350).
 Preserving workflow bytes is not proof that every initial on-screen size is identical.
 Do not force global node sizes, rename nodes or collapse them to hide that limitation.
+
+V106 also observed automatic height normalization of the two undersized built-in
+nodes in frontend 1.53.6. The workflow bytes, VM node names and original layout
+remain preserved. Do not change the host to force those built-in nodes shorter.
 

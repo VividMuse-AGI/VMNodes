@@ -13,6 +13,8 @@ VMNodes is a growing collection of ComfyUI nodes. Install and update the package
 
 Image editing currently supports **Qwen Image 2.1**. Resize & Align needs no generative model and works independently. Search for `VMNodes`, or either node's English or Chinese name.
 
+Large silhouette changes, newly revealed skin, fine hair and regular texture boundaries may look unnatural. If old objects, clothing or shadows remain, first check that the edit region includes them completely.
+
 ## Installation
 
 1. Place this package at `ComfyUI/custom_nodes/VMNodes`, with `__init__.py` directly inside it.
@@ -30,7 +32,7 @@ That is all you need for resizing. For editing, follow the [edit guide](docs/en/
 
 Coarse-region, painted-mask and full-image edits do not need SAM or Ultralytics. Resources for optional object refinement are listed separately in the edit guide.
 
-This is an initial release candidate. Registry / Manager listing and online installation are not available yet.
+This is an initial release candidate, **0.1.5**, installed from a local ZIP. The planned public repository is `VividMuse-AGI/VMNodes`; that repository, online installation and Registry / Manager listing are not available yet.
 
 ## Updating
 
