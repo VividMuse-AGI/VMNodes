@@ -40,7 +40,7 @@ That is all you need for resizing. For editing, follow the [single-image quickst
 
 The default workflow is `Qwen-Image-2.1-Single-Image-Edit.json`, using an external generation chain and 8-step LoRA settings. For reference-image and protection-mask switches, use the [unified example](workflows/image_edit/VM_图像编辑.json). The [edit guide](docs/en/nodes/image-edit.md) explains the difference.
 
-To save images, connect **VM Image Edit Final → Save Image**. The example is already connected. Set the filename prefix on the save node; the editor itself only creates temporary previews. Older workflows also need a save node after upgrading.
+To save images, connect **VM Image Edit Final → Save Image**. The example is already connected. Set the filename prefix on the save node; the editor itself only creates temporary previews.
 
 Coarse-region, painted-mask and full-image edits do not need SAM or Ultralytics. Resources for optional object refinement are listed separately in the edit guide.
 
@@ -54,7 +54,7 @@ Update VMNodes as one package, then restart ComfyUI and refresh its page.
 - ZIP: stop the relevant ComfyUI instance, back up the old directory outside `custom_nodes`, then replace it with the new `VMNodes` directory. Do not overlay stale files.
 - When dependencies change, repeat the dependency installation command above.
 
-See the [update guide](docs/en/update.md) for adding a save node to existing workflows, pinned versions and rollback. Save your own workflows in your user directory, separately from repository examples.
+See the [update guide](docs/en/update.md) for pinned versions and rollback. Save your own workflows in your user directory, separately from repository examples.
 
 ## Support and license
 

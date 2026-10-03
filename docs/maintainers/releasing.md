@@ -46,6 +46,19 @@ Registry normally packages Git-tracked files; `.comfyignore` removes development
 files. See the [official publishing instructions](https://docs.comfy.org/registry/publishing)
 and [metadata specification](https://docs.comfy.org/registry/specifications).
 
+## Corrections to published documentation
+
+User-facing CHANGELOG starts at 0.1.7, the first public Pre-release. Earlier
+internal history remains in Git and private acceptance records.
+
+Pushing corrections to `docs/releases/X.Y.Z.md` on `main` runs Sync release notes
+for the current package version. It updates only the body of an existing published
+Release through [GitHub CLI](https://cli.github.com/manual/gh_release_edit).
+It does not create or publish releases, move tags, or replace assets. Drafts stay
+under the manual release workflow. Keep release tags and uploaded ZIP/checksum
+assets unchanged; corrected web documentation may be newer than documents in
+an already downloaded ZIP. Deliver updated package contents in a new version.
+
 ## Boundaries
 
 - No model downloads, pip installs or workflow migrations run on plugin import.

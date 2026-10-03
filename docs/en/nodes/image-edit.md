@@ -62,8 +62,6 @@ Preview range only emits no Final image, so the example's save node will not sav
 
 In range-preview mode, Save Image may still display its previous image. This does not mean a new Final was saved.
 
-Upgrading from 0.1.6 or earlier: existing connections are preserved, but add **Final → Save Image** to your older workflow. The editor's old save-prefix control is inactive. Enter the desired prefix on Save Image to keep your naming convention.
-
 ## VM Image Edit: what each option does
 
 ### Selection

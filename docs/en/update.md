@@ -31,12 +31,6 @@ For portable or bundled installations, replace `python` with their included Pyth
 
 Keep your own workflows in your user directory so replacing the code does not remove them. To move from a ZIP installation to Git, back up the old directory as above, then use the [README clone command](../../README.en.md#installation).
 
-## 0.1.7: saving in existing workflows
-
-The editor provides temporary previews and a **Final** output. A separate save node writes persistent files. The default `Qwen-Image-2.1-Single-Image-Edit.json` already includes standard Save Image.
-
-In an older workflow, connect **VM Image Edit Final → Save Image** and set the filename prefix on that node. Without a save node, previews do not create persistent output files. Legacy workflow parameters remain readable.
-
 ## Rollback
 
 Stop the relevant ComfyUI instance, restore `VMNodes` from a backup or a selected earlier release, check that version's dependencies, then restart and refresh the page. If no earlier public release is available, use your own backup. Do not automatically downgrade PyTorch/CUDA.

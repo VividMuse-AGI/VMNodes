@@ -1,0 +1,47 @@
+name: Sync release notes
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/releases/*.md'
+      - '.github/workflows/release-notes.yml'
+permissions:
+  contents: read
+concurrency:
+  group: release-notes
+  cancel-in-progress: false
+jobs:
+  notes:
+    if: github.repository == 'VividMuse-AGI/VMNodes'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Read the current release notes
+        id: release
+        run: |
+          python - <<'PY'
+          import os, pathlib, re, tomllib
+          version = tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version']
+          assert re.fullmatch(r'\d+\.\d+\.\d+', version), 'Invalid package version'
+          notes = pathlib.Path('docs/releases') / (version + '.md')
+          assert notes.read_text(encoding='utf-8').startswith('# VMNodes v' + version), 'Missing or mismatched notes'
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write('tag=v' + version + '\n')
+          PY
+      - name: Update an existing published release body
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          is_draft=$(gh release view "$RELEASE_TAG" --json isDraft --jq '.isDraft')
+          if [ "$is_draft" = true ]; then
+            echo 'Draft notes remain under the manual release workflow.'
+            exit 0
+          fi
+          gh release edit "$RELEASE_TAG" --notes-file "docs/releases/${RELEASE_TAG#v}.md"

@@ -2,96 +2,24 @@
 
 ## 0.1.7 — 2026-10-03 — Pre-release
 
-首次公开测试版的发布材料。提供 VM 图像编辑、VM 图像缩放与对齐、中英文使用说明及 Qwen Image 2.1 单图示例。
+### 中文
 
-- 默认单图示例采用原版 8 步 LoRA，Final 已接到标准保存图像节点；保留节点原名称、位置和尺寸。
-- 普通粗选不依赖 SAM。示例保留可选加载器，默认断开连接并清空模型选择，避免导入时误报缺模型。
-- 新增双语快速开始、4 个模型下载入口和 rgthree 依赖说明，清理示例中的本机图片及临时预览记录。
-- 编辑节点只提供临时预览和 Final 输出；从旧版升级时，将 Final 接到外部保存图像节点。
+首次公开测试版。
 
-First public test release materials: VM Image Edit, VM Image Resize & Align, bilingual guides and a Qwen Image 2.1 single-image example.
+- **VM 图像编辑**：支持粗选范围、严格遮罩、整图编辑和可选物体细化，提供范围预览与 Final 输出。
+- **VM 图像缩放与对齐**：同步处理图像与遮罩，可选择缩放算法和尺寸整除数。
+- **Qwen Image 2.1 单图示例**：使用 8 步 LoRA，已连接标准保存图像节点；普通编辑无需 SAM。
+- **语言与使用说明**：节点可自动跟随 ComfyUI 语言，或选择中文、English；提供中英文安装、使用和更新说明。
 
-- Separates saving from editing: the editor writes temporary previews only; Final can feed Save Image, Preview Image or further processing.
-- Adds standard Save Image to the example, connected to Final. Existing nodes retain their names, ports, positions, sizes and collapse states.
-- Preview range only blocks Final, so the example cannot save a mask overlay as its final result.
-- Hides the inactive legacy save-prefix control, preserves old parameter positions, and adds Chinese/English upgrade guidance. Older workflows need an external save node.
-- Image generation, selection and compositing algorithms are unchanged. This release does not claim an image-quality improvement.
-- Adds the default single-image example with the original 8-step LoRA, bilingual quickstarts and explicit rgthree/model dependencies. Optional SAM is disconnected and unselected by default.
+开始使用请看 [README](README.md)，效果边界见[使用示例](docs/zh/editing-examples.md)。
 
-保存与更新方法见 [中文说明](docs/zh/update.md) / [English guide](docs/en/update.md)。本版仍保留结构编辑、肤色过渡及细纹理边界的已知限制，见 [使用示例](docs/zh/editing-examples.md)。本次发布不增加通用无缝编辑承诺。
+### English
 
-以下为此前未单独公开发布的内部候选记录 / Earlier internal candidates were not separate public releases.
+First public Pre-release.
 
-## 0.1.6 — Unreleased / 尚未公开发布
+- **VM Image Edit**: coarse-region, strict-mask and full-image editing, optional object refinement, range previews and a Final output.
+- **VM Image Resize & Align**: resize images and masks together, with selectable interpolation and dimension alignment.
+- **Qwen Image 2.1 single-image example**: 8-step LoRA with standard Save Image already connected; ordinary editing needs no SAM.
+- **Language and guides**: follow ComfyUI's language automatically or choose Chinese or English, with bilingual installation, usage and update guides.
 
-- Freezes the current image-editing behavior and keeps the two independent user nodes and existing example workflow.
-- Adds Chinese/English usage examples and explains residual edges, selection coverage, and the limits of switching mask modes.
-- No image algorithm, default setting, node name, port, layout or workflow-byte changes. Recent experimental masks and compositing candidates are not product defaults.
-- Documentation and package version only; this is not a new image-quality fix. The build identity changes with the version, so generation caches may need rebuilding.
-
-冻结现有功能，补齐面向用户的效果边界。已停止近期画质调参实验；安装、升级与回退验证单独记录。尚未公开发布。
-
-## 0.1.5 — Unreleased / 尚未公开发布
-
-- Prepares the VividMuse-AGI/VMNodes publication destination; the public repository and online update path still need activation and validation.
-- Adds Chinese/English guidance for old silhouettes, residual fabric and known limits of structural edits.
-- Updates the maintainer acceptance table to distinguish package checks, real default outputs, human approval and pending online validation.
-- Documentation, version/build and repository metadata only. Image algorithms, defaults, node names, ports and workflow bytes are identical to 0.1.4. The default image samples were produced by the frozen 0.1.4 ZIP.
-
-补齐交付说明与发布信息；不是新增接缝修复。公开发布和实际安装升级仍待验收。
-
-## 0.1.4 — Unreleased / 尚未公开发布
-
-- Distinguishes unconfirmed people from malformed or incorrectly sized masks in optional SAM refinement; does not silently bypass person verification.
-- Uses the same component-local closed-outline interpretation for ordinary coarse regions and SAM selection evidence.
-- Adds Chinese/English explanations for person-check failures and checks only the target version's release date when publishing.
-- No change to ordinary coarse-region output, Qwen sampling, compositing, node names, ports, sizes or workflow layout. Hair/clothing texture, sofa boundary and historical skin continuity are not claimed fixed.
-
-修正可选细化的错误分类与轮廓解释，保持普通编辑和回贴行为；不是通用接缝修复版。
-
-## 0.1.3 — Unreleased / 尚未公开发布
-
-- Clarifies the separate Qwen Image 2.1 model license in Chinese/English guides.
-- Documents RGB edit output, standalone RGBA resizing, 32-pixel alignment and
-  conditional reuse of cached generation results.
-- States optional SAM acceptance limits and explains producer-specific opacity
-  versus generic audit metadata in maintainer documentation.
-- Documentation and package metadata only; no image algorithm, audit schema,
-  controls, node names, sizes or workflow changes. Skin-seam quality is unchanged.
-
-补齐许可、使用边界及维护说明；不改变出图，不是肤色断层修复版。
-
-## 0.1.2 — Unreleased / 尚未公开发布
-
-- Audit metadata describes the actual channel count and RGB extraction without
-  assigning a meaning to extra channels; existing schema 2 arrays remain compatible.
-- Logs the package version, build and loaded directory once during module import.
-- Clarifies Chinese/English seam-correction status and capability descriptions.
-- Image processing, defaults, node contracts and workflow layout are unchanged.
-
-修正开发审计描述与加载版本记录，明确接缝协调的能力边界；不是肤色断层修复版。
-
-## 0.1.1 — Unreleased / 尚未公开发布
-
-- Opt-in developer audit now preserves decoded Pre as float32 BHWC, its original
-  tensor dtype, and the existing RGB8 data, so precision differences can be replayed.
-- Normal image output, boundary harmonization, node controls and workflow layout
-  are unchanged. This is an audit fix, **not a skin-seam quality fix**.
-
-开发审计补充量化前的 Pre 和精度说明；普通出图及节点使用方式不变。
-V54 接缝候选未通过通用验收，因此未替换默认协调算法。
-
-## 0.1.0 — Unreleased / 尚未公开发布
-
-- Package-level installation and updates; editing and resize/alignment remain separate nodes.
-- Preserves six node type IDs, port contracts and workflow layout.
-- Makes independent person verification optional; ordinary edits/resizing do not require Ultralytics.
-- Reuses compatible host OpenCV variants during installation instead of adding a second cv2 distribution.
-- Isolates feature import failures with explicit diagnostics; prevents duplicate frontend setup.
-- Adds Chinese/English guides, MIT licensing, local packaging and release checks.
-
-统一 VMNodes 安装与更新入口，保留原节点名称、尺寸和工作流兼容；新增中英文说明、MIT 许可证及发布检查。
-
-Restart ComfyUI and refresh its page after updating. Existing manual installs
-require the one-time migration in [the update guide](docs/en/update.md).
-No change to Qwen generation or compositing algorithms is intended in this version.
+Start with the [README](README.en.md), and see [editing examples](docs/en/editing-examples.md) for result limits.
