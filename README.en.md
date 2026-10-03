@@ -4,7 +4,7 @@
 
 VMNodes is a growing collection of ComfyUI nodes. Install and update the package once, then use the nodes you need.
 
-**v0.1.7 · First public Pre-release**. Try it and share feedback; compatibility may vary across ComfyUI versions, hardware and extension combinations.
+**v0.1.0 · First public Pre-release**. Try it and share feedback; compatibility may vary across ComfyUI versions, hardware and extension combinations.
 
 ## Available nodes
 
@@ -25,7 +25,7 @@ Local editing preserves original pixels outside the permitted region, while deta
    git clone https://github.com/VividMuse-AGI/VMNodes.git custom_nodes/VMNodes
    ```
 
-   For a ZIP installation, choose `VMNodes-0.1.7.zip` under **Assets** in [this repository's Releases](https://github.com/VividMuse-AGI/VMNodes/releases). `VMNodes-0.1.7.zip.sha256` provides the SHA-256 checksum. Extract the package and place its `VMNodes` folder at `ComfyUI/custom_nodes/VMNodes`. The folder must contain `__init__.py` directly, with no extra nested package directory.
+   For a ZIP installation, choose `VMNodes-0.1.0.zip` under **Assets** in [this repository's Releases](https://github.com/VividMuse-AGI/VMNodes/releases). `VMNodes-0.1.0.zip.sha256` provides the SHA-256 checksum. Extract the package and place its `VMNodes` folder at `ComfyUI/custom_nodes/VMNodes`. The folder must contain `__init__.py` directly, with no extra nested package directory.
 2. Using **ComfyUI's Python environment**, run this from the ComfyUI directory:
 
    ```shell

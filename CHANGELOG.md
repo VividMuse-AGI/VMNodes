@@ -1,6 +1,6 @@
 # Changelog / 更新记录
 
-## 0.1.7 — 2026-10-03 — Pre-release
+## 0.1.0 — 2026-10-03 — Pre-release
 
 ### 中文
 

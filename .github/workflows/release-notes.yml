@@ -39,7 +39,13 @@ jobs:
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
         run: |
-          is_draft=$(gh release view "$RELEASE_TAG" --json isDraft --jq '.isDraft')
+          if gh api "repos/${GH_REPO}/releases/tags/${RELEASE_TAG}" > "$RUNNER_TEMP/release-state.json"; then
+            is_draft=$(python -c 'import json,sys; print(str(json.load(open(sys.argv[1]))["draft"]).lower())' "$RUNNER_TEMP/release-state.json")
+          else
+            python -c 'import json,sys; assert str(json.load(open(sys.argv[1])).get("status")) == "404", "Release lookup failed"' "$RUNNER_TEMP/release-state.json"
+            echo 'No release for this version yet; release creation remains separate.'
+            exit 0
+          fi
           if [ "$is_draft" = true ]; then
             echo 'Draft notes remain under the manual release workflow.'
             exit 0

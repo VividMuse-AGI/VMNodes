@@ -4,7 +4,7 @@
 
 VMNodes 是一个持续扩展的 ComfyUI 节点工具包。整个包统一安装和更新，各个节点按需使用。
 
-**v0.1.7 · 首次公开测试版（Pre-release）**。欢迎试用并反馈问题；不同 ComfyUI 版本、硬件和扩展组合仍可能需要兼容性调整。
+**v0.1.0 · 首次公开测试版（Pre-release）**。欢迎试用并反馈问题；不同 ComfyUI 版本、硬件和扩展组合仍可能需要兼容性调整。
 
 ## 当前节点
 
@@ -25,7 +25,7 @@ VMNodes 是一个持续扩展的 ComfyUI 节点工具包。整个包统一安装
    git clone https://github.com/VividMuse-AGI/VMNodes.git custom_nodes/VMNodes
    ```
 
-   如使用 ZIP 安装，在[本仓库 Releases](https://github.com/VividMuse-AGI/VMNodes/releases)的 **Assets** 中选择 `VMNodes-0.1.7.zip`；`VMNodes-0.1.7.zip.sha256` 提供 SHA-256 校验值。解压后将包目录 `VMNodes` 放到 `ComfyUI/custom_nodes/VMNodes`。该目录内应直接看到 `__init__.py`，不要多套一层目录。
+   如使用 ZIP 安装，在[本仓库 Releases](https://github.com/VividMuse-AGI/VMNodes/releases)的 **Assets** 中选择 `VMNodes-0.1.0.zip`；`VMNodes-0.1.0.zip.sha256` 提供 SHA-256 校验值。解压后将包目录 `VMNodes` 放到 `ComfyUI/custom_nodes/VMNodes`。该目录内应直接看到 `__init__.py`，不要多套一层目录。
 2. 使用 **ComfyUI 自己的 Python 环境**，在 ComfyUI 根目录执行：
 
    ```shell

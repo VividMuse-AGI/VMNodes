@@ -2,7 +2,7 @@
 
 [Back to README](../../README.en.md)
 
-VMNodes **0.1.7** is the first public Pre-release. For a new installation, follow the [README instructions](../../README.en.md#installation). Update the whole package; individual nodes do not need separate updates. Before updating, save your workflows in your user directory and stop the relevant ComfyUI instance.
+VMNodes **0.1.0** is the first public Pre-release. For a new installation, follow the [README instructions](../../README.en.md#installation). Update the whole package; individual nodes do not need separate updates. Before updating, save your workflows in your user directory and stop the relevant ComfyUI instance.
 
 ## Git updates
 
@@ -24,7 +24,7 @@ For portable or bundled installations, replace `python` with their included Pyth
 
 ## ZIP updates or replacing an existing installation
 
-1. Download the desired package, such as `VMNodes-0.1.7.zip`, under **Assets** in [this repository's Releases](https://github.com/VividMuse-AGI/VMNodes/releases). The matching `.zip.sha256` file provides the SHA-256 checksum.
+1. Download the desired package, such as `VMNodes-0.1.0.zip`, under **Assets** in [this repository's Releases](https://github.com/VividMuse-AGI/VMNodes/releases). The matching `.zip.sha256` file provides the SHA-256 checksum.
 2. Back up `custom_nodes/VMNodes` **outside** `custom_nodes`. Do not leave loadable copies such as `VMNodes_old` there.
 3. Extract the new package, name its folder `VMNodes`, and place it at `custom_nodes/VMNodes`. Check that `__init__.py` and `pyproject.toml` are directly inside. Replace the directory rather than overlaying old files.
 4. Run the dependency installation command above using ComfyUI's Python, restart, refresh the page, and open your workflow.

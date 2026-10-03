@@ -48,7 +48,7 @@ and [metadata specification](https://docs.comfy.org/registry/specifications).
 
 ## Corrections to published documentation
 
-User-facing CHANGELOG starts at 0.1.7, the first public Pre-release. Earlier
+User-facing CHANGELOG starts at 0.1.0, the first public Pre-release. Earlier
 internal history remains in Git and private acceptance records.
 
 Pushing corrections to `docs/releases/X.Y.Z.md` on `main` runs Sync release notes
@@ -157,10 +157,12 @@ The intended repository is `VividMuse-AGI/VMNodes`. The account page was reachab
 on 2026-10-02, while the unauthenticated repository page returned 404. That does
 not rule out a private repository. Treat the metadata URL as a publication
 destination until authenticated creation/access and remote checks are complete.
-The 0.1.7 materials are finalized as a first public Pre-release dated 2026-10-03.
-This local document date and a successful URL syntax check do not prove that the
-repository, tag or Release is online. Record authenticated remote access, pushed
-commit/tag, CI result and published asset checks separately when publication occurs.
+The historical 0.1.7 materials were published on 2026-10-03, then renumbered to
+0.1.0 at the owner's request before announcing the package. Historical acceptance
+records retain their original version identities. The 0.1.0 build is
+`0.1.0+20261003.r1`; image algorithms and workflow files are unchanged.
+Record the new tag, archive manifest, remote checks and download validation
+separately. Renumbering is not a new image-quality test.
 
 ## 0.1.7 material freeze
 
@@ -171,10 +173,11 @@ and has an empty model selection so ordinary editing imports without SAM files.
 Personal input paths and cached previews are cleared. The earlier unified
 example remains available for reference/protection switches.
 
-Finalizing documentation does not change the runtime build identity
-`0.1.7+20261002.r1`. Compare runtime and workflow hashes with V119 when reusing
-its real-host evidence. Each final archive still needs its own manifest and
-SHA-256 validation. Keep the release receipt outside the public package.
+The historical build identity was `0.1.7+20261002.r1`. The later 0.1.0 renumbering
+changes version/build metadata, not image algorithms or workflow bytes. Compare
+those files with V119 when reusing its real-host evidence. Each final archive
+still needs its own manifest and SHA-256 validation. Keep the release receipt
+outside the public package.
 
 ## Image-quality freeze and delivery work
 
