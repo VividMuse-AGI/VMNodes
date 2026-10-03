@@ -2,15 +2,17 @@
 
 [返回首页](../../../README.md) · [English](../../en/nodes/image-edit.md)
 
-导入[示例工作流](../../../workflows/image_edit/VM_图像编辑.json)，上传自己的图片替换示例占位，选择模型后运行。当前处理一张主图，可额外使用内容参考图。
+推荐先使用 [Qwen Image 2.1 单图编辑示例](../../../workflows/image_edit/Qwen-Image-2.1-Single-Image-Edit.json)。按[单图编辑快速开始](../workflows/qwen-image-21-single-edit.md)安装依赖、选择模型，上传一张主图后运行。
+
+默认单图示例使用外接生成节点，已接好单图编辑和保存。下文“可选功能”中的参考图、保护遮罩开关属于[原统一编辑示例](../../../workflows/image_edit/VM_图像编辑.json)；默认单图示例没有这些开关和对应图片加载器。
 
 ## 模型准备
 
-按[模型清单](../../models.json)准备 Qwen Image 2.1、对应文本编码器和 VAE，并在工作流中选择实际文件。模型文件不包含在节点包中。需要支持该模型的 ComfyUI 版本；旧版 ComfyUI 缺少相应官方节点时需先更新主机。
+默认单图示例需要 Qwen Image 2.1、对应文本编码器、VAE 和 8 步加速 LoRA 共 4 个文件，路径与下载入口见[快速开始](../workflows/qwen-image-21-single-edit.md)。在工作流中选择实际文件；模型文件不包含在节点包中。还需安装 [rgthree-comfy](https://github.com/rgthree/rgthree-comfy)，以保留示例中的图像对比与分组控制节点。需要支持该模型的 ComfyUI 版本；旧版 ComfyUI 缺少相应官方节点时需先更新主机。
 
 Qwen Image 2.1 使用 [Qwen Research License](https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE)，商业使用需另行取得模型许可；VMNodes 的 MIT 许可证不覆盖模型。
 
-普通编辑无需 SAM。只有“细化到物体”需要 SAM 及相应官方节点；该路线中的整个人物独立校验还需要清单中的人员检测模型和可选依赖。用 ComfyUI 的 Python，在 ComfyUI 根目录执行：
+普通编辑无需 SAM。默认单图示例保留 SAM 加载器，但没有接入编辑节点。只有“细化到物体”需要按[快速开始中的接线说明](../workflows/qwen-image-21-single-edit.md#可选细化到物体)接入 SAM；该路线中的整个人物独立校验还需要[模型清单](../../models.json)中的人员检测模型和可选依赖。用 ComfyUI 的 Python，在 ComfyUI 根目录执行：
 
 ```shell
 python custom_nodes/VMNodes/install.py --person-check
@@ -88,9 +90,9 @@ python custom_nodes/VMNodes/install.py --person-check
 
 自动协调不保证消除换装或新显露表面的色差。“已尝试局部协调”表示处理了部分像素，仍需查看实际接缝。
 
-### 可选功能
+### 可选功能（原统一编辑示例）
 
-不需要参考图或保护区域时，保持关闭即可。
+以下开关适用于[原统一编辑示例](../../../workflows/image_edit/VM_图像编辑.json)。默认单图示例采用手动外接生成链，没有这些开关及对应图片加载器；如需这些功能，可导入原统一示例。使用统一示例时，不需要参考图或保护区域就保持关闭。
 
 | 功能 | 用途 | 怎么用 |
 |---|---|---|
@@ -112,9 +114,9 @@ python custom_nodes/VMNodes/install.py --person-check
 
 **严格按所画遮罩一定更干净吗？** 不一定。它只使用实际填涂的位置，不会把空心圈内部当作整块选区，也不负责清除范围外的残片。按需要选择模式，不要把切换模式当作通用边缘修复。
 
-**为什么选区外的脸或背景也变了？** 整图模式允许全图调整。希望限制改动时改用局部模式，或为重要区域添加保护遮罩。
+**为什么选区外的脸或背景也变了？** 整图模式允许全图调整。希望限制改动时改用局部模式；需要额外保护遮罩时，按上面的原统一示例操作。
 
-**能一次编辑多张主图吗？** 当前一次处理一张主图，可额外提供一张内容参考图。多张主图请分别运行。
+**能一次编辑多张主图吗？** 当前一次处理一张主图。原统一示例可额外提供一张内容参考图；默认单图示例没有预接内容参考。多张主图请分别运行。
 
 **支持透明图片编辑吗？** 当前编辑结果为 RGB，不保留透明输出。需要透明背景时，不应把本节点当作完整的 RGBA 编辑流程；独立缩放节点可保留输入图像的第四通道。
 

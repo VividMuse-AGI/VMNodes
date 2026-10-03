@@ -4,6 +4,8 @@
 
 VMNodes 是一个持续扩展的 ComfyUI 节点工具包。整个包统一安装和更新，各个节点按需使用。
 
+**v0.1.7 · 首次公开测试版（Pre-release）**。欢迎试用并反馈问题；不同 ComfyUI 版本、硬件和扩展组合仍可能需要兼容性调整。
+
 ## 当前节点
 
 | 节点 | 用途 | 使用说明 |
@@ -17,7 +19,13 @@ VMNodes 是一个持续扩展的 ComfyUI 节点工具包。整个包统一安装
 
 ## 安装
 
-1. 将本包放到 `ComfyUI/custom_nodes/VMNodes`。该目录内应直接看到 `__init__.py`。
+1. 推荐使用 Git，方便后续更新。在 **ComfyUI 根目录**执行：
+
+   ```shell
+   git clone https://github.com/VividMuse-AGI/VMNodes.git custom_nodes/VMNodes
+   ```
+
+   如使用 ZIP 安装，在[本仓库 Releases](https://github.com/VividMuse-AGI/VMNodes/releases)的 **Assets** 中选择 `VMNodes-0.1.7.zip`；`VMNodes-0.1.7.zip.sha256` 提供 SHA-256 校验值。解压后将包目录 `VMNodes` 放到 `ComfyUI/custom_nodes/VMNodes`。该目录内应直接看到 `__init__.py`，不要多套一层目录。
 2. 使用 **ComfyUI 自己的 Python 环境**，在 ComfyUI 根目录执行：
 
    ```shell
@@ -28,13 +36,15 @@ VMNodes 是一个持续扩展的 ComfyUI 节点工具包。整个包统一安装
    安装程序会复用已有的兼容 OpenCV，不会自动替换 PyTorch/CUDA。
 3. 重启 ComfyUI，刷新页面。
 
-只用缩放节点，到这里即可。使用图像编辑时，继续按[编辑说明](docs/zh/nodes/image-edit.md)准备模型并导入[示例工作流](workflows/image_edit/VM_图像编辑.json)。示例中的图片请替换为自己的图片。
+只用缩放节点，到这里即可。使用图像编辑时，按[单图编辑快速开始](docs/zh/workflows/qwen-image-21-single-edit.md)准备 4 个模型文件，并安装 [rgthree-comfy](https://github.com/rgthree/rgthree-comfy)（示例中的图像对比和分组控制节点需要）。然后导入 [Qwen Image 2.1 单图编辑示例](workflows/image_edit/Qwen-Image-2.1-Single-Image-Edit.json)，上传自己的图片、画出范围、填写需求并运行。
+
+默认工作流为 `Qwen-Image-2.1-Single-Image-Edit.json`，使用外接生成节点和 8 步 LoRA 设置。需要参考图或保护遮罩开关时，可使用[统一编辑示例](workflows/image_edit/VM_图像编辑.json)，具体区别见[编辑说明](docs/zh/nodes/image-edit.md)。
 
 保存图片时，将 **VM 图像编辑的 Final → 保存图像**。示例已接好；文件名前缀在保存节点里设置。编辑节点自身只显示临时预览。升级旧工作流时，也需要接上保存节点。
 
 普通粗选、严格遮罩和整图编辑不需要 SAM 或 Ultralytics；“细化到物体”所需的可选资源在编辑说明中单独列出。
 
-当前为首次发布候选 **0.1.7**，使用本地 ZIP 安装。拟发布到 `VividMuse-AGI/VMNodes`；该公开仓库及在线安装尚未启用，也尚未上架 Registry / Manager。
+Registry / Manager 尚未上架，请使用上述 Git 或 Releases ZIP 安装方式。
 
 ## 更新
 
@@ -44,7 +54,7 @@ VMNodes 是一个持续扩展的 ComfyUI 节点工具包。整个包统一安装
 - ZIP 安装：关闭相关 ComfyUI 实例，将旧目录备份到 `custom_nodes` 之外，再放入新版 `VMNodes`，不要叠加覆盖旧文件。
 - 依赖发生变化时，重新执行上面的依赖安装命令。
 
-从旧版图像编辑交付包升级、固定版本或回退，请看[更新说明](docs/zh/update.md)。用户自己的工作流应保存在用户目录，不要直接覆盖仓库内的示例。
+已有工作流的保存方式迁移、固定版本或回退，请看[更新说明](docs/zh/update.md)。用户自己的工作流应保存在用户目录，不要直接覆盖仓库内的示例。
 
 ## 反馈与许可
 

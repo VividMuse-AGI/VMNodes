@@ -11,11 +11,14 @@
   "docs/en/nodes/image-edit.md",
   "docs/en/nodes/image-resize.md",
   "docs/en/update.md",
+  "docs/en/workflows/qwen-image-21-single-edit.md",
   "docs/models.json",
+  "docs/releases/0.1.7.md",
   "docs/zh/editing-examples.md",
   "docs/zh/nodes/image-edit.md",
   "docs/zh/nodes/image-resize.md",
   "docs/zh/update.md",
+  "docs/zh/workflows/qwen-image-21-single-edit.md",
   "edit.py",
   "geometry.py",
   "harmonize.py",
@@ -36,5 +39,6 @@
   "vm_legacy/selection.py",
   "web/bridge.js",
   "web/unified.js",
+  "workflows/image_edit/Qwen-Image-2.1-Single-Image-Edit.json",
   "workflows/image_edit/VM_图像编辑.json"
 ]

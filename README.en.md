@@ -4,6 +4,8 @@
 
 VMNodes is a growing collection of ComfyUI nodes. Install and update the package once, then use the nodes you need.
 
+**v0.1.7 · First public Pre-release**. Try it and share feedback; compatibility may vary across ComfyUI versions, hardware and extension combinations.
+
 ## Available nodes
 
 | Node | Purpose | Guide |
@@ -17,7 +19,13 @@ Local editing preserves original pixels outside the permitted region, while deta
 
 ## Installation
 
-1. Place this package at `ComfyUI/custom_nodes/VMNodes`, with `__init__.py` directly inside it.
+1. Git is recommended for easier updates. Run this from the **ComfyUI directory**:
+
+   ```shell
+   git clone https://github.com/VividMuse-AGI/VMNodes.git custom_nodes/VMNodes
+   ```
+
+   For a ZIP installation, choose `VMNodes-0.1.7.zip` under **Assets** in [this repository's Releases](https://github.com/VividMuse-AGI/VMNodes/releases). `VMNodes-0.1.7.zip.sha256` provides the SHA-256 checksum. Extract the package and place its `VMNodes` folder at `ComfyUI/custom_nodes/VMNodes`. The folder must contain `__init__.py` directly, with no extra nested package directory.
 2. Using **ComfyUI's Python environment**, run this from the ComfyUI directory:
 
    ```shell
@@ -28,13 +36,15 @@ Local editing preserves original pixels outside the permitted region, while deta
    The installer reuses compatible OpenCV and does not automatically replace PyTorch/CUDA.
 3. Restart ComfyUI and refresh the page.
 
-That is all you need for resizing. For editing, follow the [edit guide](docs/en/nodes/image-edit.md) to prepare models and import the [example workflow](workflows/image_edit/VM_图像编辑.json). Replace its image placeholders with your own uploads.
+That is all you need for resizing. For editing, follow the [single-image quickstart](docs/en/workflows/qwen-image-21-single-edit.md) to prepare four model files and install [rgthree-comfy](https://github.com/rgthree/rgthree-comfy), which supplies the example's image comparison and group controls. Import the [Qwen Image 2.1 single-image edit example](workflows/image_edit/Qwen-Image-2.1-Single-Image-Edit.json), upload your image, draw a region, describe the edit, and run.
+
+The default workflow is `Qwen-Image-2.1-Single-Image-Edit.json`, using an external generation chain and 8-step LoRA settings. For reference-image and protection-mask switches, use the [unified example](workflows/image_edit/VM_图像编辑.json). The [edit guide](docs/en/nodes/image-edit.md) explains the difference.
+
+To save images, connect **VM Image Edit Final → Save Image**. The example is already connected. Set the filename prefix on the save node; the editor itself only creates temporary previews. Older workflows also need a save node after upgrading.
 
 Coarse-region, painted-mask and full-image edits do not need SAM or Ultralytics. Resources for optional object refinement are listed separately in the edit guide.
 
-This is an initial release candidate, **0.1.7**, installed from a local ZIP. The planned public repository is `VividMuse-AGI/VMNodes`; that repository, online installation and Registry / Manager listing are not available yet.
-
-To save images, connect **VM Image Edit Final → Save Image**. The example is already connected. Set the filename prefix on the save node; the editor itself only creates temporary previews. Older workflows also need a save node after upgrading.
+VMNodes is not listed in Registry / Manager. Use Git or a Releases ZIP as described above.
 
 ## Updating
 
@@ -44,7 +54,7 @@ Update VMNodes as one package, then restart ComfyUI and refresh its page.
 - ZIP: stop the relevant ComfyUI instance, back up the old directory outside `custom_nodes`, then replace it with the new `VMNodes` directory. Do not overlay stale files.
 - When dependencies change, repeat the dependency installation command above.
 
-See the [update guide](docs/en/update.md) for migration from older image-edit packages, pinned versions and rollback. Save your own workflows in your user directory, separately from repository examples.
+See the [update guide](docs/en/update.md) for adding a save node to existing workflows, pinned versions and rollback. Save your own workflows in your user directory, separately from repository examples.
 
 ## Support and license
 

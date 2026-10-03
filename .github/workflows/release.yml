@@ -30,4 +30,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.ref_name }}
-        run: gh release create "$RELEASE_TAG" dist/*.zip dist/*.sha256 --verify-tag --draft --title "$RELEASE_TAG" --notes-file CHANGELOG.md
+        run: |
+          gh release create "$RELEASE_TAG" \
+            "dist/VMNodes-${RELEASE_TAG#v}.zip" \
+            "dist/VMNodes-${RELEASE_TAG#v}.zip.sha256" \
+            --verify-tag --draft --prerelease \
+            --title "VMNodes $RELEASE_TAG" \
+            --notes-file "docs/releases/${RELEASE_TAG#v}.md"

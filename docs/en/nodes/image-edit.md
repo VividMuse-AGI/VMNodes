@@ -2,15 +2,17 @@
 
 [Back to README](../../../README.en.md) · [中文](../../zh/nodes/image-edit.md)
 
-Import the [example workflow](../../../workflows/image_edit/VM_图像编辑.json), replace image placeholders with your uploads, and select your model files. It processes one main image with an optional content reference.
+Start with the [Qwen Image 2.1 single-image edit example](../../../workflows/image_edit/Qwen-Image-2.1-Single-Image-Edit.json). Follow the [single-image quickstart](../workflows/qwen-image-21-single-edit.md) to install dependencies, select models, and upload one main image.
+
+The default example has an external generation chain with editing and saving already connected. The reference-image and protection-mask switches under Optional features below belong to the [original unified example](../../../workflows/image_edit/VM_图像编辑.json). Those switches and their image loaders are not included in the default single-image example.
 
 ## Models
 
-Prepare Qwen Image 2.1, its text encoder and VAE using the [model list](../../models.json). Weights are not bundled. Use a ComfyUI version with the required official model nodes.
+The default single-image example needs four files: Qwen Image 2.1, its text encoder, VAE, and 8-step acceleration LoRA. See the [quickstart](../workflows/qwen-image-21-single-edit.md) for paths and download links, then select your files in the workflow. Weights are not bundled. Install [rgthree-comfy](https://github.com/rgthree/rgthree-comfy) for the example's comparison and group controls. Use a ComfyUI version with the required official model nodes.
 
 Qwen Image 2.1 uses the [Qwen Research License](https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE). Commercial use requires a separate model license; VMNodes' MIT license does not cover the model.
 
-Ordinary edits do not need SAM. Refine to object requires SAM and its official nodes. Independent whole-person verification within that route additionally needs the person model in the list and an optional dependency. From ComfyUI's directory, using its Python:
+Ordinary edits do not need SAM. The default example retains the SAM loader but leaves it disconnected. Refine to object requires connecting it as described in the [quickstart](../workflows/qwen-image-21-single-edit.md#optional-object-refinement). Independent whole-person verification within that route additionally needs the person model in the [model list](../../models.json) and an optional dependency. From ComfyUI's directory, using its Python:
 
 ```shell
 python custom_nodes/VMNodes/install.py --person-check
@@ -88,9 +90,9 @@ Upgrading from 0.1.6 or earlier: existing connections are preserved, but add **F
 
 Automatic correction does not guarantee matching colors after clothing changes or in newly revealed areas. “Local correction applied” means some pixels were adjusted; check the actual seam.
 
-### Optional features
+### Optional features (original unified example)
 
-Leave these off unless you need a reference image or a protected area.
+These switches belong to the [original unified example](../../../workflows/image_edit/VM_图像编辑.json). The default single-image example uses a manually connected generation chain and does not include these switches or their image loaders. Import the original unified example if you need them. In that example, leave them off unless you need a reference image or a protected area.
 
 | Feature | Purpose | How to use it |
 |---|---|---|
@@ -112,9 +114,9 @@ Protection takes priority over editing. Writing “keep the face unchanged” al
 
 **Does Strict drawn mask always produce cleaner edges?** No. It uses the painted pixels and does not turn an empty outline into a filled selection. It also cannot remove fragments outside that selection. Choose the mode for the task, rather than treating a mode switch as a universal edge repair.
 
-**Why did the face or background change outside my intended edit?** Full-image mode allows changes throughout the image. Use local editing to restrict the area, or add a protection mask for important regions.
+**Why did the face or background change outside my intended edit?** Full-image mode allows changes throughout the image. Use local editing to restrict the area. For an additional protection mask, follow the original unified example instructions above.
 
-**Can I edit several main images at once?** Currently, the workflow processes one main image with an optional content reference. Run separate jobs for multiple main images.
+**Can I edit several main images at once?** Each run processes one main image. The original unified example can also use one content reference; the default single-image example has no reference input connected. Run separate jobs for multiple main images.
 
 **Can I edit transparent images?** The current edit output is RGB and does not preserve transparency. Do not use this node as a complete RGBA editing pipeline. Standalone resizing can retain an input image's fourth channel.
 

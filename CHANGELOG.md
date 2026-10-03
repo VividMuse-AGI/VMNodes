@@ -1,14 +1,26 @@
 # Changelog / 更新记录
 
-## 0.1.7 — Unreleased / 尚未公开发布
+## 0.1.7 — 2026-10-03 — Pre-release
+
+首次公开测试版的发布材料。提供 VM 图像编辑、VM 图像缩放与对齐、中英文使用说明及 Qwen Image 2.1 单图示例。
+
+- 默认单图示例采用原版 8 步 LoRA，Final 已接到标准保存图像节点；保留节点原名称、位置和尺寸。
+- 普通粗选不依赖 SAM。示例保留可选加载器，默认断开连接并清空模型选择，避免导入时误报缺模型。
+- 新增双语快速开始、4 个模型下载入口和 rgthree 依赖说明，清理示例中的本机图片及临时预览记录。
+- 编辑节点只提供临时预览和 Final 输出；从旧版升级时，将 Final 接到外部保存图像节点。
+
+First public test release materials: VM Image Edit, VM Image Resize & Align, bilingual guides and a Qwen Image 2.1 single-image example.
 
 - Separates saving from editing: the editor writes temporary previews only; Final can feed Save Image, Preview Image or further processing.
 - Adds standard Save Image to the example, connected to Final. Existing nodes retain their names, ports, positions, sizes and collapse states.
 - Preview range only blocks Final, so the example cannot save a mask overlay as its final result.
 - Hides the inactive legacy save-prefix control, preserves old parameter positions, and adds Chinese/English upgrade guidance. Older workflows need an external save node.
 - Image generation, selection and compositing algorithms are unchanged. This release does not claim an image-quality improvement.
+- Adds the default single-image example with the original 8-step LoRA, bilingual quickstarts and explicit rgthree/model dependencies. Optional SAM is disconnected and unselected by default.
 
-保存功能独立：示例已接好 Final → 保存图像；旧工作流需自行补接。编辑节点保留临时预览，不再自动写入 output。尚未公开发布。
+保存与更新方法见 [中文说明](docs/zh/update.md) / [English guide](docs/en/update.md)。本版仍保留结构编辑、肤色过渡及细纹理边界的已知限制，见 [使用示例](docs/zh/editing-examples.md)。本次发布不增加通用无缝编辑承诺。
+
+以下为此前未单独公开发布的内部候选记录 / Earlier internal candidates were not separate public releases.
 
 ## 0.1.6 — Unreleased / 尚未公开发布
 

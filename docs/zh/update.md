@@ -1,39 +1,44 @@
-# 安装升级与回退
+# 更新与回退
 
 [返回首页](../../README.md)
 
-## 从旧版手动交付包迁移
-
-1. 保存当前工作流到自己的用户目录，关闭相关 ComfyUI 实例。
-2. 将现有 `custom_nodes/VMNodes` 备份到 `custom_nodes` **之外**。不要在扫描目录中保留 `VMNodes_old` 等副本。
-3. 将新版目录放到 `custom_nodes/VMNodes`，确认根下直接存在 `__init__.py` 和 `pyproject.toml`。
-4. 用 ComfyUI 的 Python 运行 `custom_nodes/VMNodes/install.py`，重启并刷新页面。
-5. 打开自己的原工作流。原有节点 ID 和端口继续保留；无需重新命名节点或调整尺寸。
-
-旧 Klein 工作流仍需迁移到 Qwen 工作流，不会在本次包结构升级中自动转换。不要删除已经下载的模型来“清理更新”。
-
-## 0.1.7：保存节点独立
-
-编辑节点现在只提供临时预览和 Final 输出。新版示例已接好标准“保存图像”；打开自己的旧工作流后，请手动将 **Final → 保存图像**，并在保存节点设置原来希望使用的文件名前缀。节点内会显示保存提示。只预览、不连接保存节点时，不会新增正式输出文件。旧参数仍可读取，不会打乱语言或其他设置。
+VMNodes **0.1.7** 是首次公开测试版（Pre-release）。首次安装请按[首页安装步骤](../../README.md#安装)操作；后续更新整个包即可，不需要分别更新节点。更新前将自己的工作流保存在用户目录，并关闭相关 ComfyUI 实例。
 
 ## Git 更新
 
-在 VMNodes 目录运行 `git status`，确认没有本地修改，且当前处于更新用的分支，再执行：
+在 `ComfyUI/custom_nodes/VMNodes` 目录运行 `git status`，确认没有本地修改，且当前处于更新用的分支，再执行：
 
 ```shell
 git pull --ff-only
 ```
 
-有本地修改或分支分叉时先停止并保留修改，不要强制覆盖。固定在某个版本标签的安装不应使用此命令自动更新，需要明确选择目标发布版本。初始候选目录还没有远程仓库，尚不能联网拉取。
+有本地修改或分支分叉时，先保留修改并处理冲突，不要强制覆盖。固定在版本标签上的安装应先在[本仓库 Releases](https://github.com/VividMuse-AGI/VMNodes/releases)选择目标版本，再切换到对应标签；上述命令只用于分支更新。
 
-## ZIP 更新
+依赖发生变化时，用 **ComfyUI 自己的 Python 环境**，在 ComfyUI 根目录重新执行：
 
-先备份再替换整个代码目录，避免旧前端或已移除模块残留。备份必须在 `custom_nodes` 之外。示例工作流可能更新，用户自己的工作流不应放在包目录中。
+```shell
+python custom_nodes/VMNodes/install.py
+```
+
+便携版或整合包请将 `python` 替换为其自带 Python 的路径。完成后重启 ComfyUI 并刷新页面。
+
+## ZIP 更新或替换已有安装
+
+1. 在[本仓库 Releases](https://github.com/VividMuse-AGI/VMNodes/releases)的 **Assets** 中下载所需版本的安装包，例如 `VMNodes-0.1.7.zip`；同名 `.zip.sha256` 文件提供 SHA-256 校验值。
+2. 将已有 `custom_nodes/VMNodes` 备份到 `custom_nodes` **之外**，不要在扫描目录中保留 `VMNodes_old` 等副本。
+3. 解压新版，将包目录命名为 `VMNodes`，放到 `custom_nodes/VMNodes`。确认目录内直接存在 `__init__.py` 和 `pyproject.toml`，不要叠加覆盖旧文件。
+4. 使用 ComfyUI 的 Python 运行上面的依赖安装命令，重启并刷新页面，再打开自己的工作流。
+
+用户自己的工作流应保存在用户目录，避免替换代码时丢失。若要从 ZIP 改用 Git 安装，先按上述方式备份旧目录，再执行[首页的克隆命令](../../README.md#安装)。
+
+## 0.1.7：已有工作流的保存方式
+
+编辑节点只提供临时预览和 **Final** 输出，正式文件由外接保存节点写入。默认的 `Qwen-Image-2.1-Single-Image-Edit.json` 已接好标准“保存图像”。
+
+若使用此前的工作流，请手动将 **VM 图像编辑的 Final → 保存图像**，并在保存节点设置文件名前缀。只预览、不连接保存节点时，不会新增正式输出文件。旧工作流参数仍可读取。
 
 ## 回退
 
-停止相关 ComfyUI 实例，用备份或选定旧版恢复 `VMNodes`，核对该版本的依赖要求，再重启。不要自动降级整套 PyTorch/CUDA。Manager 快照不能替代用户图片、模型和环境的完整备份。
+停止相关 ComfyUI 实例，用备份或选定的历史版本恢复 `VMNodes`，核对该版本的依赖要求，再重启并刷新页面。没有历史公开版本可用时，使用自己的备份。不要自动降级整套 PyTorch/CUDA。
 
-模型、输入输出图片和用户目录不属于代码替换范围。新的人物校验配置使用用户目录中的 `VMNodes/image_edit/yolo_config`；已有旧配置可继续读取，不自动搬迁或删除。
-
-Registry / Manager 上架并完成实际验证后，将增加对应安装和版本选择说明。目前不承诺搜索可安装。
+模型、输入输出图片和用户目录不属于代码替换范围，无需删除。Registry / Manager 安装与版本选择说明将在完成上架和验证后提供。

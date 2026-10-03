@@ -1,5 +1,5 @@
 {
-  "note": "权重不在 ZIP 内。Qwen、可选 SAM 与人物校验权重的 SHA256 沿用既有记录，本轮未重新计算权重哈希。请按发布方说明获取模型。",
+  "note": "模型权重不包含在节点包中。下列路径对应示例模型选择；实际使用时在加载器中重选自己的文件。Qwen 三个文件及原版 8 步 LoRA 的哈希已于 2026-10-02 本地核对；可选 SAM 与人物校验权重沿用已有记录。Weights are not bundled. Re-select local files in loaders; SAM is optional.",
   "models": [
     {
       "path_under_comfyui_models": "checkpoints/sam3.1_multiplex_fp16.safetensors",
@@ -32,6 +32,13 @@
       "sha256": "c8ab26f517173b1fe8342d336a09f443eb61cb08dcbfc78d53fff4c2547ae81e",
       "source": "https://huggingface.co/MidnightRunner/Ultralytics/blob/main/segm/person_yolov8m-seg.pt",
       "only_for": "可选：SAM 细化路线中的整个人物独立校验"
+    },
+    {
+      "path_under_comfyui_models": "loras/Qwen/p_qwen_image_2.1_8step_v0.1.safetensors",
+      "bytes": 335606104,
+      "sha256": "f0865d68b02511a3a0ed232d9d1aa99cac3a94166f574b38bcbab1a7a297bb15",
+      "source": "https://huggingface.co/PrunaAI/Pruna-Qwen-Image-2.1/blob/main/p_qwen_image_2.1_8step_v0.1.safetensors",
+      "only_for": "Qwen-Image-2.1-Single-Image-Edit.json：原版8步LoRA，强度1；不使用补齐alpha副本。Original 8-step LoRA at strength 1; no alpha-completed copy."
     }
   ]
 }

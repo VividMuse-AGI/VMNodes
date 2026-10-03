@@ -23,14 +23,18 @@ evidence that remote CI has already run.
 
 1. Set `[project.urls].Repository` to the actual GitHub repository. For Registry,
    also set `[tool.comfy].PublisherId` after the owner creates that identity.
-2. Confirm package ID availability and owner identity. Review third-party terms.
+2. Confirm repository ownership/access and review third-party terms. Registry
+   publication additionally requires an available package ID and publisher identity.
 3. Finalize CHANGELOG's date and update README installation status/links.
 4. Run checks and inspect the ZIP file list. `release_files.json` is an explicit
    allowlist; add new runtime modules and user docs deliberately.
 5. Commit reviewed changes and run `python tools/check_release.py --public`.
    For Registry also use `--registry`. Missing metadata deliberately blocks release.
-6. Tag that exact commit `vX.Y.Z`. The manual Release workflow requires a matching
-   tag, runs checks and creates a **draft** GitHub Release. Review before publishing.
+6. Tag that exact commit `vX.Y.Z`. Dispatch the manual Release workflow from that
+   tag. It runs checks and creates a **draft Pre-release**, using
+   `docs/releases/X.Y.Z.md` and only the matching ZIP and SHA-256 assets. Review
+   the draft before publishing. For a future stable release, deliberately review
+   the workflow's Pre-release flag and release wording.
 7. Registry publication remains a separate explicit owner action from that same
    clean tagged commit: `comfy node publish`. Configure credentials through the
    CLI's secure prompt, never source files. Verify Manager installation afterwards.
@@ -100,7 +104,7 @@ No runtime audit schema or compositing behavior changes in 0.1.3.
 
 ## Current acceptance scope
 
-Acceptance records as of 2026-10-02 are maintained outside the public package.
+Acceptance records as of 2026-10-03 are maintained outside the public package.
 Research IDs identify those records; they are not extra product modes.
 
 | Evidence | Version and environment | Supported conclusion | Limit |
@@ -114,14 +118,17 @@ Research IDs identify those records; they are not extra product modes.
 | V110/V112 offline diagnosis | Frozen 0.1.5 compositor and earlier fixed generated tensors | Corrected coverage reduced a fragment; Strict drawn mask reduced blending at permitted pixels. Some old fabric remained outside permission. Skirt mode comparison showed no obvious assistant-observed regression | No new Qwen runs; top repair failed. Do not substitute assistant ratings for unavailable human feedback |
 | V114 delivery | Exact 0.1.6 candidate ZIP; ComfyUI 0.38.1 / frontend 1.53.6 | 16 package/install tests, clean imports, isolated 0.1.3 → 0.1.6 → 0.1.3 replacement, actual startup and workflow import, zh/en/auto controls | Existing host Python reused; no image inference, online validation or actual user installation replacement |
 | V115 separate saving | 0.1.7; ComfyUI 0.38.1 / frontend 1.53.6 | 27 CPU tests, 9 frontend checks, 5 real executor cases; standard Save Image pixels/metadata, preview blocking, no-save mode, old workflow loading, real PNG import and temporary preview display | Fixed synthetic Pre; no new model generation or image-quality acceptance |
+| V118 original-LoRA comparison | 0.1.7; eight real Qwen runs across two fixed cases and two mask variants | Original 8-step LoRA and no-LoRA routes executed; outside-region changes were zero and saved pixels matched Final | No consistent quality advantage established; no second seed or new broad human acceptance |
+| V119 default single-image example | 0.1.7; ComfyUI 0.38.2 / frontend 1.53.6, host with no SAM/checkpoint files | Real browser import, one GPU generation, preview blocking and PNG workflow import; Final reproduced the recorded original-LoRA baseline exactly; original node appearance fields preserved | Existing host Python and model files reused; one fixed generation, not a fresh dependency environment or new quality acceptance |
 
 The V108 archive SHA256 is
 `17795672c927abc125ca34087782d73b8f7085ada74ad2e1077291b18cb35fd4`.
 0.1.5 changes only documentation, version/build and repository metadata. Reuse
 the unchanged-runtime evidence with its original identity; do not call the two
 0.1.4 samples new 0.1.5 model runs. New package checks must use the new ZIP identity.
-The user's separate existing installation remains 0.1.3 until an explicit,
-backed-up upgrade is performed.
+The user's separate local installation was backed up and upgraded to 0.1.7 on
+2026-10-02, as recorded in V115 section 7. That local replacement is separate
+from GitHub installation and remote update validation.
 
 Structural edits, new skin, hair/fabric textures and cushion boundaries retain
 known visual failures. Single-main-image RGB editing with optional content
@@ -134,8 +141,24 @@ The intended repository is `VividMuse-AGI/VMNodes`. The account page was reachab
 on 2026-10-02, while the unauthenticated repository page returned 404. That does
 not rule out a private repository. Treat the metadata URL as a publication
 destination until authenticated creation/access and remote checks are complete.
-Keep the candidate README status and Unreleased heading until publication is
-approved; passing a URL syntax check is not proof of an accessible repository.
+The 0.1.7 materials are finalized as a first public Pre-release dated 2026-10-03.
+This local document date and a successful URL syntax check do not prove that the
+repository, tag or Release is online. Record authenticated remote access, pushed
+commit/tag, CI result and published asset checks separately when publication occurs.
+
+## 0.1.7 material freeze
+
+The default example is `Qwen-Image-2.1-Single-Image-Edit.json`. It preserves the
+owner's original node IDs, titles, positions, sizes and expansion state, with
+the original 8-step LoRA at strength 1. Its optional SAM loader is disconnected
+and has an empty model selection so ordinary editing imports without SAM files.
+Personal input paths and cached previews are cleared. The earlier unified
+example remains available for reference/protection switches.
+
+Finalizing documentation does not change the runtime build identity
+`0.1.7+20261002.r1`. Compare runtime and workflow hashes with V119 when reusing
+its real-host evidence. Each final archive still needs its own manifest and
+SHA-256 validation. Keep the release receipt outside the public package.
 
 ## Image-quality freeze and delivery work
 
