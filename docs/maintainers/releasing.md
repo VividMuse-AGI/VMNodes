@@ -30,8 +30,11 @@ evidence that remote CI has already run.
    allowlist; add new runtime modules and user docs deliberately.
 5. Commit reviewed changes and run `python tools/check_release.py --public`.
    For Registry also use `--registry`. Missing metadata deliberately blocks release.
-6. Tag that exact commit `vX.Y.Z`. Dispatch the manual Release workflow from that
-   tag. It runs checks and creates a **draft Pre-release**, using
+6. Tag the reviewed package commit `vX.Y.Z`. Dispatch the manual Release workflow
+   from the latest `main`. It fetches tags and requires every allowlisted release
+   file to match the version tag byte for byte before running checks. This allows
+   development-only test/tooling fixes without moving a public tag or changing its
+   installation assets. It creates a **draft Pre-release**, using
    `docs/releases/X.Y.Z.md` and only the matching ZIP and SHA-256 assets. Review
    the draft before publishing. For a future stable release, deliberately review
    the workflow's Pre-release flag and release wording.

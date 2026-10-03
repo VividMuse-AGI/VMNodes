@@ -45,7 +45,14 @@ class PackageTests(unittest.TestCase):
     def test_workflow_adds_only_final_saver_and_png_metadata_roundtrip(self):
         expected = json.loads((ROOT / 'tests/contracts_v51.json').read_text(encoding='utf-8'))
         original = (ROOT / 'tests/fixtures/workflow_v016.json').read_bytes()
-        self.assertEqual(hashlib.sha256(original).hexdigest(), expected['workflow_sha256'])
+        # The original Windows capture and Git's LF checkout contain the same
+        # fixture. Pin both byte identities and compare the canonical LF bytes;
+        # the graph/layout assertions below remain unchanged.
+        self.assertIn(hashlib.sha256(original).hexdigest(), {
+            expected['workflow_sha256'], expected['workflow_sha256_lf'],
+        })
+        self.assertEqual(hashlib.sha256(original.replace(b'\r\n', b'\n')).hexdigest(),
+                         expected['workflow_sha256_lf'])
         baseline = json.loads(original)
         payload = (ROOT / 'workflows/image_edit/VM_图像编辑.json').read_bytes()
         workflow = json.loads(payload)
