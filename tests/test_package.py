@@ -101,8 +101,9 @@ class PackageTests(unittest.TestCase):
             return original(name, *args, **kwargs)
         with patch('builtins.__import__', side_effect=injected), self.assertLogs('VMNodes', 'ERROR'):
             isolated = load_package(name='vmnodes_missing_edit_api')
-        self.assertEqual(set(isolated.NODE_CLASS_MAPPINGS), {'VMImageResizeAlign'})
+        self.assertEqual(set(isolated.NODE_CLASS_MAPPINGS), {'VMImageResizeAlign', 'VMMOSSLayoutStudio'})
         self.assertIn('image_edit', isolated.IMPORT_ERRORS)
+        self.assertNotIn('moss_layout', isolated.IMPORT_ERRORS)
 
     def test_duplicate_ids_fail_before_import(self):
         features = (('one', (('a', 'SameID', 'A'),)), ('two', (('b', 'SameID', 'B'),)))

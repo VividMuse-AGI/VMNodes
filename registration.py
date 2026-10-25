@@ -11,6 +11,9 @@ FEATURES = (
         ("bridge", "VMEditPlan", "VM Internal Range Plan"),
         ("bridge", "VMEditFinish", "VM Internal Preview & Composite"),
     )),
+    ("moss_layout", (
+        ("moss_layout", "VMMOSSLayoutStudio", "VM MOSS Layout Studio"),
+    )),
 )
 
 

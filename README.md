@@ -12,10 +12,15 @@ VMNodes 是一个持续扩展的 ComfyUI 节点工具包。整个包统一安装
 | --- | --- | --- |
 | **VM 图像编辑** | 描述编辑需求，选择修改范围，预览并回贴编辑结果；支持不画遮罩的整图编辑 | [如何使用](docs/zh/nodes/image-edit.md) |
 | **VM 图像缩放与对齐** | 调整尺寸、缩放算法和尺寸整除数，同步处理图像与遮罩 | [如何使用](docs/zh/nodes/image-resize.md) |
+| **VM MOSS 海报布局工作台** | 节点内画框排版、导入导出 JSON、色板与吸管、总像素尺寸、居中扩展同步 | [如何使用](docs/zh/nodes/moss-layout.md) |
 
 图像编辑当前配合 **Qwen Image 2.1** 使用。缩放节点无需生成模型，可单独使用。安装后搜索 `VMNodes`、英文节点名或中文节点名。
 
 局部编辑会保留许可范围外的原图像素，但范围内的细节和边缘效果仍取决于生成结果。大幅改变轮廓、新露出的皮肤、细发丝与规则纹理交界可能不自然。看[使用示例与效果边界](docs/zh/editing-examples.md)，了解哪些结果需要重点检查。
+
+MOSS 节点面向 **MOSS-Image**：`layout_prompt` 接 `CLIPTextEncode`，`width/height` 接潜空间节点。将海报改宽而保持人物、文字位置关系时，选择「Center Layout（居中扩展，缩小时整体适配）」。
+
+**MOSS 更新已包含在 `main` 源码中**。Git 安装可拉取更新后重启 ComfyUI 并刷新页面；已发布的 `0.1.0` ZIP 不包含这项更新。
 
 ## 安装
 

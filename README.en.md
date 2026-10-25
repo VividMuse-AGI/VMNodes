@@ -12,10 +12,15 @@ VMNodes is a growing collection of ComfyUI nodes. Install and update the package
 | --- | --- | --- |
 | **VM Image Edit** | Describe an edit, choose its region, preview it and composite the result; supports full-image editing without a mask | [Use this node](docs/en/nodes/image-edit.md) |
 | **VM Image Resize & Align** | Resize images and masks together; choose interpolation and dimension alignment | [Use this node](docs/en/nodes/image-resize.md) |
+| **VM MOSS Layout Studio** | In-node layouts, JSON import/export, palettes and eyedroppers, megapixel sizing and centered canvas expansion | [Use this node](docs/en/nodes/moss-layout.md) |
 
 Image editing currently supports **Qwen Image 2.1**. Resize & Align needs no generative model and works independently. Search for `VMNodes`, or either node's English or Chinese name.
 
 Local editing preserves original pixels outside the permitted region, while details and seams inside it still depend on the generated image. Large silhouette changes, newly revealed skin, fine hair and regular texture boundaries may look unnatural. See [examples and result limits](docs/en/editing-examples.md) for what to check.
+
+The layout node targets **MOSS-Image**: connect `layout_prompt` to `CLIPTextEncode` and `width/height` to the latent node. Choose Center Layout to widen a poster while retaining the relative placement and size of its foreground elements.
+
+**MOSS is available in the `main` source branch**. Pull updates, restart ComfyUI and refresh the page. The published `0.1.0` ZIP does not include this update.
 
 ## Installation
 

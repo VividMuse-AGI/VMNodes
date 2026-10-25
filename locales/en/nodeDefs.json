@@ -4,5 +4,70 @@
   "VMImageEdit": {"display_name": "VM Image Edit"},
   "VMFinalizeEdit": {"display_name": "VM Internal Composite"},
   "VMEditPlan": {"display_name": "VM Internal Range Plan"},
-  "VMEditFinish": {"display_name": "VM Internal Preview & Composite"}
+  "VMEditFinish": {"display_name": "VM Internal Preview & Composite"},
+  "VMMOSSLayoutStudio": {
+    "display_name": "VM MOSS Layout Studio",
+    "description": "Draw and label a poster/infographic layout on an in-node canvas, import or export Skill JSON, and compile a MOSS-Image layout prompt.",
+    "inputs": {
+      "ui_language": {
+        "name": "UI Language"
+      },
+      "canvas_preset": {
+        "name": "Size Preset"
+      },
+      "width": {
+        "name": "Width"
+      },
+      "height": {
+        "name": "Height"
+      },
+      "bbox_ratio_sync": {
+        "name": "Aspect Sync"
+      },
+      "scene_meta": {
+        "name": "Medium / Genre"
+      },
+      "canvas_layout_type": {
+        "name": "Canvas Structure"
+      },
+      "layer_order_mode": {
+        "name": "Layer Order"
+      },
+      "global_prompt": {
+        "name": "Global Caption"
+      },
+      "layout_data": {
+        "name": "Canvas Data"
+      },
+      "ref_image": {
+        "name": "Reference Image"
+      },
+      "external_layout_json": {
+        "name": "External Layout JSON"
+      },
+      "external_sync_mode": {
+        "name": "External Sync"
+      },
+      "custom_meta_tags": {
+        "name": "Custom Meta Tags"
+      }
+    },
+    "outputs": {
+      "layout_prompt": {
+        "name": "Layout Prompt"
+      },
+      "draft_json": {
+        "name": "Draft JSON"
+      },
+      "preview_image": {
+        "name": "Preview Image"
+      },
+      "width": {
+        "name": "Width"
+      },
+      "height": {
+        "name": "Height"
+      }
+    }
+  }
 }

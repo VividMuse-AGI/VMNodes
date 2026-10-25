@@ -1,5 +1,15 @@
 # Changelog / 更新记录
 
+## Unreleased — MOSS Layout Studio
+
+- 新增 MOSS 海报布局节点：文字、角色、物体框，图层排序，17 组尺寸预设，中英文界面，Draft/Compiled JSON 导入及提示词输出。
+- 支持画布缩放／平移、全部隐藏／显示、全局和图层色板、原生吸管及画布放大镜降级、参考图主色提取。
+- 新增总像素（MP）设置及实际尺寸显示；新增居中扩展同步：前景保持像素尺寸，参考图同步居中，缩小时整体等比适配。
+- 修复隐藏图层列表跳顶、覆盖导入后的旧视图残留、误贴 Python 脚本、吸管缩放坐标及主色提取噪点过滤。
+- Added the bilingual MOSS layout node, JSON bridge, layer controls, zoom/pan, palettes, eyedroppers and reference palette extraction.
+- Added megapixel sizing and Center Layout sync: retain foreground pixels on expansion, center the reference image, and uniformly fit smaller canvases.
+- Fixed layer-list scroll resets, import framing, Python-script paste handling, zoomed pixel sampling and palette noise filtering; added unit, browser and real-API regression suites.
+
 ## 0.1.0 — 2026-10-03 — Pre-release
 
 ### 中文

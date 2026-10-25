@@ -4,5 +4,70 @@
   "VMImageEdit": {"display_name": "VM 图像编辑"},
   "VMFinalizeEdit": {"display_name": "VM 内部回贴"},
   "VMEditPlan": {"display_name": "VM 内部范围规划"},
-  "VMEditFinish": {"display_name": "VM 内部预览与回贴"}
+  "VMEditFinish": {"display_name": "VM 内部预览与回贴"},
+  "VMMOSSLayoutStudio": {
+    "display_name": "VM MOSS 海报布局工作台",
+    "description": "在节点内画框排版，直接标注文字 / 角色 / 物体，导入导出 Skill JSON，输出 MOSS-Image 布局提示词。",
+    "inputs": {
+      "ui_language": {
+        "name": "界面语言"
+      },
+      "canvas_preset": {
+        "name": "尺寸预设"
+      },
+      "width": {
+        "name": "宽 W"
+      },
+      "height": {
+        "name": "高 H"
+      },
+      "bbox_ratio_sync": {
+        "name": "比例同步"
+      },
+      "scene_meta": {
+        "name": "体裁先验"
+      },
+      "canvas_layout_type": {
+        "name": "画布结构"
+      },
+      "layer_order_mode": {
+        "name": "图层排序"
+      },
+      "global_prompt": {
+        "name": "全局描述"
+      },
+      "layout_data": {
+        "name": "画布数据"
+      },
+      "ref_image": {
+        "name": "参考图"
+      },
+      "external_layout_json": {
+        "name": "外部布局 JSON"
+      },
+      "external_sync_mode": {
+        "name": "外部同步方式"
+      },
+      "custom_meta_tags": {
+        "name": "自定义 meta 标签"
+      }
+    },
+    "outputs": {
+      "layout_prompt": {
+        "name": "布局提示词"
+      },
+      "draft_json": {
+        "name": "草稿 JSON"
+      },
+      "preview_image": {
+        "name": "预览图"
+      },
+      "width": {
+        "name": "宽 W"
+      },
+      "height": {
+        "name": "高 H"
+      }
+    }
+  }
 }

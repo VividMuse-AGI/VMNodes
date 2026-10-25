@@ -445,6 +445,173 @@
       "CATEGORY": "VMNodes/Internal",
       "OUTPUT_NODE": true,
       "DEV_ONLY": true
+    },
+    "VMMOSSLayoutStudio": {
+      "inputs": {
+        "required": {
+          "ui_language": [
+            [
+              "中文 (ZH)",
+              "English (EN)"
+            ],
+            {
+              "default": "中文 (ZH)"
+            }
+          ],
+          "canvas_preset": [
+            [
+              "Custom (自定义宽高 / Custom W×H)",
+              "Poster 3:4 Standard (896x1152)",
+              "Poster 3:4 HD (1152x1536)",
+              "Poster 2:3 Standard (832x1216)",
+              "Poster 2:3 HD (1024x1536)",
+              "Mobile 9:16 Standard (768x1344)",
+              "Mobile 9:16 HD (1088x1920)",
+              "Infographic 1:2 Long (768x1536)",
+              "Infographic 1:2 HD (896x1792)",
+              "Print A4 Portrait (896x1264)",
+              "Print A4 HD (1216x1728)",
+              "Square 1:1 Standard (1024x1024)",
+              "Square 1:1 HD (1536x1536)",
+              "Landscape 4:3 (1152x896)",
+              "Campaign 3:2 HD (1536x1024)",
+              "Banner 16:9 Standard (1344x768)",
+              "Banner 16:9 HD (1920x1088)",
+              "Ultrawide 21:9 (1536x640)"
+            ],
+            {
+              "default": "Poster 3:4 Standard (896x1152)"
+            }
+          ],
+          "width": [
+            "INT",
+            {
+              "default": 896,
+              "min": 256,
+              "max": 4096,
+              "step": 16
+            }
+          ],
+          "height": [
+            "INT",
+            {
+              "default": 1152,
+              "min": 256,
+              "max": 4096,
+              "step": 16
+            }
+          ],
+          "bbox_ratio_sync": [
+            [
+              "Smart (文字/主体保比例，背景铺满)",
+              "Keep Box Aspect (所有框保持自身长宽比)",
+              "Stretch with Canvas (随画布比例弹性拉伸)",
+              "Center Layout (居中扩展，缩小时整体适配)"
+            ],
+            {
+              "default": "Smart (文字/主体保比例，背景铺满)"
+            }
+          ],
+          "scene_meta": [
+            [
+              "poster",
+              "infographic",
+              "product campaign",
+              "editorial",
+              "comic",
+              "illustration",
+              "photography",
+              "ui_design",
+              "none (不写入 meta)"
+            ],
+            {
+              "default": "poster"
+            }
+          ],
+          "canvas_layout_type": [
+            [
+              "single",
+              "multi_panel",
+              "collage"
+            ],
+            {
+              "default": "single"
+            }
+          ],
+          "layer_order_mode": [
+            [
+              "Auto (背景->物体->角色->文字置顶)",
+              "Manual (严格按列表手动顺序)"
+            ],
+            {
+              "default": "Auto (背景->物体->角色->文字置顶)"
+            }
+          ],
+          "global_prompt": [
+            "STRING",
+            {
+              "multiline": true,
+              "default": "",
+              "placeholder": "整体画面、背景、光影与排版风格描述 (summary.caption)..."
+            }
+          ],
+          "layout_data": [
+            "STRING",
+            {
+              "default": "{}",
+              "multiline": false
+            }
+          ]
+        },
+        "optional": {
+          "ref_image": [
+            "IMAGE"
+          ],
+          "external_layout_json": [
+            "STRING",
+            {
+              "forceInput": true,
+              "tooltip": "Draft JSON (abs/xyxy) or compiled JSON (abs_centralized/yxyx) from the moss-image-prompt-enhancer Skill or an LLM."
+            }
+          ],
+          "external_sync_mode": [
+            [
+              "Ignore (仅使用画布)",
+              "Replace Canvas (用外部 JSON 覆盖画布并回填)",
+              "Merge into Canvas (追加到当前画布并回填)"
+            ],
+            {
+              "default": "Replace Canvas (用外部 JSON 覆盖画布并回填)"
+            }
+          ],
+          "custom_meta_tags": [
+            "STRING",
+            {
+              "default": "",
+              "multiline": false,
+              "tooltip": "Extra medium/genre tags, comma separated; merged into summary.meta."
+            }
+          ]
+        }
+      },
+      "RETURN_TYPES": [
+        "STRING",
+        "STRING",
+        "IMAGE",
+        "INT",
+        "INT"
+      ],
+      "RETURN_NAMES": [
+        "layout_prompt",
+        "draft_json",
+        "preview_image",
+        "width",
+        "height"
+      ],
+      "FUNCTION": "compile_layout",
+      "CATEGORY": "VMNodes/MOSS",
+      "OUTPUT_NODE": true,
+      "DEV_ONLY": null
     }
   },
   "display_names": {
@@ -453,7 +620,8 @@
     "VMFinalizeEdit": "VM Internal Composite",
     "VMImageEditBridge": "VM Image Edit",
     "VMEditPlan": "VM Internal Range Plan",
-    "VMEditFinish": "VM Internal Preview & Composite"
+    "VMEditFinish": "VM Internal Preview & Composite",
+    "VMMOSSLayoutStudio": "VM MOSS Layout Studio"
   },
   "workflow_sha256": "0bb7f64e800424b3a1eea2a004b5be83d0f927700023ef09f3b98eb8ad7f7d0b",
   "workflow_sha256_lf": "df8e5e4fc0b6c5c30bc32420abfe9879810a3309d886282a4cb0051a36812713"

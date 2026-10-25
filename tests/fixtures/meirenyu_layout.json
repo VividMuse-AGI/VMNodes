@@ -1,0 +1,32 @@
+{
+  "width": 1152,
+  "height": 2048,
+  "bbox_coord_space": "abs",
+  "bbox_format": "xyxy",
+  "summary": {
+    "meta": ["drama poster", "key art", "beauty portrait"],
+    "canvas": "single",
+    "palette": ["deep navy", "pale gold", "crimson", "ivory"],
+    "caption": "A Chinese drama poster on a deep navy ground textured like painted canvas. A woman in a crystal-beaded strapless gown sits behind a plinth holding a small modelling knife, a white plaster bust carved into faceted planes standing in front of her on a metal platter. Crimson rose petals fall across the whole frame in sharp foreground streaks and soft background smears. Pale-gold serif characters crown the top third, the cast credit sits beside her shoulder, and a white pill, the four-character broadcast line and two platform lockups anchor the lower third."
+  },
+  "items": [
+    {"label":"character","caption":"A young East Asian woman seated behind a plinth, facing the camera straight on with a faint closed-mouth smile. Her long black hair is parted in the middle and set in loose waves over her shoulders; she wears tall tiered silver drop earrings and a strapless gown of silver beadwork covered in scattered crystal droplets. Her right hand is lifted beside her face holding a small silver modelling knife between two fingers, and her bare shoulders catch the light.","bbox":[300,460,770,1500]},
+    {"label":"object","caption":"A white plaster bust of a head and neck standing on a dark metal platter, its surface scraped and cut away in faceted planes, with a band of pale ribbon studded with red stones around the neck and crimson petals caught at its base.","bbox":[280,880,880,1500]},
+    {"label":"object","caption":"The Tencent Video logo at the top left: a green, blue and orange play mark with white Chinese type across it.","bbox":[20,48,322,188]},
+    {"label":"object","caption":"A white brush-script wordmark at the top right, the first two characters large and loose, the last two smaller and set beside them.","bbox":[846,52,1082,165]},
+    {"label":"text","caption":"A line of small white Chinese type, centred, naming the source novel.","text":"根据伊北同名小说《美人余》改编","bbox":[408,214,744,244]},
+    {"label":"text","caption":"The title in three huge pale-gold serif characters, the strokes cut and abstracted so they read almost as architecture, edges catching a soft metallic sheen.","text":"美人余","bbox":[352,270,792,474]},
+    {"label":"object","caption":"A narrow vertical column of tiny pale latin type between the title characters, rotated to read downward.","bbox":[564,280,606,386]},
+    {"label":"text","caption":"Three centred lines of small white Chinese type at the right of the figure: the performer, the word for 'as', and the character name, each with a tiny romanisation.","text":"李雪（李一桐）\n饰\n余梦","bbox":[866,700,1020,818]},
+    {"label":"object","caption":"A white rounded pill shape sitting on the dark cloth.","bbox":[302,1568,852,1640]},
+    {"label":"text","caption":"Dark Chinese capitals with very wide letterspacing inside the white pill.","text":"腾讯视频自制剧集","bbox":[320,1582,836,1628]},
+    {"label":"text","caption":"Four enormous white Chinese characters in a heavy condensed sans, centred, the brightest element in the frame.","text":"正在热播","bbox":[314,1680,862,1768]},
+    {"label":"text","caption":"Two stacked lines of small white Chinese type at the left.","text":"全网\n独播","bbox":[170,1828,234,1886]},
+    {"label":"object","caption":"A second Tencent Video play mark, smaller, beside the broadcast wordmark.","bbox":[256,1838,320,1896]},
+    {"label":"text","caption":"Large white Chinese type set beside the play mark.","text":"腾讯视频","bbox":[326,1828,570,1896]},
+    {"label":"text","caption":"Two stacked lines of small white Chinese type in the middle of the row.","text":"上星\n播出","bbox":[586,1828,646,1886]},
+    {"label":"object","caption":"A red star inside a white disc followed by red Chinese calligraphy, the satellite channel mark.","bbox":[682,1828,986,1896]},
+    {"label":"text","caption":"A line of small white Chinese credits, centred, split by a wide gap.","text":"导演：王迎 田婷婷　总编剧：张佳","bbox":[406,1930,778,1960]},
+    {"label":"text","caption":"A line of very small white Chinese production credits with small logos, spanning the lower edge.","text":"出品方 腾讯视频　联合出品 浩瀚娱乐　天璇工作室群","bbox":[198,1988,880,2022]}
+  ]
+}
