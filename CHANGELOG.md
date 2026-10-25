@@ -1,6 +1,6 @@
 # Changelog / 更新记录
 
-## Unreleased — MOSS Layout Studio
+## 0.2.0 — 2026-10-25 — Pre-release · MOSS Layout Studio
 
 - 新增 MOSS 海报布局节点：文字、角色、物体框，图层排序，17 组尺寸预设，中英文界面，Draft/Compiled JSON 导入及提示词输出。
 - 支持画布缩放／平移、全部隐藏／显示、全局和图层色板、原生吸管及画布放大镜降级、参考图主色提取。

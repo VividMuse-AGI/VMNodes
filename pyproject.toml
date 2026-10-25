@@ -1,7 +1,7 @@
 [project]
 name = "vmnodes"
-version = "0.1.0"
-description = "VMNodes: modular ComfyUI tools for image editing and resize/alignment."
+version = "0.2.0"
+description = "VMNodes: modular ComfyUI tools for image editing, resize/alignment and MOSS layouts."
 license = { file = "LICENSE" }
 readme = "README.md"
 dependencies = [] # install.py conditionally reuses/provisions OpenCV.

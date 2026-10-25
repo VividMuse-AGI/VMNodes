@@ -4,7 +4,7 @@
 
 VMNodes is a growing collection of ComfyUI nodes. Install and update the package once, then use the nodes you need.
 
-**v0.1.0 · First public Pre-release**. Try it and share feedback; compatibility may vary across ComfyUI versions, hardware and extension combinations.
+**v0.2.0 · MOSS layout update (Pre-release)**. Try it and share feedback; compatibility may vary across ComfyUI versions, hardware and extension combinations.
 
 ## Available nodes
 
@@ -20,7 +20,7 @@ Local editing preserves original pixels outside the permitted region, while deta
 
 The layout node targets **MOSS-Image**: connect `layout_prompt` to `CLIPTextEncode` and `width/height` to the latent node. Choose Center Layout to widen a poster while retaining the relative placement and size of its foreground elements.
 
-**MOSS is available in the `main` source branch**. Pull updates, restart ComfyUI and refresh the page. The published `0.1.0` ZIP does not include this update.
+**MOSS is included in v0.2.0**. Pull updates or download `VMNodes-0.2.0.zip`, then restart ComfyUI and refresh the page. The older `0.1.0` ZIP does not include MOSS.
 
 ## Installation
 
@@ -30,7 +30,7 @@ The layout node targets **MOSS-Image**: connect `layout_prompt` to `CLIPTextEnco
    git clone https://github.com/VividMuse-AGI/VMNodes.git custom_nodes/VMNodes
    ```
 
-   For a ZIP installation, choose `VMNodes-0.1.0.zip` under **Assets** in [this repository's Releases](https://github.com/VividMuse-AGI/VMNodes/releases). `VMNodes-0.1.0.zip.sha256` provides the SHA-256 checksum. Extract the package and place its `VMNodes` folder at `ComfyUI/custom_nodes/VMNodes`. The folder must contain `__init__.py` directly, with no extra nested package directory.
+   For a ZIP installation, choose `VMNodes-0.2.0.zip` under **Assets** in [this repository's Releases](https://github.com/VividMuse-AGI/VMNodes/releases). `VMNodes-0.2.0.zip.sha256` provides the SHA-256 checksum. Extract the package and place its `VMNodes` folder at `ComfyUI/custom_nodes/VMNodes`. The folder must contain `__init__.py` directly, with no extra nested package directory.
 2. Using **ComfyUI's Python environment**, run this from the ComfyUI directory:
 
    ```shell
