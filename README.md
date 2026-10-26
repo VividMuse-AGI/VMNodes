@@ -22,6 +22,16 @@ MOSS 节点面向 **MOSS-Image**：`layout_prompt` 接 `CLIPTextEncode`，`width
 
 **MOSS 更新包含在 v0.2.0 中**。Git 安装可拉取更新；ZIP 安装请下载 `VMNodes-0.2.0.zip`。更新后重启 ComfyUI 并刷新页面；旧的 `0.1.0` ZIP 不包含 MOSS 节点。
 
+### 将 layout prompt 还原为可编辑布局
+
+已有 MOSS `layout_prompt` 时，可通过工具栏「📥 导入 JSON」→「覆盖画布」，**预览框的位置，拖动或调整框的大小，再输出修改后的布局提示词**。支持 Draft（`abs` + `xyxy`）和编译后的布局 JSON（`abs_centralized` + `yxyx`）；无需先生成图片即可检查框之间的位置关系。普通描述文本不包含框坐标，不能据此恢复布局。
+
+相较于本次核对的官方 **Create Bounding Boxes + MOSS-Image Layout Prompt**，这一功能省去了完整布局 JSON 到官方框数据格式的额外转换。官方支持导入自己的框/element 数据，但没有直接解析完整 MOSS `layout_prompt` 并恢复框的入口。用 1152×2048 的 18 框海报执行真实 API 对照时，VM 从空画布导入带源尺寸的 Draft 后，18 框坐标全部准确恢复；这证明布局数据恢复能力，不代表生成画质优于官方。
+
+**源尺寸注意事项：** 编译后的 `layout_prompt` 可能不含 `width` / `height`。导入前，请在 JSON 顶层补上**生成该布局时的原画布尺寸**，或先将节点画布设为原尺寸。例如原稿为 1152×2048，就使用 `"width": 1152, "height": 2048`，不能直接填写准备改成的新尺寸。恢复后再改尺寸，并选择所需的比例同步模式。
+
+缺少尺寸时，导入器会按当前画布解释坐标；画布太小且框坐标超出边界时会报错。**没有报错也不代表原尺寸正确**，错误尺寸仍可能导致位置偏移。不要根据框的最外边界猜原尺寸；建议保留带尺寸的 Draft，详细操作见 [MOSS 使用说明](docs/zh/nodes/moss-layout.md)。
+
 ## 安装
 
 1. 推荐使用 Git，方便后续更新。在 **ComfyUI 根目录**执行：

@@ -22,6 +22,16 @@ The layout node targets **MOSS-Image**: connect `layout_prompt` to `CLIPTextEnco
 
 **MOSS is included in v0.2.0**. Pull updates or download `VMNodes-0.2.0.zip`, then restart ComfyUI and refresh the page. The older `0.1.0` ZIP does not include MOSS.
 
+### Restore a layout prompt as editable boxes
+
+Use the toolbar's **Import JSON → Replace Canvas** to import an existing MOSS `layout_prompt`, **preview box positions, move or resize the boxes, and output the revised layout prompt**. Both Draft (`abs` + `xyxy`) and compiled layout JSON (`abs_centralized` + `yxyx`) are supported. You can inspect the layout without generating an image. Plain descriptive text contains no box coordinates and cannot reconstruct a layout.
+
+Compared with the locally inspected official **Create Bounding Boxes + MOSS-Image Layout Prompt** pair, this removes an extra conversion from the complete layout JSON to the official box input format. The official pair accepts its own box/element data, but has no direct parser to restore boxes from a complete MOSS `layout_prompt`. In an actual API comparison using an 18-box, 1152×2048 poster, VM restored all 18 boxes with exact coordinates from a Draft with source dimensions into an empty canvas. This demonstrates layout data recovery, not superior generated image quality.
+
+**Source dimensions matter:** a compiled `layout_prompt` may omit `width` / `height`. Before importing, add the **original canvas dimensions used to create that layout** at the JSON root, or first set the node's canvas to those dimensions. For a 1152×2048 original, use `"width": 1152, "height": 2048`, not the new size you intend to use. Restore the layout first, then change dimensions with your chosen ratio synchronization mode.
+
+Without source dimensions, the importer interprets coordinates using the current canvas. It reports an error if the canvas is too small for the compiled box coordinates. **An import without an error does not prove that the dimensions are correct**: incorrect dimensions can still shift the boxes. Do not infer the original canvas size from the outermost box edges. Keep a Draft with dimensions for reuse; see the [MOSS guide](docs/en/nodes/moss-layout.md).
+
 ## Installation
 
 1. Git is recommended for easier updates. Run this from the **ComfyUI directory**:
