@@ -1,0 +1,24 @@
+{
+  "summary": {
+    "meta": [
+      "poster"
+    ],
+    "canvas": "single",
+    "caption": "真实执行回填全局描述"
+  },
+  "items": [
+    {
+      "label": "text",
+      "caption": "执行后手动样式",
+      "text": "执行后手动第一行\n第二行",
+      "bbox": [
+        -404,
+        -314,
+        -288,
+        314
+      ]
+    }
+  ],
+  "bbox_coord_space": "abs_centralized",
+  "bbox_format": "yxyx"
+}

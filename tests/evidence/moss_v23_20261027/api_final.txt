@@ -1,0 +1,71 @@
+Live checks against http://127.0.0.1:8207
+
+[L1] ������������·���
+  [PASS] layout_prompt Ϊ���ı����ջ����� �� live test
+  [PASS] width/height ��� 896/1152 �� 896/1152
+  [PASS] ui.resolved_size ���� �� [[896, 1152]]
+  [PASS] draft_json �ɽ���
+
+[L2] PrimitiveString ���ߵ��루Replace��
+  [PASS] Replace ����Դ���� 1536��1024 �� (['1536'], ['1024'])
+  [PASS] �մɱ� bbox ��ȷ [-288,-592,352,32] �� [-288, -592, 352, 32]
+  [PASS] onExecuted �غ� synced_layout_data �� present
+  [PASS] ����״̬�� 3 �����һ�׼Ϊ 1536��1024 �� 3 / 1536x1024
+  [PASS] ����״̬���� meta �� canvas �� ['product campaign', 'studio photography']
+  [PASS] Ԥ��ͼ������ �� D:\Codex\�½��ļ���\moss_v23_fixes_20261027\api\l2_replace.png
+
+[L3] PrimitiveInt ���߿��ߣ�F04��
+  [PASS] ���߿��߱�����Ϊ 1008��784 �� (['1008'], ['784'])
+  [PASS] resolved_size �ش����߳ߴ� �� [[1008, 784]]
+
+[L4] �ο�ͼ��Ϣ��G01��
+  [PASS] ref_info �ش�ԭʼ�ߴ� �� [1080, 1440]
+  [PASS] ref_info �ش� 16 ���뽨�� �� [1088, 1440]
+  [PASS] ref_info �� Base64 ����ͼ
+  [PASS] ����ͼ��Ԥ��ͼ������ �� D:\Codex\�½��ļ���\moss_v23_fixes_20261027\api\l4_ref_preview.png
+
+[L5] ���㣺Ignore ģʽ�����ǻ���
+  [PASS] Ignore ���� 896��1152 �� ['896']
+  [PASS] Ignore ������ synced_layout_data
+
+[L6] R02����ʵ�����е�ȡ��
+  [PASS] 1032��1064 ����������е�ȡż 1024��1056 �� (['1024'], ['1056'])
+  [PASS] �е�ȡ����Ļ���ߴ������һ��
+
+[L7] R03��С���� Draft ����
+  [PASS] С����ֱ�ӱ���ʹ������� �� [-107, -151, 102, 158]
+  [PASS] С�� Draft �پ���ʵ���ߵ���� bbox ��Ư�� �� [-107, -151, 102, 158]
+
+[L8] R04��palette ���롢������� Ignore
+  [PASS] �ⲿ����� compiled��draft ������ summary.palette
+  [PASS] ����״̬�� Ignore ����������������� summary.palette
+  [PASS] item.palette �ڻ������ر�����Ա���
+
+[L9] R01��Merge �ֶ��޸ĺ�������������������һ��
+  [PASS] Merge ͬ ID �����ָ��������ݲ�����ͬһλ��
+  [PASS] Merge ����û���ظ� ID ���ظ���
+
+[L10] R05���� Draft �� Compiled �� Replace
+  [PASS] abs �� Replace ��վɿ������ Draft
+  [PASS] abs �� Replace ����Դ�ߴ粢���� palette
+  [PASS] abs_centralized �� Replace ��վɿ������ Draft
+  [PASS] abs_centralized �� Replace ����Դ�ߴ粢���� palette
+
+[L11] R06��û�вο�ͼʱ��ʽ���� UI �غ�
+  [PASS] �޲ο�ͼ���з��� ref_info=[null]
+
+[L12] V2.3 �ⲿ�ı�ֱ���˿�
+  [PASS] global_prompt_in��summary.caption ���������ı� �� �ⲿ�����ȫ������
+  [PASS] global_prompt_in��synced_caption ����ڵ������ �� ['�ⲿ�����ȫ������']
+  [PASS] box_texts_in����ǩ�﷨д�� text / caption �� {"box_1": {"id": "box_1", "label": "text", "visible": true, "lock_aspect": true, "cx": 0.5, "cy": 0.12, "w": 0.8, "h": 0.08, "orig_aspect": 10.0, "text": "����������", "caption": "��ɫ�������", "tags": [], "pal
+  [PASS] box_texts_in��\n ת�����Ϊ��ʵ���� �� '���߸�����\n�ڶ���'
+  [PASS] box_texts_in���������ͬ�����İ� �� ['����������', '���߸�����\n�ڶ���']
+  [PASS] box_texts_in������ͨ�� onExecuted ���� �� {"version":2,"base_width":896,"base_height":1152,"boxes":[{"id":"box_1","label":
+
+[L13] V2.3 �����༭�ı������������ȼ�
+  [PASS] layout_prompt ����������ֶ��༭�Ķ����İ�����ʽ
+  [PASS] draft_json ����������ֶ��༭�Ķ����İ�����ʽ
+  [PASS] box_texts_in ������ʱ���Ƕ�Ӧ���ظ��ֲ��������ŵ�����ֶ�ֵ��
+
+�ϼƣ�41/41 ͨ��
+Live checks passed

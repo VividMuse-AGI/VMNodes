@@ -76,6 +76,7 @@ const stateOf = (page) => page.evaluate(() => {
       size: [...n.size],
       labels: Object.fromEntries(n.widgets.slice(0, 10).map((w) => [w.name, w.label || null])),
       langValue: n.widgets.find((w) => w.name === "ui_language").value,
+      guides: { ...n._vmmoss.S.guides },
       buttons: [...root.querySelectorAll(".vmmoss-btn")].map((b) => b.textContent),
     };
   });
@@ -89,6 +90,8 @@ const stateOf = (page) => page.evaluate(() => {
   check("顶部 [中文 | EN] 开关存在",
     mount.buttons.some((b) => b.replace(/\s/g, "") === "中文|EN"), mount.buttons.join(" / "));
   check("native widget 标签已本地化", mount.labels.canvas_preset === "尺寸预设", JSON.stringify(mount.labels));
+  check("新节点默认开启三分线、关闭黄金线", mount.guides.thirds && !mount.guides.golden,
+    JSON.stringify(mount.guides));
 
   console.log("\n[U2] 中英文实时切换");
   const beforeZh = await page.evaluate(() => ({
@@ -1128,6 +1131,528 @@ const stateOf = (page) => page.evaluate(() => {
     !refCleared.ref && !refCleared.refBarShown && refCleared.palExtractHidden,
     JSON.stringify(refCleared));
 
+  console.log("\n[U18] V2.3 顶层三分线 / 黄金分割线");
+  const guideBase = await page.evaluate(async () => {
+    const n = window.__n;
+    const S = n._vmmoss.S;
+    n.onExecuted({ ref_info: [null] });
+    S.eye = null;
+    S.inspector = null;
+    S.sel = null;
+    S.state = {
+      version: 2, base_width: 896, base_height: 1152, palette: [],
+      boxes: [{ id: "g1", label: "object", visible: true, lock_aspect: false, cx: 0.5, cy: 0.5,
+        w: 1, h: 1, orig_aspect: 896 / 1152, text: "", caption: "全屏不透明框", palette: [] }],
+    };
+    while (S.guides.thirds || S.guides.golden) {
+      n._vmmoss.toggleGuide(S.guides.thirds ? "thirds" : "golden");
+    }
+    n._vmmoss.closeInspector();
+    const preset = n.widgets.find((w) => w.name === "canvas_preset");
+    preset.value = "Poster 3:4 Standard (896x1152)";
+    preset.callback(preset.value);
+    n._vmmoss.resetView();
+    n._vmmoss.commit();
+    n._vmmoss.rebuildRows();
+    n._vmmoss.draw();
+    n._vmmoss.updateFoot();
+    await new Promise((r) => setTimeout(r, 450));
+    const c = document.querySelector(".vmmoss-canvas");
+    const r = c.getBoundingClientRect();
+    return {
+      rect: { x: r.x, y: r.y, w: r.width, h: r.height },
+      cw: S.canvasW, ch: S.canvasH, dpr: S.dpr,
+      guides: { ...S.guides },
+      nodeH: n.size[1],
+      barButtons: [...document.querySelectorAll(".vmmoss-bar .vmmoss-btn")]
+        .map((b) => b.textContent).filter((text) => /三分线|黄金线/.test(text)),
+    };
+  });
+  check("工具栏有独立的 [📐 三分线] 与 [🔱 黄金线] 按钮",
+    guideBase.barButtons.length === 2 && /三分线/.test(guideBase.barButtons[0]) &&
+    /黄金线/.test(guideBase.barButtons[1]), guideBase.barButtons.join(" / "));
+  check("两个参考线均可手动关闭", !guideBase.guides.thirds && !guideBase.guides.golden,
+    JSON.stringify(guideBase.guides));
+
+  const probeGuides = (ratios, crosses) => page.evaluate(({ ratios, crosses }) => {
+    const S = window.__n._vmmoss.S;
+    const c = document.querySelector(".vmmoss-canvas");
+    const ctx = c.getContext("2d");
+    const dpr = S.dpr;
+    const lum = (x, y) => {
+      const d = ctx.getImageData(Math.max(0, Math.round(x * dpr)), Math.max(0, Math.round(y * dpr)), 1, 1).data;
+      return (d[0] * 299 + d[1] * 587 + d[2] * 114) / 1000;
+    };
+    // A 1.25px dashed line can land on a fractional device row, so probe the
+    // brightest pixel within ±2px of the nominal position.
+    const vertical = (ratio) => {
+      let best = 0;
+      const x0 = ratio * S.canvasW;
+      for (let dx = -2; dx <= 2; dx += 1) {
+        for (let y = 6; y <= S.canvasH - 6; y += 2) best = Math.max(best, lum(x0 + dx, y));
+      }
+      return Math.round(best);
+    };
+    const horizontal = (ratio) => {
+      let best = 0;
+      const y0 = ratio * S.canvasH;
+      for (let dy = -2; dy <= 2; dy += 1) {
+        for (let x = 6; x <= S.canvasW - 6; x += 2) best = Math.max(best, lum(x, y0 + dy));
+      }
+      return Math.round(best);
+    };
+    const cross = (rx, ry) => {
+      let best = 0;
+      for (let dx = -2; dx <= 2; dx += 1) {
+        for (let dy = -2; dy <= 2; dy += 1) {
+          best = Math.max(best, lum(rx * S.canvasW + dx, ry * S.canvasH + dy));
+        }
+      }
+      return Math.round(best);
+    };
+    return {
+      v: ratios.map(vertical),
+      h: ratios.map(horizontal),
+      cross: crosses.map(([rx, ry]) => cross(rx, ry)),
+      plain: Math.round(lum(0.5 * S.canvasW, 0.5 * S.canvasH)),
+    };
+  }, { ratios, crosses });
+
+  const thirdsRatios = [1 / 3, 2 / 3];
+  const goldenRatios = [0.3819660112501051, 0.6180339887498949];
+  const goldenCrosses = [
+    [0.3819660112501051, 0.3819660112501051], [0.6180339887498949, 0.3819660112501051],
+    [0.3819660112501051, 0.6180339887498949], [0.6180339887498949, 0.6180339887498949],
+  ];
+  const offProbe = await probeGuides(thirdsRatios, goldenCrosses);
+  check("关闭时画布上没有参考线（基准亮度）",
+    offProbe.v.every((v) => v < 150) && offProbe.plain < 150,
+    `v=${offProbe.v.join(",")} plain=${offProbe.plain}`);
+
+  await page.evaluate(() => {
+    const n = window.__n;
+    [...document.querySelectorAll(".vmmoss-bar .vmmoss-btn")]
+      .find((b) => /三分线/.test(b.textContent)).click();
+    n._vmmoss.draw();
+  });
+  await page.waitForTimeout(250);
+  const thirdsProbe = await probeGuides(thirdsRatios, goldenCrosses);
+  check("三分线开启后 1/3、2/3 处出现高对比白线（覆盖全屏框之上）",
+    thirdsProbe.v.every((v) => v > 170) && thirdsProbe.h.every((v) => v > 170),
+    `v=${thirdsProbe.v.join(",")} h=${thirdsProbe.h.join(",")}`);
+  check("三分线只在 1/3、2/3，不误画黄金线",
+    thirdsProbe.cross.every((v) => v < 170), `cross=${thirdsProbe.cross.join(",")}`);
+  // A vertical scan always crosses the horizontal guides, so probe the centre point.
+  const centreProbe = await probeGuides([], [[0.5, 0.5]]);
+  check("画面中心（1/2）没有多余参考线", centreProbe.cross[0] < 120, String(centreProbe.cross[0]));
+
+  await page.evaluate(() => {
+    const buttons = [...document.querySelectorAll(".vmmoss-bar .vmmoss-btn")];
+    buttons.find((b) => /三分线/.test(b.textContent)).click();
+    buttons.find((b) => /黄金线/.test(b.textContent)).click();
+    window.__n._vmmoss.draw();
+  });
+  await page.waitForTimeout(250);
+  const goldenProbe = await probeGuides(goldenRatios, goldenCrosses);
+  check("黄金线在 0.382 / 0.618 处绘制四条贯穿线",
+    goldenProbe.v.every((v) => v > 170) && goldenProbe.h.every((v) => v > 170),
+    `v=${goldenProbe.v.join(",")} h=${goldenProbe.h.join(",")}`);
+  check("黄金线绘制 4 个焦点十字",
+    goldenProbe.cross.every((v) => v > 170), `cross=${goldenProbe.cross.join(",")}`);
+  const thirdsOff = await probeGuides(thirdsRatios, []);
+  check("仅开黄金线时不再显示三分线", thirdsOff.v.every((v) => v < 170), `v=${thirdsOff.v.join(",")}`);
+
+  const snapSetup = await page.evaluate(async () => {
+    const n = window.__n;
+    const S = n._vmmoss.S;
+    S.state = {
+      version: 2, base_width: 896, base_height: 1152, palette: [],
+      boxes: [{ id: "s1", label: "object", visible: true, lock_aspect: false, cx: 0.336, cy: 0.5,
+        w: 0.2, h: 0.2, orig_aspect: 0.78, text: "", caption: "吸附测试", palette: [] }],
+    };
+    S.sel = null;
+    S.snap = true;
+    if (!S.guides.thirds) n._vmmoss.toggleGuide("thirds");
+    n._vmmoss.commit();
+    n._vmmoss.rebuildRows();
+    n._vmmoss.draw();
+    await new Promise((r) => setTimeout(r, 300));
+    const c = document.querySelector(".vmmoss-canvas");
+    const r = c.getBoundingClientRect();
+    const box = S.state.boxes[0];
+    const toScreen = (nx, ny) => ({
+      x: r.x + ((nx * S.canvasW * S.view.zoom + S.view.panX) / S.canvasW) * r.width,
+      y: r.y + ((ny * S.canvasH * S.view.zoom + S.view.panY) / S.canvasH) * r.height,
+    });
+    return {
+      start: toScreen(box.cx, box.cy),
+      end: toScreen(box.cx + 2 / S.canvasW, box.cy),
+      startCx: box.cx,
+    };
+  });
+  await page.mouse.move(snapSetup.start.x, snapSetup.start.y);
+  await page.mouse.down();
+  await page.mouse.move(snapSetup.end.x, snapSetup.end.y, { steps: 6 });
+  await page.mouse.up();
+  await page.waitForTimeout(250);
+  const snappedCx = await page.evaluate(() => window.__n._vmmoss.S.state.boxes[0].cx);
+  check("拖动框靠近三分线时自动吸附到 1/3",
+    Math.abs(snappedCx - 1 / 3) < 1e-6, `${snapSetup.startCx.toFixed(4)} → ${snappedCx.toFixed(6)}`);
+
+  await page.evaluate(async () => {
+    const n = window.__n;
+    const S = n._vmmoss.S;
+    if (S.guides.thirds) n._vmmoss.toggleGuide("thirds");
+    S.state.boxes[0].cx = 0.336;
+    S.state.boxes[0].cy = 0.5;
+    n._vmmoss.commit();
+    n._vmmoss.draw();
+    await new Promise((r) => setTimeout(r, 200));
+  });
+  const noSnapSetup = await page.evaluate(() => {
+    const n = window.__n;
+    const S = n._vmmoss.S;
+    const c = document.querySelector(".vmmoss-canvas");
+    const r = c.getBoundingClientRect();
+    const box = S.state.boxes[0];
+    return {
+      start: { x: r.x + box.cx * r.width, y: r.y + box.cy * r.height },
+      end: { x: r.x + (box.cx + 2 / S.canvasW) * r.width, y: r.y + box.cy * r.height },
+    };
+  });
+  await page.mouse.move(noSnapSetup.start.x, noSnapSetup.start.y);
+  await page.mouse.down();
+  await page.mouse.move(noSnapSetup.end.x, noSnapSetup.end.y, { steps: 6 });
+  await page.mouse.up();
+  await page.waitForTimeout(250);
+  const plainCx = await page.evaluate(() => window.__n._vmmoss.S.state.boxes[0].cx);
+  check("关闭参考线后不再吸附（只按网格）",
+    Math.abs(plainCx - 1 / 3) > 1e-6, plainCx.toFixed(6));
+
+  const guideDraft = async () => {
+    await page.getByRole("button", { name: "📤 导出 Draft" }).click();
+    await page.waitForSelector(".vmmoss-modal textarea", { timeout: 5000 });
+    const text = await page.evaluate(() => document.querySelector(".vmmoss-modal textarea").value);
+    await page.locator(".vmmoss-modal").getByRole("button", { name: "关闭", exact: true }).click();
+    await page.waitForTimeout(150);
+    return text;
+  };
+  const draftWithGuides = await guideDraft();
+  await page.evaluate(() => {
+    const buttons = [...document.querySelectorAll(".vmmoss-bar .vmmoss-btn")];
+    buttons.find((b) => /黄金线/.test(b.textContent)).click();
+  });
+  await page.waitForTimeout(200);
+  const draftWithoutGuides = await guideDraft();
+  check("参考线开关不影响 draft_json",
+    draftWithGuides === draftWithoutGuides && !/thirds|golden/.test(draftWithGuides),
+    `${draftWithGuides.length} vs ${draftWithoutGuides.length} chars`);
+  const layoutClean = await page.evaluate(() =>
+    !/thirds|golden|guide/i.test(window.__n.widgets.find((w) => w.name === "layout_data").value));
+  check("参考线不写入 layout_data", layoutClean);
+
+  const guidePersist = await page.evaluate(async () => {
+    const app = window.comfyAPI.app.app;
+    const n = window.__n;
+    n._vmmoss.toggleGuide("thirds");
+    const want = { ...n._vmmoss.S.guides };
+    const serialized = app.graph.serialize();
+    const saved = (serialized.nodes.find((nd) => nd.type === "VMMOSSLayoutStudio") || {})
+      .properties?.vmmoss_guides || null;
+    app.graph.clear();
+    await new Promise((r) => setTimeout(r, 350));
+    app.graph.configure(serialized);
+    await new Promise((r) => setTimeout(r, 900));
+    const restoredNode = app.graph._nodes.find((nd) => nd.type === "VMMOSSLayoutStudio");
+    if (restoredNode) window.__n = restoredNode;
+    return { want, saved, got: restoredNode?._vmmoss?.S.guides || null };
+  });
+  check("参考线状态写入 node.properties",
+    JSON.stringify(guidePersist.saved) === JSON.stringify(guidePersist.want),
+    JSON.stringify(guidePersist.saved));
+  check("保存 / 重载后参考线状态恢复",
+    JSON.stringify(guidePersist.got) === JSON.stringify(guidePersist.want),
+    JSON.stringify(guidePersist.got));
+
+  console.log("\n[U19] V2.3 展开式大号文字编辑抽屉");
+  const inspBase = await page.evaluate(async () => {
+    const n = window.__n;
+    const S = n._vmmoss.S;
+    S.state = {
+      version: 2, base_width: 896, base_height: 1152, palette: [],
+      boxes: [
+        { id: "k1", label: "text", visible: true, lock_aspect: true, cx: 0.5, cy: 0.12,
+          w: 0.8, h: 0.08, orig_aspect: 10, text: "原标题", caption: "原样式", palette: [] },
+        { id: "k2", label: "character", visible: true, lock_aspect: true, cx: 0.5, cy: 0.55,
+          w: 0.5, h: 0.4, orig_aspect: 0.87, text: "", caption: "原角色描述", palette: [] },
+      ],
+    };
+    while (S.guides.thirds || S.guides.golden) n._vmmoss.toggleGuide(S.guides.thirds ? "thirds" : "golden");
+    S.sel = null;
+    S.inspector = null;
+    n._vmmoss.closeInspector();
+    n._vmmoss.commit();
+    n._vmmoss.rebuildRows();
+    n._vmmoss.draw();
+    n._vmmoss.updateFoot();
+    await new Promise((r) => setTimeout(r, 400));
+    return {
+      nodeH: n.size[1],
+      expandButtons: document.querySelectorAll(".vmmoss-expand").length,
+      rows: document.querySelectorAll(".vmmoss-row").length,
+      drawerShown: document.querySelector(".vmmoss-inspector").classList.contains("show"),
+    };
+  });
+  check("每行都有 [⤢] 展开按钮", inspBase.expandButtons === 2 && inspBase.rows === 2,
+    `${inspBase.expandButtons}/${inspBase.rows}`);
+  check("默认不展开抽屉", !inspBase.drawerShown);
+
+  await page.click('.vmmoss-row[data-id="k1"] .vmmoss-expand');
+  await page.waitForTimeout(350);
+  const inspOpen = await page.evaluate(() => {
+    const d = document.querySelector(".vmmoss-inspector");
+    const root = document.querySelector(".vmmoss").getBoundingClientRect();
+    const box = d.getBoundingClientRect();
+    const text = d.querySelector(".vmmoss-insp-text");
+    const caption = d.querySelector(".vmmoss-insp-caption");
+    return {
+      shown: d.classList.contains("show"),
+      ratio: box.width / root.width,
+      box: d.dataset.box,
+      text: text?.value ?? null,
+      caption: caption?.value ?? null,
+      resize: text ? getComputedStyle(text).resize : null,
+      fontSize: text ? parseFloat(getComputedStyle(text).fontSize) : null,
+      nodeH: window.__n.size[1],
+      selected: window.__n._vmmoss.S.sel,
+    };
+  });
+  check("点击 [⤢] 展开全宽抽屉并选中该框",
+    inspOpen.shown && inspOpen.ratio > 0.98 && inspOpen.box === "k1" && inspOpen.selected === "k1",
+    `ratio=${inspOpen.ratio.toFixed(3)} box=${inspOpen.box}`);
+  check("抽屉里渲染文字与样式两个大号多行输入",
+    inspOpen.text === "原标题" && inspOpen.caption === "原样式" &&
+    inspOpen.fontSize >= 12 && inspOpen.resize === "vertical",
+    `${inspOpen.text} / ${inspOpen.caption} / ${inspOpen.fontSize}px / ${inspOpen.resize}`);
+  check("抽屉只增高一个面板的高度",
+    inspOpen.nodeH - inspBase.nodeH > 40 && inspOpen.nodeH - inspBase.nodeH < 260,
+    `+${inspOpen.nodeH - inspBase.nodeH}px`);
+
+  await page.fill(".vmmoss-insp-text", "第一行标题\n第二行副标题");
+  await page.fill(".vmmoss-insp-caption", "白色粗体现代无衬线，两行居中");
+  await page.waitForTimeout(300);
+  const inspTyped = await page.evaluate(() => {
+    const n = window.__n;
+    const state = JSON.parse(n.widgets.find((w) => w.name === "layout_data").value);
+    const row = [...document.querySelectorAll(".vmmoss-row")].find((r) => r.dataset.id === "k1");
+    return {
+      text: state.boxes[0].text,
+      caption: state.boxes[0].caption,
+      rowText: row.querySelector("textarea")?.value ?? null,
+      rowCaption: row.querySelector("input")?.value ?? null,
+    };
+  });
+  check("多行文字实时同步到 layout_data 与图层行",
+    inspTyped.text === "第一行标题\n第二行副标题" && inspTyped.rowText === inspTyped.text,
+    JSON.stringify(inspTyped.text));
+  check("样式描述实时同步到图层行",
+    inspTyped.caption === "白色粗体现代无衬线，两行居中" && inspTyped.rowCaption === inspTyped.caption,
+    inspTyped.rowCaption);
+
+  // Click a non-interactive part of the row (the tag chip) so selection changes.
+  await page.click('.vmmoss-row[data-id="k2"] .vmmoss-tag');
+  await page.waitForTimeout(400);
+  const inspFollow = await page.evaluate(() => {
+    const d = document.querySelector(".vmmoss-inspector");
+    return {
+      box: d.dataset.box,
+      hasText: !!d.querySelector(".vmmoss-insp-text"),
+      caption: d.querySelector(".vmmoss-insp-caption")?.value ?? null,
+      shown: d.classList.contains("show"),
+      nodeH: window.__n.size[1],
+    };
+  });
+  check("切换选中框后同一抽屉跟随新框",
+    inspFollow.shown && inspFollow.box === "k2" && inspFollow.caption === "原角色描述",
+    `${inspFollow.box} / ${inspFollow.caption}`);
+  check("角色框只显示描述字段，且抽屉高度不叠加",
+    !inspFollow.hasText && inspFollow.nodeH <= inspOpen.nodeH + 40,
+    `hasText=${inspFollow.hasText} nodeH=${inspFollow.nodeH}`);
+
+  await page.click(".vmmoss-insp-close");
+  await page.waitForTimeout(400);
+  const inspClosed = await page.evaluate(() => ({
+    shown: document.querySelector(".vmmoss-inspector").classList.contains("show"),
+    inspector: window.__n._vmmoss.S.inspector,
+    nodeH: window.__n.size[1],
+  }));
+  check("点「收起」关闭抽屉并还原节点高度",
+    !inspClosed.shown && inspClosed.inspector === null && Math.abs(inspClosed.nodeH - inspBase.nodeH) <= 40,
+    `nodeH=${inspClosed.nodeH} base=${inspBase.nodeH}`);
+
+  console.log("\n[U20] V2.3 外部文本端口回填（onExecuted）");
+  const textBackfill = await page.evaluate(async () => {
+    const n = window.__n;
+    const payload = {
+      version: 2, base_width: 896, base_height: 1152,
+      caption: "连线带来的全局描述",
+      boxes: [
+        { id: "k1", label: "text", visible: true, lock_aspect: true, cx: 0.5, cy: 0.12,
+          w: 0.8, h: 0.08, orig_aspect: 10, text: "连线标题", caption: "连线样式", palette: [] },
+        { id: "k2", label: "character", visible: true, lock_aspect: true, cx: 0.5, cy: 0.55,
+          w: 0.5, h: 0.4, orig_aspect: 0.87, text: "", caption: "连线角色描述", palette: [] },
+      ],
+    };
+    n.onExecuted({
+      resolved_size: [[896, 1152]],
+      synced_caption: ["连线带来的全局描述"],
+      synced_layout_data: [JSON.stringify(payload)],
+    });
+    await new Promise((r) => setTimeout(r, 600));
+    const row = [...document.querySelectorAll(".vmmoss-row")].find((r) => r.dataset.id === "k1");
+    return {
+      caption: n.widgets.find((w) => w.name === "global_prompt").value,
+      text: JSON.parse(n.widgets.find((w) => w.name === "layout_data").value).boxes[0].text,
+      rowText: row?.querySelector("textarea")?.value ?? null,
+      rows: document.querySelectorAll(".vmmoss-row").length,
+      width: n.widgets.find((w) => w.name === "width").value,
+    };
+  });
+  check("onExecuted 回填全局描述",
+    textBackfill.caption === "连线带来的全局描述", textBackfill.caption);
+  check("onExecuted 回填各框文案到画布与图层行",
+    textBackfill.text === "连线标题" && textBackfill.rowText === "连线标题" &&
+    textBackfill.rows === 2 && textBackfill.width === 896,
+    `${textBackfill.text} / ${textBackfill.rows} 行`);
+
+  const footLink = await page.evaluate(async () => {
+    const n = window.__n;
+    const app = window.comfyAPI.app.app;
+    const src = window.LiteGraph.createNode("PrimitiveString");
+    src.pos = [520, 40];
+    app.graph.add(src);
+    window.__linkSrc = src;
+    const idx = n.inputs.findIndex((input) => input.name === "box_texts_in");
+    if (idx < 0) return { skipped: true };
+    src.connect(0, n, idx);
+    await new Promise((r) => setTimeout(r, 300));
+    return { foot: document.querySelector(".vmmoss-foot").textContent, idx };
+  });
+  check("连线 box_texts_in 时状态栏提示文案来自连线",
+    footLink.skipped ? false : /文案来自连线/.test(footLink.foot), footLink.foot || "no port");
+  await page.evaluate(() => {
+    const n = window.__n;
+    const idx = n.inputs.findIndex((input) => input.name === "box_texts_in");
+    if (idx >= 0) n.disconnectInput(idx);
+    if (window.__linkSrc) window.comfyAPI.app.app.graph.remove(window.__linkSrc);
+  });
+  await page.waitForTimeout(200);
+
+  {
+  console.log("\n[U21] V2.3 复核修复：全局编辑高度、重载、执行后继续编辑");
+  await page.evaluate(async () => {
+    const app = window.comfyAPI.app.app;
+    app.graph.clear();
+    await new Promise(r => setTimeout(r, 300));
+    const n = window.LiteGraph.createNode("VMMOSSLayoutStudio");
+    n.pos = [40, 40]; app.graph.add(n); window.__n = n;
+    app.canvas.ds.scale = 0.78; app.canvas.ds.offset = [416, 110];
+    await new Promise(r => setTimeout(r, 700));
+    const el = n.widgets.find(w => w.name === "global_prompt").inputEl;
+    el.dataset.vmmossAuditCaption = "true";
+  });
+  const globalBefore = await page.evaluate(() => {
+    const n = window.__n, w = n.widgets.find(w => w.name === "global_prompt"), el = w.inputEl;
+    return { resize: getComputedStyle(el).resize, height: el.offsetHeight, nodeHeight: n.size[1] };
+  });
+  check("全局描述默认加高且可纵向拖动", globalBefore.resize === "vertical" && globalBefore.height >= 84,
+    JSON.stringify(globalBefore));
+  const globalInput = page.locator('[data-vmmoss-audit-caption="true"]');
+  await globalInput.fill("全局多行描述\n第二行光影要求");
+  check("全局描述多行编辑仍写入原生 STRING 控件",
+    await page.evaluate(() => window.__n.widgets.find(w => w.name === "global_prompt").value === "全局多行描述\n第二行光影要求"));
+  const resizeRect = await globalInput.boundingBox();
+  await page.mouse.move(resizeRect.x + resizeRect.width - 3, resizeRect.y + resizeRect.height - 3);
+  await page.mouse.down();
+  await page.mouse.move(resizeRect.x + resizeRect.width - 3, resizeRect.y + resizeRect.height + 100, { steps: 15 });
+  await page.mouse.up();
+  await page.waitForTimeout(500);
+  const globalAfter = await page.evaluate(() => {
+    const n = window.__n, el = n.widgets.find(w => w.name === "global_prompt").inputEl;
+    const rect = el.getBoundingClientRect(), parentRect = el.parentElement.getBoundingClientRect();
+    return { height: el.offsetHeight, nodeHeight: n.size[1], savedHeight: n.properties.vmmoss_caption_height,
+      fitsAllocation: rect.bottom <= parentRect.bottom + 1 && rect.top >= parentRect.top - 1,
+      noOverlap: el.getBoundingClientRect().bottom <= document.querySelector(".vmmoss").getBoundingClientRect().top };
+  });
+  check("拖高全局描述后节点同步增高且不覆盖布局画布",
+    globalAfter.height > globalBefore.height + 60 && globalAfter.nodeHeight > globalBefore.nodeHeight + 60 && globalAfter.noOverlap,
+    JSON.stringify(globalAfter));
+  check("拖高全局描述后不越过原生控件分配区域或遮挡下一行", globalAfter.fitsAllocation,
+    JSON.stringify(globalAfter));
+  const restored = await page.evaluate(async () => {
+    const app = window.comfyAPI.app.app, n = window.__n;
+    if (n._vmmoss.S.guides.thirds) n._vmmoss.toggleGuide("thirds");
+    const saved = app.graph.serialize();
+    app.graph.clear(); app.graph.configure(saved);
+    window.__n = app.graph.getNodeById(n.id);
+    await new Promise(r => setTimeout(r, 600));
+    const fresh = window.__n, w = fresh.widgets.find(w => w.name === "global_prompt");
+    return { guides: fresh._vmmoss.S.guides, height: w.inputEl.offsetHeight,
+      caption: w.value, savedHeight: fresh.properties.vmmoss_caption_height };
+  });
+  check("用户关闭的参考线保存重载后仍关闭", !restored.guides.thirds && !restored.guides.golden,
+    JSON.stringify(restored.guides));
+  check("全局描述高度与多行文字随工作流重载恢复",
+    Math.abs(restored.height - globalAfter.height) <= 1 && restored.caption === "全局多行描述\n第二行光影要求",
+    JSON.stringify(restored));
+
+  await page.evaluate(async () => {
+    const n = window.__n, a = n._vmmoss, app = window.comfyAPI.app.app;
+    a.S.state = { version: 2, base_width: 896, base_height: 1152, boxes: [
+      { id: "v23_text", label: "text", cx: 0.5, cy: 0.2, w: 0.7, h: 0.1,
+        visible: true, lock_aspect: false, text: "执行前标题", caption: "执行前样式", palette: [] },
+    ] };
+    a.commit(); a.rebuildRows(); a.openInspector("v23_text");
+    window.__beforeExecutionBox = a.S.state.boxes[0];
+    const src = window.LiteGraph.createNode("PrimitiveString"); app.graph.add(src);
+    src.widgets.find(w => w.name === "value").value = "真实执行回填全局描述";
+    src.connect(0, n, n.inputs.findIndex(i => i.name === "global_prompt_in"));
+    await app.queuePrompt(0, 1);
+  });
+  await page.waitForFunction(() => window.__n.widgets.find(w => w.name === "global_prompt").value === "真实执行回填全局描述",
+    null, { timeout: 60000 });
+  check("真实连线执行回填后抽屉仍打开且状态对象已更新",
+    await page.evaluate(() => document.querySelector(".vmmoss-inspector").classList.contains("show") &&
+      window.__n._vmmoss.S.state.boxes[0] !== window.__beforeExecutionBox));
+  await page.fill(".vmmoss-insp-text", "执行后手动第一行\n第二行");
+  await page.fill(".vmmoss-insp-caption", "执行后手动样式");
+  const editedAfterRun = await page.evaluate(() => {
+    const n = window.__n, box = JSON.parse(n.widgets.find(w => w.name === "layout_data").value).boxes[0];
+    return { text: box.text, caption: box.caption,
+      rowText: document.querySelector(".vmmoss-row textarea").value,
+      rowCaption: document.querySelector(".vmmoss-row input").value };
+  });
+  check("真实执行后抽屉改字及样式同步保存并更新列表",
+    editedAfterRun.text === "执行后手动第一行\n第二行" && editedAfterRun.caption === "执行后手动样式" &&
+    editedAfterRun.rowText === editedAfterRun.text && editedAfterRun.rowCaption === editedAfterRun.caption,
+    JSON.stringify(editedAfterRun));
+  await page.evaluate(async () => {
+    const app = window.comfyAPI.app.app, n = window.__n;
+    const show = window.LiteGraph.createNode("ShowText|pysssss"); app.graph.add(show);
+    n.connect(0, show, 0);
+    window.__compiledAfterEdit = null;
+    const original = show.onExecuted;
+    show.onExecuted = function(message) { window.__compiledAfterEdit = message.text?.[0]; return original?.apply(this, arguments); };
+    await app.queuePrompt(0, 1);
+  });
+  await page.waitForFunction(() => !!window.__compiledAfterEdit, null, { timeout: 60000 });
+  const compiledAfterEdit = await page.evaluate(() => JSON.parse(window.__compiledAfterEdit));
+  check("再次真实执行的 layout_prompt 包含回填后的手动编辑",
+    compiledAfterEdit.items[0].text === editedAfterRun.text && compiledAfterEdit.items[0].caption === editedAfterRun.caption,
+    JSON.stringify(compiledAfterEdit.items[0]));
+  fs.writeFileSync(path.join(OUT, "v23_real_edit_output.json"), JSON.stringify(compiledAfterEdit, null, 2), "utf-8");
+  }
+
   console.log("\n[U11] 截图");
   await page.evaluate(async () => {
     const n = window.__n;
@@ -1149,9 +1674,13 @@ const stateOf = (page) => page.evaluate(() => {
     preset.value = "Poster 3:4 Standard (896x1152)";
     preset.callback(preset.value);
     S.view = { zoom: 1, panX: 0, panY: 0 };
-    n._vmmoss.commit(); n._vmmoss.rebuildRows(); n._vmmoss.renderPaletteBar();
+    // V2.3: show the thirds guides and the expanded inspector in the artefact.
+    if (!S.guides.thirds) n._vmmoss.toggleGuide("thirds");
+    n._vmmoss.commit();
+    n._vmmoss.renderPaletteBar();
+    n._vmmoss.openInspector("box_3");
     n._vmmoss.draw(); n._vmmoss.updateFoot(); n._vmmoss.renderZoomBadge();
-    await new Promise((r) => setTimeout(r, 600));
+    await new Promise((r) => setTimeout(r, 700));
   });
   await page.waitForTimeout(400);
   const box = await page.locator(".vmmoss").boundingBox();

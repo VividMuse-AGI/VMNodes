@@ -1,0 +1,70 @@
+{
+  "timestamp": "2026-10-27T16:25:34.328840+08:00",
+  "conclusion": "V2.3 accepted within documented test scope",
+  "comfyui": "0.43.0",
+  "frontend": "1.57.4",
+  "python": "3.11.9",
+  "tests": {
+    "unittest": {
+      "passed": 110,
+      "total": 110,
+      "exit_code": 0,
+      "PYTHONUTF8": "unset"
+    },
+    "moss_frontend": {
+      "passed": 136,
+      "total": 136,
+      "exit_code": 0
+    },
+    "general_frontend": {
+      "passed": 9,
+      "total": 9,
+      "exit_code": 0
+    },
+    "browser": {
+      "passed": 146,
+      "total": 146,
+      "exit_code": 0
+    },
+    "real_api": {
+      "passed": 41,
+      "total": 41,
+      "exit_code": 0
+    }
+  },
+  "counts_overlap": true,
+  "i18n": {
+    "zh": 143,
+    "en": 143,
+    "same_keys": true
+  },
+  "design_checklist": {
+    "groups": 3,
+    "numbered_subitems": 8
+  },
+  "closed_findings": [
+    "F01 stale inspector closure",
+    "F02 global caption resize including native widget margins",
+    "F03 default thirds guide state"
+  ],
+  "visual_review": {
+    "image": "ui_full.jpg",
+    "result": "global textarea stays above next native controls; layout canvas and inspector visible"
+  },
+  "scope_exclusions": [
+    "No diffusion generation",
+    "Native OS eyedropper desktop actions not repeated; historical 2026-10-25 evidence retained"
+  ],
+  "sha256": {
+    "web/moss_layout_studio.js": "1854743da42d9993484b13f7ebb09efd3bd9c09bfd787dd9d34f32c788ae3b8f",
+    "moss_layout.py": "3583055a901eef1e67dba520bb3d0ed60daf8b9843e6e1041df8d67cdc23daae",
+    "tests/moss_frontend.cjs": "f44617bd1e529e639a22ffc8d09628fc3bea6f12ddc042be9e2373b15ecf121e",
+    "tests/moss_ui_e2e.js": "6c5b59b1e46ba25969c325a8fded12bb67b0a2c01ebfe5d87ff29fcddb5ec62a",
+    "tests/moss_live_api.py": "e309f8e63344600888db1431c46c01070b77d2f8fee091997cc2fe01eea36272",
+    "tests/test_moss_layout.py": "b1764d5adb50fe0d01522c7e60568eb62ad8d48742a0d84468ddcf1cc6331333",
+    "docs/zh/nodes/moss-layout.md": "b31427cacaa84b793adb848208c3aaa39715a86df8b5f275a651ebba542044ce",
+    "docs/en/nodes/moss-layout.md": "ae47da0237145cbd6aefc7fa48f92f4dfec490cd94df627cdf19bbda9f01f6ff",
+    "CHANGELOG.md": "c6e038a01273e4f8ef20e52048079d16c2b65a6a7e293ad5aa9725393a2b0bb7"
+  },
+  "publication_note": "Evidence copied from the completed local acceptance run. Logs converted to UTF-8/LF with trailing whitespace removed; screenshots are review previews. Source SHA256 values refer to original Windows files (before Git line-ending normalization). No product code changed during publication."
+}

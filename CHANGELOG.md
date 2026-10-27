@@ -1,5 +1,21 @@
 # Changelog / 更新记录
 
+## Unreleased
+
+### 中文
+
+- 修复 V2.3 抽屉在执行回填后继续改字未保存的问题；全局描述默认高 84px、可纵向拖高并保存高度；三分线默认开启且保留用户已保存的关闭状态。补充真实执行后编辑回归，修复浏览器关闭按钮定位与 Windows 子进程 UTF-8 解码。
+- MOSS 排版节点 V2.3：工具栏新增 `📐 三分线` / `🔱 黄金线` 独立开关，参考线改为在所有画框之后绘制的顶层白色虚线（带深色衬底），开启吸附时拖动框会自动吸附到参考线；状态持久化到 `node.properties`，不进入任何输出 JSON。
+- MOSS 排版节点 V2.3：图层行新增 `⤢` 展开按钮，列表下方出现全宽大号多行文字编辑抽屉（渲染文字 + 样式描述，可拖拽拉高），与行内输入、画布和 `layout_data` 双向同步，切换选中框自动跟随且只占一个面板高度。
+- MOSS 排版节点 V2.3：新增 `global_prompt_in` 与 `box_texts_in` 外部文本端口，支持 `T1: 标题 | 样式` 标签语法与按行顺序注入文字框，运行后通过 `synced_caption` / `synced_layout_data` 回填画布与图层列表。
+
+### English
+
+- Fixed inspector edits being lost after execution backfill. The global caption starts at 84px and supports persistent vertical resizing. Thirds are enabled by default while saved disabled settings remain intact. Added execution/edit round-trip regressions and fixed modal-close targeting and Windows UTF-8 subprocess decoding.
+- MOSS layout node V2.3: independent `📐 Thirds` / `🔱 Golden` toolbar toggles; guides are now a top-layer white dashed overlay with a dark halo, snap boxes onto them while dragging, persist in `node.properties` and never enter any output JSON.
+- MOSS layout node V2.3: every layer row gains a `⤢` button that opens a full-width multi-line text inspector (exact text + style caption, vertically resizable) kept in two-way sync with the row, canvas and `layout_data`; it follows the selection and only ever occupies one panel.
+- MOSS layout node V2.3: new `global_prompt_in` and `box_texts_in` text inputs with `T1: title | style` labels and positional lines, mirrored back to the canvas through `synced_caption` / `synced_layout_data`.
+
 ## 0.2.0 — 2026-10-25 — Pre-release · MOSS Layout Studio
 
 - 新增 MOSS 海报布局节点：文字、角色、物体框，图层排序，17 组尺寸预设，中英文界面，Draft/Compiled JSON 导入及提示词输出。

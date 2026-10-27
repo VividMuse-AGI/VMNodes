@@ -34,6 +34,8 @@ when you actually want an image.
 | `global_prompt` | Global caption → `summary.caption` |
 | `layout_data` | Canvas state maintained by the frontend |
 | `ref_image` (optional) | Backdrop reference; shown on the canvas, never sent to the prompt |
+| `global_prompt_in` (optional) | External global caption: overrides `summary.caption` when non-empty and is mirrored back into the widget |
+| `box_texts_in` (optional) | External per-box copy: `T1: title \| style` labels or plain lines for the Text boxes in order |
 | `external_layout_json` (optional) | Skill draft / compiled JSON / plain caption |
 | `external_sync_mode` (optional) | `Ignore` / `Replace Canvas` / `Merge into Canvas` |
 | `custom_meta_tags` (optional) | Extra comma-separated meta tags |
@@ -185,6 +187,61 @@ show `🎨 Extract Palette`:
 - flat or low-contrast images use remaining valid buckets, up to four colours, without
   inventing colours; if every pixel is excluded, the existing palette is preserved;
 - the result replaces the global palette and flashes “4 dominant colours extracted”.
+
+## Composition guides and the text inspector (V2.3)
+
+### Thirds and golden-ratio guides
+
+`📐 Thirds` and `🔱 Golden` are independent toggles. New nodes enable Thirds and disable Golden; saved disabled settings are preserved:
+
+- Thirds draws lines at `1/3` and `2/3`.
+- Golden draws lines at `0.382` / `0.618` plus four crosshair power points.
+- Guides are painted **after every box**, so a full-canvas background or a reference
+  image can never cover them; each line carries a translucent dark halo and stays
+  readable on white references.
+- With snapping on, dragging a box within 6px of a guide (centre or either edge) snaps
+  onto it; disabling the guides disables that snap.
+- The toggles live in `node.properties.vmmoss_guides`, so they survive save/reload and
+  never appear in `layout_data`, `layout_prompt` or `draft_json`.
+
+### Expandable text inspector
+
+The native global caption field starts at 84px high. Drag its bottom-right corner vertically
+to resize it (64px minimum); the node grows with it and saves the height with the workflow.
+It remains the original `global_prompt` STRING widget and adds no prompt fields.
+
+Every layer row gains a `⤢` button (double-clicking the row works too):
+
+- It opens a **full-width** drawer under the list with large multi-line fields for
+  `Exact text` and `Style / Caption` (12px, Enter for new lines, vertical resize);
+  character/object boxes only show the description.
+- Edits stay in sync with the compact row, the canvas preview and `layout_data`.
+- The drawer follows the selected box, always occupies a single panel height, and can be
+  collapsed with `Collapse` or `⤢` again.
+
+### Driving copy from other nodes
+
+Connect any multi-line text node to the two new inputs:
+
+```text
+T1: AI Developer Conference 2026 | bold white sans-serif, centred
+T2: Oct 25 · Shanghai | light-cyan tech subtitle
+C1: cyberpunk female android bust, blue-violet rim light
+O1: deep-blue geometric grid backdrop
+```
+
+- **Labelled mode**: `T1/C1/O1/T2…` match the on-canvas tags (or use `box_3:`); text
+  boxes split `title | style`, character/object boxes take the whole line as description.
+  A literal `\n` becomes a real line break.
+- **Positional mode**: bare lines fill the 1st, 2nd, 3rd… Text box in order.
+- Connected box copy overrides the corresponding local edits on every execution. No layout
+  backfill is sent when the current values already match the link. Disconnect `box_texts_in`
+  to keep later manual edits, or edit the upstream copy. Connecting only `global_prompt_in`
+  does not override individual box text.
+- An open inspector remains editable after execution backfill; further text and style edits
+  are saved into the current `layout_data`.
+- A non-empty `global_prompt_in` overrides the caption and is mirrored back via
+  `ui["synced_caption"]`.
 
 ## Import and export Skill JSON
 

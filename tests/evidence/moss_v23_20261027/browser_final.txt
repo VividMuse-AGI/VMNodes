@@ -1,0 +1,190 @@
+
+[U1] 节点挂载与默认中文界面
+  [PASS] DOM 画布挂载
+  [PASS] 12 个后端 widget + 1 个 DOM widget（IMAGE/forceInput 不是 widget） — ui_language,canvas_preset,width,height,bbox_ratio_sync,scene_meta,canvas_layout_type,layer_order_mode,global_prompt,layout_data,external_sync_mode,custom_meta_tags,vmmoss_ui
+  [PASS] 默认语言为中文
+  [PASS] 工具栏为中文 — + 文字框 / + 角色框 / + 物体框 / 📥 导入 JSON / 📤 导出 Draft / 网格吸附 开 / 📐 三分线 / 🔱 黄金线 / 水平居中 / 垂直居中 / 等宽 / 等高 / 水平等距 / 垂直等距 / 👁 全部隐藏 / 清空 / 中文 | EN / 应用 / 🎨+ / 💧 吸管 / 🎨 提取配色 /  /
+  [PASS] 顶部 [中文 | EN] 开关存在 — + 文字框 / + 角色框 / + 物体框 / 📥 导入 JSON / 📤 导出 Draft / 网格吸附 开 / 📐 三分线 / 🔱 黄金线 / 水平居中 / 垂直居中 / 等宽 / 等高 / 水平等距 / 垂直等距 / 👁 全部隐藏 / 清空 / 中文 | EN / 应用 / 🎨+ / 💧 吸管 / 🎨 提取配色 /  /
+  [PASS] native widget 标签已本地化 — {"ui_language":"界面语言","canvas_preset":"尺寸预设","width":"宽 W","height":"高 H","bbox_ratio_sync":"比例同步","scene_meta":"体裁先验","canvas_layout_type":"画布结构","layer_order_mode":"图层排序","global_prompt":"全局描述","layout_data":"画布数据"}
+  [PASS] 新节点默认开启三分线、关闭黄金线 — {"thirds":true,"golden":false}
+
+[U2] 中英文实时切换
+  [PASS] ui_language 切到 English — English (EN)
+  [PASS] 节点标题切到英文 — VM MOSS Layout Studio
+  [PASS] widget 标签切到英文 — Medium / Genre
+  [PASS] 工具栏切到英文 — + Text / + Character / + Object / 📥 Import JSON / 📤 Export Draft / Snap: On / 📐 Thirds / 🔱 Golden / Center H / Center V / Match W / Match H / Distribute H / Distribute V / 👁 Hide All / Clear / 中文 | EN / Apply / 🎨+ / 💧 Pick / 🎨 Extract Palette /  /
+  [PASS] 空状态与状态栏切到英文 — No boxes yet — use “+ Text”, o
+  [PASS] 切换未破坏中文原标题 — VM MOSS 海报布局工作台
+  [PASS] 再次点击切回中文 — 中文 (ZH)
+
+[U3] 📥 导入 Skill JSON（覆盖画布）
+  [PASS] 画布尺寸还原为 1536×1024 — 1536×1024 / Custom (自定义宽高 / Custom W×H)
+  [PASS] 3 个框与 3 行图层 — 3/3
+  [PASS] 全局描述与体裁还原 — product campaign | studio photography | single
+  [PASS] 画布视口比例 = 1536/1024 — 487×325
+  [PASS] 导入成功后关闭弹窗
+
+[U4] 📤 导出 Draft JSON
+  [PASS] 导出草稿为 abs/xyxy 且 3 个框 — abs/xyxy/3
+  [PASS] 导出坐标与官方示例一致 — [176,224,800,864]
+  [PASS] 导出保留换行文字 — "一杯温暖\n一刻从容"
+
+[U5] F05 命中顺序 = 输出层级
+  [PASS] Auto：重叠处优先命中文字框 — txt
+  [PASS] Manual：后画的背景在上、命中背景 — bg
+
+[U6] F03 锁定框最小尺寸 32×8
+  [PASS] 按比例缩到最小：32×8 px — 32.00×8.00
+  [PASS] 锁定框未退化为 1:1 — 4.000
+
+[U7] G02 等高 / 等宽对齐
+  [PASS] 等高：两框高度一致 — 0.1 vs 0.1
+  [PASS] 等高：锁定框按比例同步宽度 — 2.000
+
+[U8] F04/onExecuted：真实尺寸回填
+  [PASS] onExecuted 回填 1008×784 与 Custom — 1008×784 / Custom (自定义宽高 / Custom W×H)
+  [PASS] 画布基准与视口同步 — 1008×784 / 457×356
+
+[U9] F01/onExecuted：外部布局回填
+  [PASS] 外部布局回填 2 个框到画布与列表 — 2/2
+  [PASS] 回填同时更新尺寸与全局描述 — 1536×1024 / product campaign
+
+[U10] G01 参考图状态栏与一键匹配
+  [PASS] 参考图栏显示原始尺寸 — 参考图 1080×1440
+  [PASS] 一键匹配按钮文案为对齐尺寸 — 一键匹配 1088×1440
+  [PASS] 一键匹配应用 1088×1440 — 1088×1440
+
+[U12] V2.1 画布滚轮缩放 / 中键平移 / 徽章复位
+  [PASS] 滚轮放大到 1.2x~6x — 1.716
+  [PASS] 缩放未触发外层 ComfyUI 画布缩放/平移 — 0.78 / 416,110
+  [PASS] 右上角徽章显示倍率 — 🔍 172% ↺
+  [PASS] 缩放锚点为鼠标光标位置 — 138.00→137.75 / 178.00→177.62
+  [PASS] 中键拖动平移视口 — pan -98.4,-126.8 → -188.1,-184.5
+  [PASS] 平移未带动外层 ComfyUI 画布 — 416,110
+  [PASS] 中键释放后平移状态清空
+  [PASS] 200% + 平移后点击命中正确框 — z2
+  [PASS] 200% 拖动位移按 1/zoom 折算 — 0.5697 vs 0.5697
+  [PASS] 徽章一键复位 100% 居中 — {"zoom":1,"panX":0,"panY":0}
+  [PASS] 快捷键 0 复位 100% 居中 — {"zoom":1,"panX":0,"panY":0}
+
+[U13] V2.1 一键隐藏 / 显示全部框
+  [PASS] 默认按钮为「👁 全部隐藏」 — 👁 全部隐藏
+  [PASS] 一键隐藏 3 个框 — 0 / 画布 896×1152基准 896×11523 框 / 0 可见输出顺序 —
+  [PASS] 隐藏后按钮切为「🚫 全部显示」并高亮 — 🚫 全部显示
+  [PASS] 再次点击恢复 3 个框 — 👁 全部隐藏
+
+[U14] V2.1 全局色板 + 单框调色盘
+  [PASS] 预设主题写入 4 个颜色 + 4 个色块 — ["#0F172A","#1E40AF","#38BDF8","#F8FAFC"]
+  [PASS] 色块 × 可移除 — #1E40AF,#38BDF8,#F8FAFC
+  [PASS] 取色器新增 #8B5CF6 — #1E40AF,#38BDF8,#F8FAFC,#8B5CF6
+  [PASS] 同一颜色不重复写入 — #1E40AF,#38BDF8,#F8FAFC,#8B5CF6
+  [PASS] 点击行内 🎨 打开图层色板弹窗 — 图层色板
+  [PASS] 快捷色盘写入 item.palette — #9333EA
+  [PASS] 重复颜色不重复添加并提示 — 该颜色已在色板中
+  [PASS] 第二次选色追加为两色 — #9333EA,#06B6D4
+  [PASS] 图层行渲染两个色点 — 2
+  [PASS] 画布框角标旁绘制色点 — 15 px / canvas 276×356 / visible 3
+  [PASS] 手输色值（ivory）归一为 Hex — #9333EA,#06B6D4,#FFFFF0
+  [PASS] 清空色板
+  [PASS] 导出 draft 的 summary.palette 与全局色板一致 — ["#1E40AF","#38BDF8","#F8FAFC","#8B5CF6"]
+
+[U15] V2.1 新增文案的中英切换
+  [PASS] EN：工具栏显示 Hide All — + Text / + Character / + Object / 📥 Import JSON / 📤 Export Draft / Snap: Off / 📐 Thirds / 🔱 Golden / Center H / Cent
+  [PASS] EN：全局色板标签与主题本地化 — Global palette: | Custom …,Tech Neon,Black & Gold,Warm Editorial,Oriental Crimson,Fresh Infographic
+  [PASS] EN：图层色板弹窗标题与分组本地化 — Layer palette / Poster colours
+  [PASS] EN：缩放徽章提示本地化 — Reset to 100% centred view (shortcut 0)
+  [PASS] 切回中文 — 中文 (ZH)
+
+[U16] V2.1 missing real-input regressions
+  [PASS] V21 real wheel reaches approximately 200% — {"zoom":1.9999999626105784,"panX":-118.16826751137233,"panY":-162.97834167968693}
+  [PASS] V21 cursor anchor survives wheel zoom
+  [PASS] V21 wheel leaves host scale and offset unchanged
+  [PASS] V21 real middle drag changes view by the CSS-correct distance — {"zoom":1.9999999626105784,"panX":-150.21954520088238,"panY":-186.05526536529783}
+  [PASS] V21 middle drag leaves host and box geometry unchanged
+  [PASS] V21 panned 200% canvas selects correct box
+  [PASS] V21 panned 200% move has correct X and Y inverse mapping
+  [PASS] V21 panned 200% nw resize preserves opposite corner and maps distance — {"before":{"id":"v21_geometry","label":"object","visible":true,"lock_aspect":false,"cx":0.5278706767727821,"cy":0.5162057051383618,"w":0.25,"h":0.25,"orig_aspect":0.7777777777777778,"text":"","caption":"Geometry","palette":[]},"after":{"id":"v21_geometry","label":"object","visible":true,"lock_aspect":false,"cx":0.519741728883947,"cy":0.5108038163893193,"w":0.26625789577767034,"h":0.260803777498085,"orig_aspect":0.7940432323502837,"text":"","caption":"Geometry","palette":[]}}
+  [PASS] V21 panned 200% ne resize preserves opposite corner and maps distance — {"before":{"id":"v21_geometry","label":"object","visible":true,"lock_aspect":false,"cx":0.519741728883947,"cy":0.5108038163893193,"w":0.26625789577767034,"h":0.260803777498085,"orig_aspect":0.7940432323502837,"text":"","caption":"Geometry","palette":[]},"after":{"id":"v21_geometry","label":"object","visible":true,"lock_aspect":false,"cx":0.5278706781160736,"cy":0.505401914676532,"w":0.2825157942419235,"h":0.27160758092365955,"orig_aspect":0.8090146301710471,"text":"","caption":"Geometry","palette":[]}}
+  [PASS] V21 panned 200% sw resize preserves opposite corner and maps distance — {"before":{"id":"v21_geometry","label":"object","visible":true,"lock_aspect":false,"cx":0.5278706781160736,"cy":0.505401914676532,"w":0.2825157942419235,"h":0.27160758092365955,"orig_aspect":0.8090146301710471,"text":"","caption":"Geometry","palette":[]},"after":{"id":"v21_geometry","label":"object","visible":true,"lock_aspect":false,"cx":0.5197417307240121,"cy":0.5108038042144099,"w":0.29877368902604645,"h":0.28241135999941597,"orig_aspect":0.8228406106242603,"text":"","caption":"Geometry","palette":[]}}
+  [PASS] V21 panned 200% se resize preserves opposite corner and maps distance — {"before":{"id":"v21_geometry","label":"object","visible":true,"lock_aspect":false,"cx":0.5197417307240121,"cy":0.5108038042144099,"w":0.29877368902604645,"h":0.28241135999941597,"orig_aspect":0.8228406106242603,"text":"","caption":"Geometry","palette":[]},"after":{"id":"v21_geometry","label":"object","visible":true,"lock_aspect":false,"cx":0.5278706781160736,"cy":0.516205705927197,"w":0.3150315838101692,"h":0.293215163424991,"orig_aspect":0.8356476599763855,"text":"","caption":"Geometry","palette":[]}}
+  [PASS] V21 panned 200% empty double click adds exactly one text box
+  [PASS] V21 reset after pan and geometry edits restores centred 100%
+  [PASS] V21 wheel upper bound is 600% — {"zoom":6,"panX":-686.9951927166085,"panY":-885.4045612394655}
+  [PASS] V21 wheel lower bound is centred 100%
+  [PASS] V21 Space plus left drag pans only the inner viewport — {"before":{"zoom":1.9999999626105784,"panX":-137.3990334060511,"panY":-177.08090562694022},"after":{"zoom":1.9999999626105784,"panX":-163.04005555765914,"panY":-192.4655214173475},"space":false,"graphBefore":{"scale":0.78,"offset":[416,110]},"graphAfter":{"scale":0.78,"offset":[416,110]}}
+  [PASS] V21 releasing Space outside canvas clears modifier
+  [PASS] V21 registered blur listener clears active Space (synthetic lifecycle event)
+  [PASS] V21 native global picker ignores intermediate colours and commits final once — {"during":{"value":"#8a5ef3","palette":[]},"after":["#8A5EF3"]}
+  [PASS] V21 native layer picker ignores intermediate colours and commits final once — {"during":{"value":"#f09c0a","palette":[]},"after":["#F09C0A"]}
+
+[U17] V2.2 吸管拾色 / 画布放大镜 / 参考图提取配色
+  [PASS] 全局色板栏有 [💧 吸管] 按钮 — 💧 吸管 / 吸取屏幕任意位置的颜色，加入全局色板
+  [PASS] 单框调色盘有 [💧 吸管取色] 按钮 — 💧 吸管取色 / 吸取颜色加入该框色板
+  [PASS] 无参考图时 🎨 提取配色按钮隐藏
+  [PASS] 💧 吸管走原生 EyeDropper 并写入全局色板 — 2 次 / ["#123456"]
+  [PASS] 原生吸管模式不进入画布降级，重复色自动去重 — ["#123456"]
+  [PASS] Esc 取消（AbortError）静默且不污染色板、不降级 — ["#123456"]
+  [PASS] 无原生 API 时平滑降级到画布吸管（目标=全局） — {"target":"global","hex":null,"mx":-1,"my":-1,"moved":false} / copy
+  [PASS] 降级时状态栏说明原因 — 当前环境不支持全屏吸管，已切换到画布吸管
+  [PASS] Esc 退出画布吸管并恢复光标 — crosshair
+  [PASS] 右键取消吸管且不写入颜色 — {"entered":true,"eye":false,"palette":["#123456"]}
+  [PASS] 参考图加载后两处 🎨 提取配色按钮出现 — 🎨 提取配色
+  [PASS] 快捷键 I 在选中框时进入画布吸管并指向该框 — {"target":"p1","hex":null,"mx":-1,"my":-1,"moved":false}
+  [PASS] 鼠标移动实时读取像素并给出 #RRGGBB — #C81E1E
+  [PASS] 放大镜在光标处绘制预览环与色值胶囊 — fill 200,30,30 / center 124,19,19 / stroke 239,235,236 / backdrop 102,26,29
+  [PASS] 左键点击把像素色写入选中框色板并退出吸管 — ["#C81E1E"]
+  [PASS] 🎨 提取配色从参考图取到 4 个主色 — ["#C81E1E","#1E40AF","#F59E0B","#F8FAFC"]
+  [PASS] 提取结果写入全局色板 summary.palette — 已提取 4 个主色
+  [PASS] EN：吸管与提取配色按钮文案本地化 — 💧 Pick | 🎨 Extract Palette | 💧 Eyedropper
+  [PASS] 切回中文并还原原生 API
+  [PASS] 断开参考图后底图与提取按钮同步隐藏 — {"ref":false,"refBarShown":false,"palExtractHidden":true}
+
+[U18] V2.3 顶层三分线 / 黄金分割线
+  [PASS] 工具栏有独立的 [📐 三分线] 与 [🔱 黄金线] 按钮 — 📐 三分线 / 🔱 黄金线
+  [PASS] 两个参考线均可手动关闭 — {"thirds":false,"golden":false}
+  [PASS] 关闭时画布上没有参考线（基准亮度） — v=68,68 plain=43
+  [PASS] 三分线开启后 1/3、2/3 处出现高对比白线（覆盖全屏框之上） — v=190,190 h=191,191
+  [PASS] 三分线只在 1/3、2/3，不误画黄金线 — cross=39,43,39,43
+  [PASS] 画面中心（1/2）没有多余参考线 — 43
+  [PASS] 黄金线在 0.382 / 0.618 处绘制四条贯穿线 — v=238,238 h=238,238
+  [PASS] 黄金线绘制 4 个焦点十字 — cross=238,238,238,238
+  [PASS] 仅开黄金线时不再显示三分线 — v=142,142
+  [PASS] 拖动框靠近三分线时自动吸附到 1/3 — 0.3360 → 0.333333
+  [PASS] 关闭参考线后不再吸附（只按网格） — 0.339286
+  [PASS] 参考线开关不影响 draft_json — 439 vs 439 chars
+  [PASS] 参考线不写入 layout_data
+  [PASS] 参考线状态写入 node.properties — {"thirds":true,"golden":false}
+  [PASS] 保存 / 重载后参考线状态恢复 — {"thirds":true,"golden":false}
+
+[U19] V2.3 展开式大号文字编辑抽屉
+  [PASS] 每行都有 [⤢] 展开按钮 — 2/2
+  [PASS] 默认不展开抽屉
+  [PASS] 点击 [⤢] 展开全宽抽屉并选中该框 — ratio=0.992 box=k1
+  [PASS] 抽屉里渲染文字与样式两个大号多行输入 — 原标题 / 原样式 / 12px / vertical
+  [PASS] 抽屉只增高一个面板的高度 — +164px
+  [PASS] 多行文字实时同步到 layout_data 与图层行 — "第一行标题\n第二行副标题"
+  [PASS] 样式描述实时同步到图层行 — 白色粗体现代无衬线，两行居中
+  [PASS] 切换选中框后同一抽屉跟随新框 — k2 / 原角色描述
+  [PASS] 角色框只显示描述字段，且抽屉高度不叠加 — hasText=false nodeH=1147
+  [PASS] 点「收起」关闭抽屉并还原节点高度 — nodeH=1047 base=1047
+
+[U20] V2.3 外部文本端口回填（onExecuted）
+  [PASS] onExecuted 回填全局描述 — 连线带来的全局描述
+  [PASS] onExecuted 回填各框文案到画布与图层行 — 连线标题 / 2 行
+  [PASS] 连线 box_texts_in 时状态栏提示文案来自连线 — 画布 896×1152基准 896×11522 框 / 2 可见输出顺序 T1→C1文案来自连线
+
+[U21] V2.3 复核修复：全局编辑高度、重载、执行后继续编辑
+  [PASS] 全局描述默认加高且可纵向拖动 — {"resize":"vertical","height":84,"nodeHeight":1027}
+  [PASS] 全局描述多行编辑仍写入原生 STRING 控件
+  [PASS] 拖高全局描述后节点同步增高且不覆盖布局画布 — {"height":216,"nodeHeight":1159,"savedHeight":216,"fitsAllocation":true,"noOverlap":true}
+  [PASS] 拖高全局描述后不越过原生控件分配区域或遮挡下一行 — {"height":216,"nodeHeight":1159,"savedHeight":216,"fitsAllocation":true,"noOverlap":true}
+  [PASS] 用户关闭的参考线保存重载后仍关闭 — {"thirds":false,"golden":false}
+  [PASS] 全局描述高度与多行文字随工作流重载恢复 — {"guides":{"thirds":false,"golden":false},"height":216,"caption":"全局多行描述\n第二行光影要求","savedHeight":216}
+  [PASS] 真实连线执行回填后抽屉仍打开且状态对象已更新
+  [PASS] 真实执行后抽屉改字及样式同步保存并更新列表 — {"text":"执行后手动第一行\n第二行","caption":"执行后手动样式","rowText":"执行后手动第一行\n第二行","rowCaption":"执行后手动样式"}
+  [PASS] 再次真实执行的 layout_prompt 包含回填后的手动编辑 — {"label":"text","caption":"执行后手动样式","text":"执行后手动第一行\n第二行","bbox":[-404,-314,-288,314]}
+
+[U11] 截图
+  [PASS] 无本节点相关控制台错误
+
+合计：146/146 通过

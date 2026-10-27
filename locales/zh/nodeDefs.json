@@ -1,10 +1,22 @@
 {
-  "VMImageEditBridge": {"display_name": "VM 图像编辑"},
-  "VMImageResizeAlign": {"display_name": "VM 图像缩放与对齐"},
-  "VMImageEdit": {"display_name": "VM 图像编辑"},
-  "VMFinalizeEdit": {"display_name": "VM 内部回贴"},
-  "VMEditPlan": {"display_name": "VM 内部范围规划"},
-  "VMEditFinish": {"display_name": "VM 内部预览与回贴"},
+  "VMImageEditBridge": {
+    "display_name": "VM 图像编辑"
+  },
+  "VMImageResizeAlign": {
+    "display_name": "VM 图像缩放与对齐"
+  },
+  "VMImageEdit": {
+    "display_name": "VM 图像编辑"
+  },
+  "VMFinalizeEdit": {
+    "display_name": "VM 内部回贴"
+  },
+  "VMEditPlan": {
+    "display_name": "VM 内部范围规划"
+  },
+  "VMEditFinish": {
+    "display_name": "VM 内部预览与回贴"
+  },
   "VMMOSSLayoutStudio": {
     "display_name": "VM MOSS 海报布局工作台",
     "description": "在节点内画框排版，直接标注文字 / 角色 / 物体，导入导出 Skill JSON，输出 MOSS-Image 布局提示词。",
@@ -41,6 +53,14 @@
       },
       "ref_image": {
         "name": "参考图"
+      },
+      "global_prompt_in": {
+        "name": "全局描述（连线）",
+        "tooltip": "连入外部文本框作为全局画面描述，运行后自动回填"
+      },
+      "box_texts_in": {
+        "name": "各框文案（连线）",
+        "tooltip": "支持 'T1: 标题 | 样式' 标签语法或按行顺序注入文字框"
       },
       "external_layout_json": {
         "name": "外部布局 JSON"

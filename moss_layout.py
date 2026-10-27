@@ -391,6 +391,86 @@ def parse_layout_data(raw: Any, width: int, height: int) -> Dict[str, Any]:
     return state
 
 
+_BOX_TAG_RE = re.compile(r"^(?:(?P<letter>[TCO])\s*(?P<num>\d+)|(?P<id>box_\d+))\s*[:：]\s*(?P<body>.+)$",
+                          re.IGNORECASE)
+# Looks like `XX12:` but is not one of our tags — ignore instead of treating it as a
+# positional line, otherwise a typo would silently overwrite the first text box.
+_UNKNOWN_TAG_RE = re.compile(r"^[A-Za-z]{1,4}\s*\d+\s*[:：]")
+
+
+def _assign_box_text(box: Dict[str, Any], payload: str) -> bool:
+    """Write one line of `box_texts_in` into a box. Returns True when it changed."""
+    body = str(payload or "").strip().replace("\\n", "\n")
+    if not body:
+        return False
+    if box.get("label") != "text":
+        # Character / object boxes only carry a description.
+        if box.get("caption") != body:
+            box["caption"] = body
+            return True
+        return False
+    if "|" in body:
+        text, caption = (part.strip() for part in body.split("|", 1))
+    else:
+        text, caption = body, ""
+    changed = False
+    if text and box.get("text") != text:
+        box["text"] = text
+        changed = True
+    if caption and box.get("caption") != caption:
+        box["caption"] = caption
+        changed = True
+    return changed
+
+
+def apply_box_texts(boxes: Sequence[Dict[str, Any]], raw: Any) -> Tuple[List[Dict[str, Any]], bool]:
+    """Bind external multi-line copy to boxes (V2.3).
+
+    Two syntaxes, auto-detected per line:
+      * labelled  — `T1: 标题 | 样式`, `C1: 描述`, `box_2: 文案` (tags follow list order)
+      * positional — bare lines fill the Text boxes in list order
+
+    Blank lines and `#` comments are skipped; unknown tags are ignored. Connected
+    copy wins over local edits on each run. Already matching values need no update.
+    """
+    result = list(boxes)
+    if not str(raw or "").strip():
+        return result, False
+
+    by_tag = {tag: box for box, tag in zip(result, display_tags(result).values())}
+    by_id = {box.get("id"): box for box in result}
+    positional: List[str] = []
+    labelled = set()
+    changed = False
+
+    for line in str(raw).replace("\r\n", "\n").replace("\r", "\n").split("\n"):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        match = _BOX_TAG_RE.match(stripped)
+        if match:
+            key = (f"{match.group('letter')}{match.group('num')}".upper()
+                   if match.group("letter") else match.group("id").lower())
+            box = by_tag.get(key) or by_id.get(key)
+            if box is not None:
+                labelled.add(id(box))
+                if _assign_box_text(box, match.group("body")):
+                    changed = True
+            continue
+        if _UNKNOWN_TAG_RE.match(stripped):
+            continue
+        positional.append(stripped)
+
+    if positional:
+        # Positional lines only fill text boxes that no label claimed this round.
+        text_boxes = [box for box in result
+                      if box.get("label") == "text" and id(box) not in labelled]
+        for box, line in zip(text_boxes, positional):
+            if _assign_box_text(box, line):
+                changed = True
+    return result, changed
+
+
 def display_tags(boxes: Sequence[Dict[str, Any]]) -> Dict[str, str]:
     """Stable labels (T1/C1/O1) assigned in list order, independent of z-sorting."""
     counters = {"object": 0, "character": 0, "text": 0}
@@ -943,6 +1023,17 @@ class VMMOSSLayoutStudio:
             },
             "optional": {
                 "ref_image": ("IMAGE",),
+                "global_prompt_in": ("STRING", {
+                    "forceInput": True,
+                    "tooltip": "直接连入外部文本框节点作为全局画面描述 (summary.caption)，"
+                               "无需复制粘贴，运行后自动同步至节点。",
+                }),
+                "box_texts_in": ("STRING", {
+                    "forceInput": True,
+                    "tooltip": "直接连入外部多行文本框批量修改各框文案！支持按标签"
+                               "（如 'T1: 主标题 | 白色粗体'、'C1: 角色描述'）或按行顺序注入文字框，"
+                               "运行后自动回填画布。",
+                }),
                 "external_layout_json": ("STRING", {
                     "forceInput": True,
                     "tooltip": "Draft JSON (abs/xyxy) or compiled JSON (abs_centralized/yxyx) "
@@ -994,7 +1085,8 @@ class VMMOSSLayoutStudio:
 
     def compile_layout(self, ui_language, canvas_preset, width, height, bbox_ratio_sync,
                        scene_meta, canvas_layout_type, layer_order_mode, global_prompt,
-                       layout_data, ref_image=None, external_layout_json=None,
+                       layout_data, ref_image=None, global_prompt_in=None, box_texts_in=None,
+                       external_layout_json=None,
                        external_sync_mode=EXTERNAL_REPLACE, custom_meta_tags=""):
         mode = bbox_ratio_sync if bbox_ratio_sync in SYNC_MODES else SYNC_SMART
         order_mode = layer_order_mode if layer_order_mode in LAYER_MODES else LAYER_AUTO
@@ -1050,6 +1142,20 @@ class VMMOSSLayoutStudio:
                 caption = imported["caption"]
             state["caption"] = caption
 
+        # 3.5) External text links override the on-node copy (V2.3). Text wins over
+        # an imported layout, but never rewrites the canvas unless something changed.
+        external_caption = str(global_prompt_in or "").strip()
+        text_synced = False
+        if external_caption:
+            if external_caption != caption:
+                caption = external_caption
+                state["caption"] = caption
+                text_synced = True
+        if str(box_texts_in or "").strip():
+            boxes, text_changed = apply_box_texts(boxes, box_texts_in)
+            if text_changed:
+                text_synced = True
+
         # 4) Compile in the one effective order used by both canvas and preview.
         ordered = effective_boxes(boxes, order_mode, visible_only=True)
         items, draft_items = build_items(ordered, W, H, zh)
@@ -1069,13 +1175,14 @@ class VMMOSSLayoutStudio:
 
         ui: Dict[str, Any] = {"resolved_size": [[W, H]], "language": ["zh" if zh else "en"],
                               "ref_info": [None]}
-        if synced:
+        if synced or text_synced:
             state.update(version=2, base_width=W, base_height=H, boxes=boxes)
+            state["caption"] = caption
             ui["synced_layout_data"] = [json.dumps(state, ensure_ascii=False, separators=(",", ":"))]
-            ui["external_kind"] = [imported.get("kind", "") if imported else ""]
-        elif imported and imported.get("kind") == "caption":
-            # A caption-only link must not touch the boxes, but the editor should
-            # still show the imported caption (F01 for the caption format).
+            if synced:
+                ui["external_kind"] = [imported.get("kind", "") if imported else ""]
+        if external_caption or (imported and imported.get("kind") == "caption"):
+            # The editor mirrors the winning caption (external link, else a caption import).
             ui["synced_caption"] = [caption]
         if ref_image is not None:
             info = self._ref_info(ref_image, W, H)

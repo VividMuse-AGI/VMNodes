@@ -1,0 +1,212 @@
+{
+  "base": "http://127.0.0.1:8207",
+  "passed": 41,
+  "total": 41,
+  "checks": [
+    {
+      "name": "layout_prompt 为纯文本（空画布）",
+      "ok": true,
+      "detail": "live test"
+    },
+    {
+      "name": "width/height 输出 896/1152",
+      "ok": true,
+      "detail": "896/1152"
+    },
+    {
+      "name": "ui.resolved_size 存在",
+      "ok": true,
+      "detail": "[[896, 1152]]"
+    },
+    {
+      "name": "draft_json 可解析",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Replace 采用源画布 1536×1024",
+      "ok": true,
+      "detail": "(['1536'], ['1024'])"
+    },
+    {
+      "name": "陶瓷杯 bbox 精确 [-288,-592,352,32]",
+      "ok": true,
+      "detail": "[-288, -592, 352, 32]"
+    },
+    {
+      "name": "onExecuted 载荷 synced_layout_data",
+      "ok": true,
+      "detail": "present"
+    },
+    {
+      "name": "回填状态含 3 个框且基准为 1536×1024",
+      "ok": true,
+      "detail": "3 / 1536x1024"
+    },
+    {
+      "name": "回填状态保留 meta 与 canvas",
+      "ok": true,
+      "detail": "['product campaign', 'studio photography']"
+    },
+    {
+      "name": "预览图已生成",
+      "ok": true,
+      "detail": "D:\\Codex\\新建文件夹\\moss_v23_fixes_20261027\\api\\l2_replace.png"
+    },
+    {
+      "name": "连线宽高被对齐为 1008×784",
+      "ok": true,
+      "detail": "(['1008'], ['784'])"
+    },
+    {
+      "name": "resolved_size 回传连线尺寸",
+      "ok": true,
+      "detail": "[[1008, 784]]"
+    },
+    {
+      "name": "ref_info 回传原始尺寸",
+      "ok": true,
+      "detail": "[1080, 1440]"
+    },
+    {
+      "name": "ref_info 回传 16 对齐建议",
+      "ok": true,
+      "detail": "[1088, 1440]"
+    },
+    {
+      "name": "ref_info 含 Base64 缩略图",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "带底图的预览图已生成",
+      "ok": true,
+      "detail": "D:\\Codex\\新建文件夹\\moss_v23_fixes_20261027\\api\\l4_ref_preview.png"
+    },
+    {
+      "name": "Ignore 保持 896×1152",
+      "ok": true,
+      "detail": "['896']"
+    },
+    {
+      "name": "Ignore 不回填 synced_layout_data",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "1032×1064 的输出采用中点取偶 1024×1056",
+      "ok": true,
+      "detail": "(['1024'], ['1056'])"
+    },
+    {
+      "name": "中点取整后的回填尺寸与输出一致",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "小数框直接编译使用外包络",
+      "ok": true,
+      "detail": "[-107, -151, 102, 158]"
+    },
+    {
+      "name": "小数 Draft 再经真实连线导入后 bbox 零漂移",
+      "ok": true,
+      "detail": "[-107, -151, 102, 158]"
+    },
+    {
+      "name": "外部导入的 compiled、draft 与回填保留 summary.palette",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "回填状态切 Ignore 后两个输出继续保留 summary.palette",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "item.palette 在画布重载编译后仍保留",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Merge 同 ID 导入框恢复上游内容并回填同一位置",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "Merge 回填没有重复 ID 或重复框",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "abs 空 Replace 清空旧框并输出空 Draft",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "abs 空 Replace 采用源尺寸并保留 palette",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "abs_centralized 空 Replace 清空旧框并输出空 Draft",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "abs_centralized 空 Replace 采用源尺寸并保留 palette",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "无参考图运行返回 ref_info=[null]",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "global_prompt_in：summary.caption 采用连线文本",
+      "ok": true,
+      "detail": "外部连入的全局描述"
+    },
+    {
+      "name": "global_prompt_in：synced_caption 回填节点输入框",
+      "ok": true,
+      "detail": "['外部连入的全局描述']"
+    },
+    {
+      "name": "box_texts_in：标签语法写入 text / caption",
+      "ok": true,
+      "detail": "{\"box_1\": {\"id\": \"box_1\", \"label\": \"text\", \"visible\": true, \"lock_aspect\": true, \"cx\": 0.5, \"cy\": 0.12, \"w\": 0.8, \"h\": 0.08, \"orig_aspect\": 10.0, \"text\": \"连线主标题\", \"caption\": \"白色粗体居中\", \"tags\": [], \"pal"
+    },
+    {
+      "name": "box_texts_in：\\n 转义解析为真实换行",
+      "ok": true,
+      "detail": "'连线副标题\\n第二行'"
+    },
+    {
+      "name": "box_texts_in：编译输出同步新文案",
+      "ok": true,
+      "detail": "['连线主标题', '连线副标题\\n第二行']"
+    },
+    {
+      "name": "box_texts_in：画布通过 onExecuted 回填",
+      "ok": true,
+      "detail": "{\"version\":2,\"base_width\":896,\"base_height\":1152,\"boxes\":[{\"id\":\"box_1\",\"label\":"
+    },
+    {
+      "name": "layout_prompt 保留回填后手动编辑的多行文案和样式",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "draft_json 保留回填后手动编辑的多行文案和样式",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "box_texts_in 仍连接时覆盖对应本地改字并回填（不承诺保留手动值）",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

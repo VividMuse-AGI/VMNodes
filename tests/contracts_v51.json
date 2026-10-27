@@ -567,6 +567,20 @@
           "ref_image": [
             "IMAGE"
           ],
+          "global_prompt_in": [
+            "STRING",
+            {
+              "forceInput": true,
+              "tooltip": "直接连入外部文本框节点作为全局画面描述 (summary.caption)，无需复制粘贴，运行后自动同步至节点。"
+            }
+          ],
+          "box_texts_in": [
+            "STRING",
+            {
+              "forceInput": true,
+              "tooltip": "直接连入外部多行文本框批量修改各框文案！支持按标签（如 'T1: 主标题 | 白色粗体'、'C1: 角色描述'）或按行顺序注入文字框，运行后自动回填画布。"
+            }
+          ],
           "external_layout_json": [
             "STRING",
             {

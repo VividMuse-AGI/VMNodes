@@ -329,6 +329,78 @@ def main():
     check("无参考图运行返回 ref_info=[null]",
           no_ref["outputs"]["1"].get("ref_info") == [None])
 
+    print("\n[L12] V2.3 外部文本直连端口")
+    seed = {
+        "version": 2, "base_width": 896, "base_height": 1152,
+        "boxes": [
+            {"id": "box_1", "label": "text", "visible": True, "lock_aspect": True,
+             "cx": 0.5, "cy": 0.12, "w": 0.8, "h": 0.08, "orig_aspect": 10,
+             "text": "旧标题", "caption": "旧样式"},
+            {"id": "box_2", "label": "character", "visible": True, "lock_aspect": True,
+             "cx": 0.5, "cy": 0.55, "w": 0.5, "h": 0.4, "orig_aspect": 0.87,
+             "text": "", "caption": "旧角色"},
+            {"id": "box_3", "label": "text", "visible": True, "lock_aspect": True,
+             "cx": 0.5, "cy": 0.85, "w": 0.6, "h": 0.06, "orig_aspect": 10,
+             "text": "旧副标题", "caption": ""},
+        ],
+    }
+    caption_entry = run(studio({
+        "layout_data": json.dumps(seed, ensure_ascii=False),
+        "global_prompt": "节点上的旧描述",
+        "global_prompt_in": ["40", 0],
+    }, {"40": {"class_type": "PrimitiveString", "inputs": {"value": "外部连入的全局描述"}}}))
+    caption_ui = caption_entry["outputs"]["1"]
+    check("global_prompt_in：summary.caption 采用连线文本",
+          output_json(caption_entry, "3")["summary"]["caption"] == "外部连入的全局描述",
+          output_json(caption_entry, "3")["summary"].get("caption"))
+    check("global_prompt_in：synced_caption 回填节点输入框",
+          caption_ui.get("synced_caption") == ["外部连入的全局描述"],
+          str(caption_ui.get("synced_caption")))
+
+    texts = "T1: 连线主标题 | 白色粗体居中\nC1: 连线角色描述\nT2: 连线副标题\\n第二行"
+    texts_entry = run(studio({
+        "layout_data": json.dumps(seed, ensure_ascii=False),
+        "box_texts_in": ["41", 0],
+    }, {"41": {"class_type": "PrimitiveString", "inputs": {"value": texts}}}))
+    texts_ui = texts_entry["outputs"]["1"]
+    synced_boxes = json.loads(texts_ui["synced_layout_data"][0])["boxes"] if texts_ui.get("synced_layout_data") else []
+    by_id = {box["id"]: box for box in synced_boxes}
+    check("box_texts_in：标签语法写入 text / caption",
+          by_id.get("box_1", {}).get("text") == "连线主标题"
+          and by_id.get("box_1", {}).get("caption") == "白色粗体居中"
+          and by_id.get("box_2", {}).get("caption") == "连线角色描述",
+          json.dumps(by_id, ensure_ascii=False)[:200])
+    check("box_texts_in：\\n 转义解析为真实换行",
+          by_id.get("box_3", {}).get("text") == "连线副标题\n第二行",
+          repr(by_id.get("box_3", {}).get("text")))
+    prompt_items = output_json(texts_entry, "3")["items"]
+    prompt_texts = [item.get("text") for item in prompt_items if item["label"] == "text"]
+    check("box_texts_in：编译输出同步新文案",
+          "连线主标题" in prompt_texts and "连线副标题\n第二行" in prompt_texts,
+          str(prompt_texts))
+    check("box_texts_in：画布通过 onExecuted 回填",
+          bool(texts_ui.get("synced_layout_data"))
+          and json.loads(texts_ui["synced_layout_data"][0])["base_width"] == 896,
+          str(texts_ui.get("synced_layout_data", [""])[0])[:80])
+
+    print("\n[L13] V2.3 回填后编辑的编译与连线优先级")
+    edited_state = json.loads(texts_ui["synced_layout_data"][0])
+    edited_state["boxes"][0].update(text="手动修改第一行\n第二行", caption="手动修改样式")
+    edited_entry = run(studio({
+        "layout_data": json.dumps(edited_state, ensure_ascii=False),
+        "global_prompt_in": ["40", 0],
+    }, {"40": {"class_type": "PrimitiveString", "inputs": {"value": "仅全局描述来自连线"}}}))
+    for output_id, label in (("3", "layout_prompt"), ("2", "draft_json")):
+        items = output_json(edited_entry, output_id)["items"]
+        check(f"{label} 保留回填后手动编辑的多行文案和样式",
+              any(i.get("text") == "手动修改第一行\n第二行" and i.get("caption") == "手动修改样式" for i in items))
+    authoritative = run(studio({
+        "layout_data": json.dumps(edited_state, ensure_ascii=False),
+        "box_texts_in": ["41", 0],
+    }, {"41": {"class_type": "PrimitiveString", "inputs": {"value": texts}}}))
+    check("box_texts_in 仍连接时覆盖对应本地改字并回填（不承诺保留手动值）",
+          json.loads(authoritative["outputs"]["1"]["synced_layout_data"][0])["boxes"][0]["text"] == "连线主标题")
+
     passed = sum(1 for _, ok, _ in RESULTS if ok)
     with open(os.path.join(OUT, "checks.json"), "w", encoding="utf-8") as handle:
         json.dump({"base": BASE, "passed": passed, "total": len(RESULTS),

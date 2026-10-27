@@ -26,6 +26,19 @@ class Element {
   remove() { if (this.parent) this.parent.children = this.parent.children.filter((child) => child !== this); }
   set innerHTML(value) { this.children = []; }
   addEventListener(type, handler) { (this.handlers[type] ||= []).push(handler); }
+  removeEventListener(type, handler) { this.handlers[type] = (this.handlers[type] || []).filter(h => h !== handler); }
+  setAttribute(name, value) { this.attrs ||= {}; this.attrs[name] = String(value); }
+  getAttribute(name) { return this.attrs?.[name] ?? null; }
+  removeAttribute(name) { if (this.attrs) delete this.attrs[name]; }
+  closest(selector) {
+    const wanted = selector.split(',').map((part) => part.trim().toUpperCase());
+    let node = this;
+    while (node) {
+      if (wanted.includes(String(node.tagName).toUpperCase())) return node;
+      node = node.parent;
+    }
+    return null;
+  }
   click() { for (const handler of this.handlers.click || []) handler({ target: this, stopPropagation() {} }); }
   focus() {}
   contains(element) { return element === this || this.children.some(child => child.contains(element)); }
@@ -84,6 +97,7 @@ const MUG_COMPILED = {
     clampView, zoomAtPoint, viewToCanvas, ZOOM_MAX, PALETTE_THEMES, QUICK_COLORS,
     THEME_CUSTOM, normalizeHex, pushPaletteColor, nextAllVisible, setAllVisible,
     hexFromRgb, extractDominantColorsFromPixels, pickColorWithEyedropper,
+    guideRatios, snapBoxToGuides, GUIDE_GOLDEN, GUIDE_SNAP_PX,
   } = mod;
 
   const images = [];
@@ -1336,6 +1350,222 @@ const MUG_COMPILED = {
     for(const bad of [[null,1],[-1,100],[NaN,100],[Infinity,100],[true,100]]) {
       assert.strictEqual(normalizeState({base_width:1024,base_height:1024,boxes:[],reference_size:bad},1024,1024).reference_size,undefined);
     }
+  });
+
+
+  console.log('[16] V2.3 composition guides');
+  check('guideRatios returns nothing when both guides are off', () => {
+    assert.deepStrictEqual(guideRatios({ thirds: false, golden: false }), []);
+    assert.deepStrictEqual(guideRatios(undefined), []);
+  });
+  check('thirds use 1/3 and 2/3 on both axes', () => {
+    const ratios = guideRatios({ thirds: true, golden: false });
+    assert.strictEqual(ratios.length, 2);
+    for (const entry of ratios) {
+      assert.strictEqual(entry.kind, 'thirds');
+      assert.ok(Math.abs(entry.ratio - 1 / 3) < 1e-12 || Math.abs(entry.ratio - 2 / 3) < 1e-12);
+    }
+  });
+  check('golden guides use 0.381966 and 0.618034', () => {
+    const ratios = guideRatios({ thirds: false, golden: true }).map((entry) => entry.ratio);
+    assert.deepStrictEqual(ratios, GUIDE_GOLDEN);
+    assert.ok(Math.abs(ratios[0] - 0.382) < 1e-3);
+    assert.ok(Math.abs(ratios[1] - 0.618) < 1e-3);
+    assert.strictEqual(guideRatios({ thirds: true, golden: true }).length, 4);
+  });
+  check('snapBoxToGuides pulls a centre onto the nearest guide', () => {
+    const guides = { thirds: true, golden: false };
+    const snapped = snapBoxToGuides({ cx: 0.336, cy: 0.5, w: 0.2, h: 0.2 }, 900, 900, guides);
+    assert.ok(Math.abs(snapped.cx - 1 / 3) < 1e-12, String(snapped.cx));
+    assert.strictEqual(snapped.cy, 0.5);
+  });
+  check('snapBoxToGuides also snaps box edges', () => {
+    const guides = { thirds: true, golden: false };
+    // left edge 0.4283 - 0.1 = 0.3283 → 4.5px away from 1/3
+    const snapped = snapBoxToGuides({ cx: 0.4283, cy: 0.5, w: 0.2, h: 0.2 }, 900, 900, guides);
+    assert.ok(Math.abs((snapped.cx - 0.1) - 1 / 3) < 1e-12, String(snapped.cx - 0.1));
+  });
+  check('snapBoxToGuides ignores far boxes and disabled guides', () => {
+    const guides = { thirds: true, golden: true };
+    const far = { cx: 0.5, cy: 0.5, w: 0.1, h: 0.1 };
+    assert.deepStrictEqual(snapBoxToGuides(far, 900, 900, guides), { cx: 0.5, cy: 0.5 });
+    const near = { cx: 0.336, cy: 0.336, w: 0.1, h: 0.1 };
+    assert.deepStrictEqual(snapBoxToGuides(near, 900, 900, { thirds: false, golden: false }),
+      { cx: near.cx, cy: near.cy });
+    const edge = { cx: 0.336 + GUIDE_SNAP_PX / 900 * 1.2, cy: 0.5, w: 0.1, h: 0.1 };
+    assert.deepStrictEqual(snapBoxToGuides(edge, 900, 900, guides), { cx: edge.cx, cy: 0.5 });
+  });
+  check('guide toggles persist on node.properties and update the buttons', () => {
+    const node = createEditor();
+    const S = node._vmmoss.S;
+    assert.deepStrictEqual(S.guides, { thirds: true, golden: false });
+    node._vmmoss.toggleGuide('thirds');
+    assert.deepStrictEqual(node.properties.vmmoss_guides, { thirds: false, golden: false });
+    node._vmmoss.toggleGuide('golden');
+    assert.deepStrictEqual(node.properties.vmmoss_guides, { thirds: false, golden: true });
+    node._vmmoss.toggleGuide('thirds');
+    assert.deepStrictEqual(node.properties.vmmoss_guides, { thirds: true, golden: true });
+    assert.ok(node.getWidget('canvas_preset'));
+    // layout_data never carries the guide flags
+    assert.ok(!node.getWidget('layout_data').value.includes('thirds'));
+  });
+  check('guides restore from node.properties on configure', () => {
+    const node = createEditor();
+    node.properties = { vmmoss_guides: { thirds: true, golden: false } };
+    node.onConfigure({});
+    assert.deepStrictEqual(node._vmmoss.S.guides, { thirds: true, golden: false });
+  });
+  check('saved disabled guides survive reload while old workflows use the thirds default', () => {
+    const node = createEditor();
+    node.properties = { vmmoss_guides: { thirds: false, golden: false } };
+    node.onConfigure({});
+    assert.deepStrictEqual(node._vmmoss.S.guides, { thirds: false, golden: false });
+    node.properties = {};
+    node.onConfigure({});
+    assert.deepStrictEqual(node._vmmoss.S.guides, { thirds: true, golden: false });
+  });
+
+  console.log('[17] V2.3 text inspector drawer');
+  const makeEditorWithBoxes = () => {
+    const node = createEditor();
+    const S = node._vmmoss.S;
+    S.state = {
+      version: 2, base_width: 896, base_height: 1152,
+      boxes: [
+        { id: 'box_1', label: 'text', visible: true, lock_aspect: true, cx: 0.5, cy: 0.12,
+          w: 0.8, h: 0.08, orig_aspect: 10, text: '主标题', caption: '白色粗体', tags: [], palette: [] },
+        { id: 'box_2', label: 'character', visible: true, lock_aspect: true, cx: 0.5, cy: 0.55,
+          w: 0.5, h: 0.4, orig_aspect: 0.87, text: '', caption: '角色描述', tags: [], palette: [] },
+      ],
+    };
+    node._vmmoss.commit();
+    node._vmmoss.rebuildRows();
+    node._vmmoss.draw();
+    return node;
+  };
+
+  check('every row exposes a [⤢] expand button', () => {
+    const node = makeEditorWithBoxes();
+    const buttons = node.root.querySelectorAll('.vmmoss-expand');
+    assert.strictEqual(buttons.length, 2);
+    assert.strictEqual(buttons[0].textContent, '⤢');
+  });
+  check('expanding a text box shows both multi-line fields with its copy', () => {
+    const node = makeEditorWithBoxes();
+    node._vmmoss.openInspector('box_1');
+    const drawer = node.root.querySelector('.vmmoss-inspector');
+    assert.ok(drawer.classList.contains('show'));
+    assert.strictEqual(node._vmmoss.S.inspector, 'box_1');
+    assert.strictEqual(drawer.querySelector('.vmmoss-insp-text').value, '主标题');
+    assert.strictEqual(drawer.querySelector('.vmmoss-insp-caption').value, '白色粗体');
+  });
+  check('drawer edits update layout_data and the compact row', () => {
+    const node = makeEditorWithBoxes();
+    node._vmmoss.openInspector('box_1');
+    const drawer = node.root.querySelector('.vmmoss-inspector');
+    const area = drawer.querySelector('.vmmoss-insp-text');
+    area.value = '第一行\n第二行';
+    area.handlers.input[0]({ target: area });
+    const state = JSON.parse(node.getWidget('layout_data').value);
+    assert.strictEqual(state.boxes[0].text, '第一行\n第二行');
+    const row = node.root.querySelectorAll('.vmmoss-row')
+      .find((candidate) => candidate.dataset.id === 'box_1');
+    const rowArea = row.querySelectorAll('textarea')[0];
+    assert.strictEqual(rowArea.value, '第一行\n第二行');
+  });
+  check('character boxes hide the exact-text field but keep the caption', () => {
+    const node = makeEditorWithBoxes();
+    node._vmmoss.openInspector('box_2');
+    const drawer = node.root.querySelector('.vmmoss-inspector');
+    assert.strictEqual(drawer.querySelector('.vmmoss-insp-text'), null);
+    assert.strictEqual(drawer.querySelector('.vmmoss-insp-caption').value, '角色描述');
+  });
+  check('collapsing the drawer hides it and clears the target', () => {
+    const node = makeEditorWithBoxes();
+    node._vmmoss.openInspector('box_1');
+    node._vmmoss.closeInspector();
+    const drawer = node.root.querySelector('.vmmoss-inspector');
+    assert.ok(!drawer.classList.contains('show'));
+    assert.strictEqual(node._vmmoss.S.inspector, null);
+    assert.strictEqual(drawer.children.length, 0);
+  });
+  check('toggleInspector opens and closes the same box', () => {
+    const node = makeEditorWithBoxes();
+    node._vmmoss.toggleInspector('box_1');
+    assert.strictEqual(node._vmmoss.S.inspector, 'box_1');
+    node._vmmoss.toggleInspector('box_1');
+    assert.strictEqual(node._vmmoss.S.inspector, null);
+  });
+  check('removing the expanded box closes the drawer', () => {
+    const node = makeEditorWithBoxes();
+    node._vmmoss.openInspector('box_1');
+    node._vmmoss.S.state.boxes = node._vmmoss.S.state.boxes.filter((box) => box.id !== 'box_1');
+    node._vmmoss.S.inspector = null;
+    node._vmmoss.rebuildRows();
+    assert.ok(!node.root.querySelector('.vmmoss-inspector').classList.contains('show'));
+  });
+
+  console.log('[18] V2.3 acceptance regressions');
+  check('open drawer writes current box after execution replaces state, in both fields', () => {
+    const node = makeEditorWithBoxes();
+    node._vmmoss.openInspector('box_1');
+    const detached = node._vmmoss.S.state.boxes[0];
+    const incoming = JSON.parse(node.getWidget('layout_data').value);
+    incoming.boxes[0].text = 'external text';
+    incoming.boxes[0].caption = 'external style';
+    node.onExecuted({ resolved_size: [[896, 1152]], synced_layout_data: [JSON.stringify(incoming)] });
+    for (const [field, value] of [['text', '编辑后第一行\n第二行'], ['caption', '编辑后的样式']]) {
+      const area = node.root.querySelector(`.vmmoss-insp-${field}`);
+      area.value = value;
+      area.handlers.input[0]({ target: area });
+      assert.strictEqual(node._vmmoss.S.state.boxes[0][field], value);
+      assert.strictEqual(JSON.parse(node.getWidget('layout_data').value).boxes[0][field], value);
+      assert.notStrictEqual(detached[field], value);
+    }
+  });
+  check('drawer survives repeated same-id box replacements and ignores removed targets', () => {
+    const node = makeEditorWithBoxes();
+    node._vmmoss.openInspector('box_1');
+    const area = node.root.querySelector('.vmmoss-insp-text');
+    for (let i = 0; i < 2; i++) {
+      node._vmmoss.S.state.boxes = node._vmmoss.S.state.boxes.map(b => ({ ...b }));
+      area.value = `edit ${i}`;
+      area.handlers.input[0]({ target: area });
+      assert.strictEqual(JSON.parse(node.getWidget('layout_data').value).boxes[0].text, area.value);
+    }
+    node._vmmoss.S.state.boxes = [];
+    node._vmmoss.commit();
+    area.value = 'stale event';
+    area.handlers.input[0]({ target: area });
+    assert.deepStrictEqual(JSON.parse(node.getWidget('layout_data').value).boxes, []);
+  });
+  check('global caption uses a taller resizable native widget without adding a serialized widget', () => {
+    const node = createEditor();
+    const caption = node.getWidget('global_prompt');
+    assert.strictEqual(caption.inputEl.style.resize, 'vertical');
+    assert.strictEqual(caption.inputEl.style.minHeight, '64px');
+    assert.strictEqual(caption.inputEl.style.height, '84px');
+    assert.strictEqual(caption.options.getMinHeight(), 104);
+    assert.strictEqual(caption.options.getMaxHeight(), 104);
+    assert.strictEqual(node.widgets.filter(w => w.name === 'global_prompt').length, 1);
+  });
+  check('global caption height restores from properties without affecting layout JSON', () => {
+    const node = createEditor();
+    const data = node.getWidget('layout_data').value;
+    node.properties = { vmmoss_caption_height: 180 };
+    node.onConfigure({});
+    assert.strictEqual(node.getWidget('global_prompt').options.getHeight(), 200);
+    assert.strictEqual(node.getWidget('global_prompt').inputEl.style.height, '180px');
+    assert.strictEqual(node.getWidget('layout_data').value, data);
+  });
+  check('global caption allocation includes native widget margins without enlarging the textarea', () => {
+    const caption = createEditor().getWidget('global_prompt');
+    caption.margin = 6;
+    assert.strictEqual(caption.options.getMinHeight(), 96);
+    assert.strictEqual(caption.options.getMaxHeight(), 96);
+    caption.margin = 0;
+    assert.strictEqual(caption.options.getHeight(), 84);
+    assert.strictEqual(caption.inputEl.style.height, '84px');
   });
 
   console.log(`\n${passed} checks passed`);

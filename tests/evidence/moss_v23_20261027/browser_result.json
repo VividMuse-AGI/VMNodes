@@ -1,0 +1,732 @@
+[
+  {
+    "name": "DOM 画布挂载",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "12 个后端 widget + 1 个 DOM widget（IMAGE/forceInput 不是 widget）",
+    "ok": true,
+    "detail": "ui_language,canvas_preset,width,height,bbox_ratio_sync,scene_meta,canvas_layout_type,layer_order_mode,global_prompt,layout_data,external_sync_mode,custom_meta_tags,vmmoss_ui"
+  },
+  {
+    "name": "默认语言为中文",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "工具栏为中文",
+    "ok": true,
+    "detail": "+ 文字框 / + 角色框 / + 物体框 / 📥 导入 JSON / 📤 导出 Draft / 网格吸附 开 / 📐 三分线 / 🔱 黄金线 / 水平居中 / 垂直居中 / 等宽 / 等高 / 水平等距 / 垂直等距 / 👁 全部隐藏 / 清空 / 中文 | EN / 应用 / 🎨+ / 💧 吸管 / 🎨 提取配色 /  / "
+  },
+  {
+    "name": "顶部 [中文 | EN] 开关存在",
+    "ok": true,
+    "detail": "+ 文字框 / + 角色框 / + 物体框 / 📥 导入 JSON / 📤 导出 Draft / 网格吸附 开 / 📐 三分线 / 🔱 黄金线 / 水平居中 / 垂直居中 / 等宽 / 等高 / 水平等距 / 垂直等距 / 👁 全部隐藏 / 清空 / 中文 | EN / 应用 / 🎨+ / 💧 吸管 / 🎨 提取配色 /  / "
+  },
+  {
+    "name": "native widget 标签已本地化",
+    "ok": true,
+    "detail": "{\"ui_language\":\"界面语言\",\"canvas_preset\":\"尺寸预设\",\"width\":\"宽 W\",\"height\":\"高 H\",\"bbox_ratio_sync\":\"比例同步\",\"scene_meta\":\"体裁先验\",\"canvas_layout_type\":\"画布结构\",\"layer_order_mode\":\"图层排序\",\"global_prompt\":\"全局描述\",\"layout_data\":\"画布数据\"}"
+  },
+  {
+    "name": "新节点默认开启三分线、关闭黄金线",
+    "ok": true,
+    "detail": "{\"thirds\":true,\"golden\":false}"
+  },
+  {
+    "name": "ui_language 切到 English",
+    "ok": true,
+    "detail": "English (EN)"
+  },
+  {
+    "name": "节点标题切到英文",
+    "ok": true,
+    "detail": "VM MOSS Layout Studio"
+  },
+  {
+    "name": "widget 标签切到英文",
+    "ok": true,
+    "detail": "Medium / Genre"
+  },
+  {
+    "name": "工具栏切到英文",
+    "ok": true,
+    "detail": "+ Text / + Character / + Object / 📥 Import JSON / 📤 Export Draft / Snap: On / 📐 Thirds / 🔱 Golden / Center H / Center V / Match W / Match H / Distribute H / Distribute V / 👁 Hide All / Clear / 中文 | EN / Apply / 🎨+ / 💧 Pick / 🎨 Extract Palette /  / "
+  },
+  {
+    "name": "空状态与状态栏切到英文",
+    "ok": true,
+    "detail": "No boxes yet — use “+ Text”, o"
+  },
+  {
+    "name": "切换未破坏中文原标题",
+    "ok": true,
+    "detail": "VM MOSS 海报布局工作台"
+  },
+  {
+    "name": "再次点击切回中文",
+    "ok": true,
+    "detail": "中文 (ZH)"
+  },
+  {
+    "name": "画布尺寸还原为 1536×1024",
+    "ok": true,
+    "detail": "1536×1024 / Custom (自定义宽高 / Custom W×H)"
+  },
+  {
+    "name": "3 个框与 3 行图层",
+    "ok": true,
+    "detail": "3/3"
+  },
+  {
+    "name": "全局描述与体裁还原",
+    "ok": true,
+    "detail": "product campaign | studio photography | single"
+  },
+  {
+    "name": "画布视口比例 = 1536/1024",
+    "ok": true,
+    "detail": "487×325"
+  },
+  {
+    "name": "导入成功后关闭弹窗",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "导出草稿为 abs/xyxy 且 3 个框",
+    "ok": true,
+    "detail": "abs/xyxy/3"
+  },
+  {
+    "name": "导出坐标与官方示例一致",
+    "ok": true,
+    "detail": "[176,224,800,864]"
+  },
+  {
+    "name": "导出保留换行文字",
+    "ok": true,
+    "detail": "\"一杯温暖\\n一刻从容\""
+  },
+  {
+    "name": "Auto：重叠处优先命中文字框",
+    "ok": true,
+    "detail": "txt"
+  },
+  {
+    "name": "Manual：后画的背景在上、命中背景",
+    "ok": true,
+    "detail": "bg"
+  },
+  {
+    "name": "按比例缩到最小：32×8 px",
+    "ok": true,
+    "detail": "32.00×8.00"
+  },
+  {
+    "name": "锁定框未退化为 1:1",
+    "ok": true,
+    "detail": "4.000"
+  },
+  {
+    "name": "等高：两框高度一致",
+    "ok": true,
+    "detail": "0.1 vs 0.1"
+  },
+  {
+    "name": "等高：锁定框按比例同步宽度",
+    "ok": true,
+    "detail": "2.000"
+  },
+  {
+    "name": "onExecuted 回填 1008×784 与 Custom",
+    "ok": true,
+    "detail": "1008×784 / Custom (自定义宽高 / Custom W×H)"
+  },
+  {
+    "name": "画布基准与视口同步",
+    "ok": true,
+    "detail": "1008×784 / 457×356"
+  },
+  {
+    "name": "外部布局回填 2 个框到画布与列表",
+    "ok": true,
+    "detail": "2/2"
+  },
+  {
+    "name": "回填同时更新尺寸与全局描述",
+    "ok": true,
+    "detail": "1536×1024 / product campaign"
+  },
+  {
+    "name": "参考图栏显示原始尺寸",
+    "ok": true,
+    "detail": "参考图 1080×1440"
+  },
+  {
+    "name": "一键匹配按钮文案为对齐尺寸",
+    "ok": true,
+    "detail": "一键匹配 1088×1440"
+  },
+  {
+    "name": "一键匹配应用 1088×1440",
+    "ok": true,
+    "detail": "1088×1440"
+  },
+  {
+    "name": "滚轮放大到 1.2x~6x",
+    "ok": true,
+    "detail": "1.716"
+  },
+  {
+    "name": "缩放未触发外层 ComfyUI 画布缩放/平移",
+    "ok": true,
+    "detail": "0.78 / 416,110"
+  },
+  {
+    "name": "右上角徽章显示倍率",
+    "ok": true,
+    "detail": "🔍 172% ↺"
+  },
+  {
+    "name": "缩放锚点为鼠标光标位置",
+    "ok": true,
+    "detail": "138.00→137.75 / 178.00→177.62"
+  },
+  {
+    "name": "中键拖动平移视口",
+    "ok": true,
+    "detail": "pan -98.4,-126.8 → -188.1,-184.5"
+  },
+  {
+    "name": "平移未带动外层 ComfyUI 画布",
+    "ok": true,
+    "detail": "416,110"
+  },
+  {
+    "name": "中键释放后平移状态清空",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "200% + 平移后点击命中正确框",
+    "ok": true,
+    "detail": "z2"
+  },
+  {
+    "name": "200% 拖动位移按 1/zoom 折算",
+    "ok": true,
+    "detail": "0.5697 vs 0.5697"
+  },
+  {
+    "name": "徽章一键复位 100% 居中",
+    "ok": true,
+    "detail": "{\"zoom\":1,\"panX\":0,\"panY\":0}"
+  },
+  {
+    "name": "快捷键 0 复位 100% 居中",
+    "ok": true,
+    "detail": "{\"zoom\":1,\"panX\":0,\"panY\":0}"
+  },
+  {
+    "name": "默认按钮为「👁 全部隐藏」",
+    "ok": true,
+    "detail": "👁 全部隐藏"
+  },
+  {
+    "name": "一键隐藏 3 个框",
+    "ok": true,
+    "detail": "0 / 画布 896×1152基准 896×11523 框 / 0 可见输出顺序 —"
+  },
+  {
+    "name": "隐藏后按钮切为「🚫 全部显示」并高亮",
+    "ok": true,
+    "detail": "🚫 全部显示"
+  },
+  {
+    "name": "再次点击恢复 3 个框",
+    "ok": true,
+    "detail": "👁 全部隐藏"
+  },
+  {
+    "name": "预设主题写入 4 个颜色 + 4 个色块",
+    "ok": true,
+    "detail": "[\"#0F172A\",\"#1E40AF\",\"#38BDF8\",\"#F8FAFC\"]"
+  },
+  {
+    "name": "色块 × 可移除",
+    "ok": true,
+    "detail": "#1E40AF,#38BDF8,#F8FAFC"
+  },
+  {
+    "name": "取色器新增 #8B5CF6",
+    "ok": true,
+    "detail": "#1E40AF,#38BDF8,#F8FAFC,#8B5CF6"
+  },
+  {
+    "name": "同一颜色不重复写入",
+    "ok": true,
+    "detail": "#1E40AF,#38BDF8,#F8FAFC,#8B5CF6"
+  },
+  {
+    "name": "点击行内 🎨 打开图层色板弹窗",
+    "ok": true,
+    "detail": "图层色板"
+  },
+  {
+    "name": "快捷色盘写入 item.palette",
+    "ok": true,
+    "detail": "#9333EA"
+  },
+  {
+    "name": "重复颜色不重复添加并提示",
+    "ok": true,
+    "detail": "该颜色已在色板中"
+  },
+  {
+    "name": "第二次选色追加为两色",
+    "ok": true,
+    "detail": "#9333EA,#06B6D4"
+  },
+  {
+    "name": "图层行渲染两个色点",
+    "ok": true,
+    "detail": "2"
+  },
+  {
+    "name": "画布框角标旁绘制色点",
+    "ok": true,
+    "detail": "15 px / canvas 276×356 / visible 3"
+  },
+  {
+    "name": "手输色值（ivory）归一为 Hex",
+    "ok": true,
+    "detail": "#9333EA,#06B6D4,#FFFFF0"
+  },
+  {
+    "name": "清空色板",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "导出 draft 的 summary.palette 与全局色板一致",
+    "ok": true,
+    "detail": "[\"#1E40AF\",\"#38BDF8\",\"#F8FAFC\",\"#8B5CF6\"]"
+  },
+  {
+    "name": "EN：工具栏显示 Hide All",
+    "ok": true,
+    "detail": "+ Text / + Character / + Object / 📥 Import JSON / 📤 Export Draft / Snap: Off / 📐 Thirds / 🔱 Golden / Center H / Cent"
+  },
+  {
+    "name": "EN：全局色板标签与主题本地化",
+    "ok": true,
+    "detail": "Global palette: | Custom …,Tech Neon,Black & Gold,Warm Editorial,Oriental Crimson,Fresh Infographic"
+  },
+  {
+    "name": "EN：图层色板弹窗标题与分组本地化",
+    "ok": true,
+    "detail": "Layer palette / Poster colours"
+  },
+  {
+    "name": "EN：缩放徽章提示本地化",
+    "ok": true,
+    "detail": "Reset to 100% centred view (shortcut 0)"
+  },
+  {
+    "name": "切回中文",
+    "ok": true,
+    "detail": "中文 (ZH)"
+  },
+  {
+    "name": "V21 real wheel reaches approximately 200%",
+    "ok": true,
+    "detail": "{\"zoom\":1.9999999626105784,\"panX\":-118.16826751137233,\"panY\":-162.97834167968693}"
+  },
+  {
+    "name": "V21 cursor anchor survives wheel zoom",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "V21 wheel leaves host scale and offset unchanged",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "V21 real middle drag changes view by the CSS-correct distance",
+    "ok": true,
+    "detail": "{\"zoom\":1.9999999626105784,\"panX\":-150.21954520088238,\"panY\":-186.05526536529783}"
+  },
+  {
+    "name": "V21 middle drag leaves host and box geometry unchanged",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "V21 panned 200% canvas selects correct box",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "V21 panned 200% move has correct X and Y inverse mapping",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "V21 panned 200% nw resize preserves opposite corner and maps distance",
+    "ok": true,
+    "detail": "{\"before\":{\"id\":\"v21_geometry\",\"label\":\"object\",\"visible\":true,\"lock_aspect\":false,\"cx\":0.5278706767727821,\"cy\":0.5162057051383618,\"w\":0.25,\"h\":0.25,\"orig_aspect\":0.7777777777777778,\"text\":\"\",\"caption\":\"Geometry\",\"palette\":[]},\"after\":{\"id\":\"v21_geometry\",\"label\":\"object\",\"visible\":true,\"lock_aspect\":false,\"cx\":0.519741728883947,\"cy\":0.5108038163893193,\"w\":0.26625789577767034,\"h\":0.260803777498085,\"orig_aspect\":0.7940432323502837,\"text\":\"\",\"caption\":\"Geometry\",\"palette\":[]}}"
+  },
+  {
+    "name": "V21 panned 200% ne resize preserves opposite corner and maps distance",
+    "ok": true,
+    "detail": "{\"before\":{\"id\":\"v21_geometry\",\"label\":\"object\",\"visible\":true,\"lock_aspect\":false,\"cx\":0.519741728883947,\"cy\":0.5108038163893193,\"w\":0.26625789577767034,\"h\":0.260803777498085,\"orig_aspect\":0.7940432323502837,\"text\":\"\",\"caption\":\"Geometry\",\"palette\":[]},\"after\":{\"id\":\"v21_geometry\",\"label\":\"object\",\"visible\":true,\"lock_aspect\":false,\"cx\":0.5278706781160736,\"cy\":0.505401914676532,\"w\":0.2825157942419235,\"h\":0.27160758092365955,\"orig_aspect\":0.8090146301710471,\"text\":\"\",\"caption\":\"Geometry\",\"palette\":[]}}"
+  },
+  {
+    "name": "V21 panned 200% sw resize preserves opposite corner and maps distance",
+    "ok": true,
+    "detail": "{\"before\":{\"id\":\"v21_geometry\",\"label\":\"object\",\"visible\":true,\"lock_aspect\":false,\"cx\":0.5278706781160736,\"cy\":0.505401914676532,\"w\":0.2825157942419235,\"h\":0.27160758092365955,\"orig_aspect\":0.8090146301710471,\"text\":\"\",\"caption\":\"Geometry\",\"palette\":[]},\"after\":{\"id\":\"v21_geometry\",\"label\":\"object\",\"visible\":true,\"lock_aspect\":false,\"cx\":0.5197417307240121,\"cy\":0.5108038042144099,\"w\":0.29877368902604645,\"h\":0.28241135999941597,\"orig_aspect\":0.8228406106242603,\"text\":\"\",\"caption\":\"Geometry\",\"palette\":[]}}"
+  },
+  {
+    "name": "V21 panned 200% se resize preserves opposite corner and maps distance",
+    "ok": true,
+    "detail": "{\"before\":{\"id\":\"v21_geometry\",\"label\":\"object\",\"visible\":true,\"lock_aspect\":false,\"cx\":0.5197417307240121,\"cy\":0.5108038042144099,\"w\":0.29877368902604645,\"h\":0.28241135999941597,\"orig_aspect\":0.8228406106242603,\"text\":\"\",\"caption\":\"Geometry\",\"palette\":[]},\"after\":{\"id\":\"v21_geometry\",\"label\":\"object\",\"visible\":true,\"lock_aspect\":false,\"cx\":0.5278706781160736,\"cy\":0.516205705927197,\"w\":0.3150315838101692,\"h\":0.293215163424991,\"orig_aspect\":0.8356476599763855,\"text\":\"\",\"caption\":\"Geometry\",\"palette\":[]}}"
+  },
+  {
+    "name": "V21 panned 200% empty double click adds exactly one text box",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "V21 reset after pan and geometry edits restores centred 100%",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "V21 wheel upper bound is 600%",
+    "ok": true,
+    "detail": "{\"zoom\":6,\"panX\":-686.9951927166085,\"panY\":-885.4045612394655}"
+  },
+  {
+    "name": "V21 wheel lower bound is centred 100%",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "V21 Space plus left drag pans only the inner viewport",
+    "ok": true,
+    "detail": "{\"before\":{\"zoom\":1.9999999626105784,\"panX\":-137.3990334060511,\"panY\":-177.08090562694022},\"after\":{\"zoom\":1.9999999626105784,\"panX\":-163.04005555765914,\"panY\":-192.4655214173475},\"space\":false,\"graphBefore\":{\"scale\":0.78,\"offset\":[416,110]},\"graphAfter\":{\"scale\":0.78,\"offset\":[416,110]}}"
+  },
+  {
+    "name": "V21 releasing Space outside canvas clears modifier",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "V21 registered blur listener clears active Space (synthetic lifecycle event)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "V21 native global picker ignores intermediate colours and commits final once",
+    "ok": true,
+    "detail": "{\"during\":{\"value\":\"#8a5ef3\",\"palette\":[]},\"after\":[\"#8A5EF3\"]}"
+  },
+  {
+    "name": "V21 native layer picker ignores intermediate colours and commits final once",
+    "ok": true,
+    "detail": "{\"during\":{\"value\":\"#f09c0a\",\"palette\":[]},\"after\":[\"#F09C0A\"]}"
+  },
+  {
+    "name": "全局色板栏有 [💧 吸管] 按钮",
+    "ok": true,
+    "detail": "💧 吸管 / 吸取屏幕任意位置的颜色，加入全局色板"
+  },
+  {
+    "name": "单框调色盘有 [💧 吸管取色] 按钮",
+    "ok": true,
+    "detail": "💧 吸管取色 / 吸取颜色加入该框色板"
+  },
+  {
+    "name": "无参考图时 🎨 提取配色按钮隐藏",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "💧 吸管走原生 EyeDropper 并写入全局色板",
+    "ok": true,
+    "detail": "2 次 / [\"#123456\"]"
+  },
+  {
+    "name": "原生吸管模式不进入画布降级，重复色自动去重",
+    "ok": true,
+    "detail": "[\"#123456\"]"
+  },
+  {
+    "name": "Esc 取消（AbortError）静默且不污染色板、不降级",
+    "ok": true,
+    "detail": "[\"#123456\"]"
+  },
+  {
+    "name": "无原生 API 时平滑降级到画布吸管（目标=全局）",
+    "ok": true,
+    "detail": "{\"target\":\"global\",\"hex\":null,\"mx\":-1,\"my\":-1,\"moved\":false} / copy"
+  },
+  {
+    "name": "降级时状态栏说明原因",
+    "ok": true,
+    "detail": "当前环境不支持全屏吸管，已切换到画布吸管"
+  },
+  {
+    "name": "Esc 退出画布吸管并恢复光标",
+    "ok": true,
+    "detail": "crosshair"
+  },
+  {
+    "name": "右键取消吸管且不写入颜色",
+    "ok": true,
+    "detail": "{\"entered\":true,\"eye\":false,\"palette\":[\"#123456\"]}"
+  },
+  {
+    "name": "参考图加载后两处 🎨 提取配色按钮出现",
+    "ok": true,
+    "detail": "🎨 提取配色"
+  },
+  {
+    "name": "快捷键 I 在选中框时进入画布吸管并指向该框",
+    "ok": true,
+    "detail": "{\"target\":\"p1\",\"hex\":null,\"mx\":-1,\"my\":-1,\"moved\":false}"
+  },
+  {
+    "name": "鼠标移动实时读取像素并给出 #RRGGBB",
+    "ok": true,
+    "detail": "#C81E1E"
+  },
+  {
+    "name": "放大镜在光标处绘制预览环与色值胶囊",
+    "ok": true,
+    "detail": "fill 200,30,30 / center 124,19,19 / stroke 239,235,236 / backdrop 102,26,29"
+  },
+  {
+    "name": "左键点击把像素色写入选中框色板并退出吸管",
+    "ok": true,
+    "detail": "[\"#C81E1E\"]"
+  },
+  {
+    "name": "🎨 提取配色从参考图取到 4 个主色",
+    "ok": true,
+    "detail": "[\"#C81E1E\",\"#1E40AF\",\"#F59E0B\",\"#F8FAFC\"]"
+  },
+  {
+    "name": "提取结果写入全局色板 summary.palette",
+    "ok": true,
+    "detail": "已提取 4 个主色"
+  },
+  {
+    "name": "EN：吸管与提取配色按钮文案本地化",
+    "ok": true,
+    "detail": "💧 Pick | 🎨 Extract Palette | 💧 Eyedropper"
+  },
+  {
+    "name": "切回中文并还原原生 API",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "断开参考图后底图与提取按钮同步隐藏",
+    "ok": true,
+    "detail": "{\"ref\":false,\"refBarShown\":false,\"palExtractHidden\":true}"
+  },
+  {
+    "name": "工具栏有独立的 [📐 三分线] 与 [🔱 黄金线] 按钮",
+    "ok": true,
+    "detail": "📐 三分线 / 🔱 黄金线"
+  },
+  {
+    "name": "两个参考线均可手动关闭",
+    "ok": true,
+    "detail": "{\"thirds\":false,\"golden\":false}"
+  },
+  {
+    "name": "关闭时画布上没有参考线（基准亮度）",
+    "ok": true,
+    "detail": "v=68,68 plain=43"
+  },
+  {
+    "name": "三分线开启后 1/3、2/3 处出现高对比白线（覆盖全屏框之上）",
+    "ok": true,
+    "detail": "v=190,190 h=191,191"
+  },
+  {
+    "name": "三分线只在 1/3、2/3，不误画黄金线",
+    "ok": true,
+    "detail": "cross=39,43,39,43"
+  },
+  {
+    "name": "画面中心（1/2）没有多余参考线",
+    "ok": true,
+    "detail": "43"
+  },
+  {
+    "name": "黄金线在 0.382 / 0.618 处绘制四条贯穿线",
+    "ok": true,
+    "detail": "v=238,238 h=238,238"
+  },
+  {
+    "name": "黄金线绘制 4 个焦点十字",
+    "ok": true,
+    "detail": "cross=238,238,238,238"
+  },
+  {
+    "name": "仅开黄金线时不再显示三分线",
+    "ok": true,
+    "detail": "v=142,142"
+  },
+  {
+    "name": "拖动框靠近三分线时自动吸附到 1/3",
+    "ok": true,
+    "detail": "0.3360 → 0.333333"
+  },
+  {
+    "name": "关闭参考线后不再吸附（只按网格）",
+    "ok": true,
+    "detail": "0.339286"
+  },
+  {
+    "name": "参考线开关不影响 draft_json",
+    "ok": true,
+    "detail": "439 vs 439 chars"
+  },
+  {
+    "name": "参考线不写入 layout_data",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "参考线状态写入 node.properties",
+    "ok": true,
+    "detail": "{\"thirds\":true,\"golden\":false}"
+  },
+  {
+    "name": "保存 / 重载后参考线状态恢复",
+    "ok": true,
+    "detail": "{\"thirds\":true,\"golden\":false}"
+  },
+  {
+    "name": "每行都有 [⤢] 展开按钮",
+    "ok": true,
+    "detail": "2/2"
+  },
+  {
+    "name": "默认不展开抽屉",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "点击 [⤢] 展开全宽抽屉并选中该框",
+    "ok": true,
+    "detail": "ratio=0.992 box=k1"
+  },
+  {
+    "name": "抽屉里渲染文字与样式两个大号多行输入",
+    "ok": true,
+    "detail": "原标题 / 原样式 / 12px / vertical"
+  },
+  {
+    "name": "抽屉只增高一个面板的高度",
+    "ok": true,
+    "detail": "+164px"
+  },
+  {
+    "name": "多行文字实时同步到 layout_data 与图层行",
+    "ok": true,
+    "detail": "\"第一行标题\\n第二行副标题\""
+  },
+  {
+    "name": "样式描述实时同步到图层行",
+    "ok": true,
+    "detail": "白色粗体现代无衬线，两行居中"
+  },
+  {
+    "name": "切换选中框后同一抽屉跟随新框",
+    "ok": true,
+    "detail": "k2 / 原角色描述"
+  },
+  {
+    "name": "角色框只显示描述字段，且抽屉高度不叠加",
+    "ok": true,
+    "detail": "hasText=false nodeH=1147"
+  },
+  {
+    "name": "点「收起」关闭抽屉并还原节点高度",
+    "ok": true,
+    "detail": "nodeH=1047 base=1047"
+  },
+  {
+    "name": "onExecuted 回填全局描述",
+    "ok": true,
+    "detail": "连线带来的全局描述"
+  },
+  {
+    "name": "onExecuted 回填各框文案到画布与图层行",
+    "ok": true,
+    "detail": "连线标题 / 2 行"
+  },
+  {
+    "name": "连线 box_texts_in 时状态栏提示文案来自连线",
+    "ok": true,
+    "detail": "画布 896×1152基准 896×11522 框 / 2 可见输出顺序 T1→C1文案来自连线"
+  },
+  {
+    "name": "全局描述默认加高且可纵向拖动",
+    "ok": true,
+    "detail": "{\"resize\":\"vertical\",\"height\":84,\"nodeHeight\":1027}"
+  },
+  {
+    "name": "全局描述多行编辑仍写入原生 STRING 控件",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "拖高全局描述后节点同步增高且不覆盖布局画布",
+    "ok": true,
+    "detail": "{\"height\":216,\"nodeHeight\":1159,\"savedHeight\":216,\"fitsAllocation\":true,\"noOverlap\":true}"
+  },
+  {
+    "name": "拖高全局描述后不越过原生控件分配区域或遮挡下一行",
+    "ok": true,
+    "detail": "{\"height\":216,\"nodeHeight\":1159,\"savedHeight\":216,\"fitsAllocation\":true,\"noOverlap\":true}"
+  },
+  {
+    "name": "用户关闭的参考线保存重载后仍关闭",
+    "ok": true,
+    "detail": "{\"thirds\":false,\"golden\":false}"
+  },
+  {
+    "name": "全局描述高度与多行文字随工作流重载恢复",
+    "ok": true,
+    "detail": "{\"guides\":{\"thirds\":false,\"golden\":false},\"height\":216,\"caption\":\"全局多行描述\\n第二行光影要求\",\"savedHeight\":216}"
+  },
+  {
+    "name": "真实连线执行回填后抽屉仍打开且状态对象已更新",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "真实执行后抽屉改字及样式同步保存并更新列表",
+    "ok": true,
+    "detail": "{\"text\":\"执行后手动第一行\\n第二行\",\"caption\":\"执行后手动样式\",\"rowText\":\"执行后手动第一行\\n第二行\",\"rowCaption\":\"执行后手动样式\"}"
+  },
+  {
+    "name": "再次真实执行的 layout_prompt 包含回填后的手动编辑",
+    "ok": true,
+    "detail": "{\"label\":\"text\",\"caption\":\"执行后手动样式\",\"text\":\"执行后手动第一行\\n第二行\",\"bbox\":[-404,-314,-288,314]}"
+  },
+  {
+    "name": "无本节点相关控制台错误",
+    "ok": true,
+    "detail": ""
+  }
+]

@@ -1,0 +1,159 @@
+[1] i18n dictionary
+  [PASS] zh/en expose the same key set
+  [PASS] every translation is a non-empty string
+  [PASS] placeholders match between languages
+[2] presets and alignment
+  [PASS] every preset named by the design is present (+ Custom)
+  [PASS] all preset sizes are multiples of 16 and within 256–4096
+  [PASS] alignedSize snaps and clamps
+[3] content ids match the Python parser
+  [PASS] SHA-1 known vector
+  [PASS] imported ids equal Python sha1 prefixes
+  [PASS] contentId is stable for a known box
+[4] Skill JSON parsing
+  [PASS] draft keeps canvas, meta, canvas type, caption and boxes
+  [PASS] markdown fences are stripped
+  [PASS] compiled yxyx parses to the same normalised geometry
+  [PASS] caption-only objects and plain strings fill the caption
+  [PASS] unrecognised JSON returns null
+  [PASS] cross-size import keeps a square character (F02)
+[5] resize geometry (F03)
+  [PASS] 4:1 locked box cannot shrink below 32×8 px
+  [PASS] 1:4 locked box cannot shrink below 8×32 px
+  [PASS] 1:1 locked box minimum is 8×8 px
+  [PASS] all four corners keep the locked ratio and stay inside
+  [PASS] unlocked boxes resize freely with an 8px floor
+[6] effective layer order (F05)
+  [PASS] Auto puts text last and sorts objects by area
+  [PASS] Manual preserves the list order
+  [PASS] display tags follow list order, not z-order
+[7] draft export matches the backend
+  [PASS] draft export reproduces the Python draft for the mug example
+  [PASS] hidden boxes are excluded from the draft
+[8] mode helpers
+  [PASS] sync modes fall back to Smart
+  [PASS] tag splitting accepts commas and full-width separators
+  [PASS] aspect sync returns the same size for identical canvases
+[9] independent review regressions
+  [PASS] alignment uses Python ties-to-even, including input rounding
+  [PASS] fractional draft edges survive repeated import and export
+  [PASS] state normalization retains palette and explicit empty summary values
+  [PASS] empty draft and compiled layouts are distinct from caption-only inputs
+  [PASS] repeated onExecuted payload overwrites stale local edits and restores widgets
+  [PASS] import dialog Replace clears the canvas for an empty layout
+  [PASS] caption-only dialog import preserves boxes and palette
+  [PASS] invalid nonempty layout with caption cannot clear the canvas
+  [PASS] Merge dialog applies and exports the incoming summary palette
+  [PASS] reference disconnect clears the overlay and ignores a delayed image load
+  [PASS] backend null reference clears the overlay and earlier loads cannot replace a newer image
+  [PASS] a queued reference result cannot restore an overlay after disconnect
+[final audit regressions]
+  [PASS] missing compiled dimensions reject all four outside edges
+  [PASS] missing dimensions accept exact edges and explicit dimensions permit resizing
+  [PASS] partial and null dimensions validate the missing axis
+  [PASS] failed compiled Replace and Merge keep the entire local layout and show an actionable error
+  [PASS] Delete deletes only the selected box and does not reach host shortcuts
+  [PASS] Delete with no selected box preserves layout and does not reach host shortcuts
+  [PASS] Backspace deletes only the selected box and does not reach host shortcuts
+  [PASS] Backspace with no selected box preserves layout and does not reach host shortcuts
+  [PASS] arrow keys still nudge and unrelated shortcuts still propagate
+  [PASS] global caption placeholder switches EN/ZH/EN without changing content
+  [PASS] layer reorder uses local row coordinates at every canvas zoom and scroll offset
+[10] V2.1 canvas view (zoom / pan)
+  [PASS] clampView resets to a centred 100% view at zoom <= 1
+  [PASS] clampView keeps the canvas covered and caps at 600%
+  [PASS] zoomAtPoint keeps the point under the cursor fixed
+  [PASS] zoomAtPoint saturates and springs back to 100%
+  [PASS] viewToCanvas inverts the render transform exactly
+[11] V2.1 palette helpers
+  [PASS] 16 quick colours are unique, valid and cover the design list
+  [PASS] every palette theme carries four valid colours and both labels
+  [PASS] normalizeHex handles shorthand, long form and colour words
+  [PASS] pushPaletteColor dedupes, caps at four and keeps unknown words
+  [PASS] toggle-all helpers flip every box and report the next state
+  [PASS] draft export writes summary.palette and item.palette
+  [PASS] i18n covers every t("…") key the UI uses
+[12] V2.1 native picker and Space lifecycle regressions
+  [PASS] global picker commits only final colour of a continuous gesture
+  [PASS] global picker uses the last available slot for the final colour
+  [PASS] layer picker commits only final colour and preserves separate selections
+  [PASS] layer picker respects dedupe and limit without recording intermediate colours
+  [PASS] Space keyup outside canvas releases pan modifier
+  [PASS] Space keyup in text input clears an already active modifier
+  [PASS] window blur clears Space and active pan and releases pointer capture
+  [PASS] removing editor removes Space and blur listeners
+[13] V2.2 eyedropper and palette extraction
+  [PASS] hexFromRgb pads, upper-cases and clamps channels
+  [PASS] extractDominantColorsFromPixels returns the four block colours in order
+  [PASS] extraction ignores transparent pixels and empty input
+  [PASS] maxColors caps the result and near-duplicates are merged
+  [PASS] native EyeDropper success normalises the sampled colour
+  [PASS] AbortError is silent and never triggers the fallback
+  [PASS] missing or throwing native API degrades to the canvas fallback
+  [PASS] global palette bar exposes 💧 pick and 🎨 extract buttons
+  [PASS] per-box popover exposes a 💧 eyedropper button
+  [PASS] I enters the canvas eyedropper and Esc leaves it
+  [PASS] I targets the selected box and ignores text fields
+  [PASS] picked colours land in the global palette when nothing is selected
+  [PASS] picked colours land in the selected box palette
+  [PASS] extract palette reads the reference image into the global palette
+  [PASS] extract palette without a reference leaves the palette untouched
+  [PASS] canvas eyedropper click samples and exits without moving boxes
+[14] V2.2 sampling regressions
+  [PASS] extraction removes clipped white and black before ranking four colours
+  [PASS] noise thresholds retain ordinary light dark and saturated colours
+  [PASS] all-noise extraction returns no fabricated palette
+  [PASS] reference sampling inverts zoom and both pan axes independently of DPR
+  [PASS] canvas sampling removes the loupe before every hover and click
+  [PASS] rendered canvas sampling uses screen pixels and clamps physical DPR edges
+  [PASS] all-noise reference extraction preserves the existing palette
+[re-import regressions]
+  [PASS] clear then reimport dimensioned Draft restores every original box
+  [PASS] manual width and height then Replace restores source geometry
+  [PASS] Replace after zoom and pan exposes the whole newly imported layout
+  [PASS] Merge retains the view and current selection
+  [PASS] caption-only and rejected imports retain existing framing
+  [PASS] Python generator pasted into Replace or Merge is rejected without changing canvas
+  [PASS] ordinary caption prose and valid JSON mentioning Python remain importable
+[megapixels]
+  [PASS] MP sizing preserves portrait/landscape/square ratios within alignment tolerance
+  [PASS] invalid MP and extreme aspect targets fail without clamping
+  [PASS] Apply updates both sides once and respects all three box sync modes
+  [PASS] invalid Apply keeps layout and previous target; correction clears error
+  [PASS] linked dimensions disable Apply and reconnect restores it
+  [PASS] saved MP target restores without altering saved dimensions or widget count
+  [PASS] Replace import remains authoritative after MP sizing
+  [PASS] MP controls translate in place while preserving the entered target
+[center layout]
+  [PASS] Center Layout preserves all source pixels and translates the full layout
+  [PASS] Center Layout treats only full canvas objects as backgrounds
+  [PASS] Center Layout fits a smaller canvas with one shared scale and keeps edge boxes inside
+  [PASS] Center Layout state saves reference placement through chained changes and reload
+  [PASS] Replace import resets reference padding; switching modes does not resize boxes
+  [PASS] reference rectangle matches centered placement and invalid metadata is discarded
+[16] V2.3 composition guides
+  [PASS] guideRatios returns nothing when both guides are off
+  [PASS] thirds use 1/3 and 2/3 on both axes
+  [PASS] golden guides use 0.381966 and 0.618034
+  [PASS] snapBoxToGuides pulls a centre onto the nearest guide
+  [PASS] snapBoxToGuides also snaps box edges
+  [PASS] snapBoxToGuides ignores far boxes and disabled guides
+  [PASS] guide toggles persist on node.properties and update the buttons
+  [PASS] guides restore from node.properties on configure
+  [PASS] saved disabled guides survive reload while old workflows use the thirds default
+[17] V2.3 text inspector drawer
+  [PASS] every row exposes a [⤢] expand button
+  [PASS] expanding a text box shows both multi-line fields with its copy
+  [PASS] drawer edits update layout_data and the compact row
+  [PASS] character boxes hide the exact-text field but keep the caption
+  [PASS] collapsing the drawer hides it and clears the target
+  [PASS] toggleInspector opens and closes the same box
+  [PASS] removing the expanded box closes the drawer
+[18] V2.3 acceptance regressions
+  [PASS] open drawer writes current box after execution replaces state, in both fields
+  [PASS] drawer survives repeated same-id box replacements and ignores removed targets
+  [PASS] global caption uses a taller resizable native widget without adding a serialized widget
+  [PASS] global caption height restores from properties without affecting layout JSON
+  [PASS] global caption allocation includes native widget margins without enlarging the textarea
+
+136 checks passed

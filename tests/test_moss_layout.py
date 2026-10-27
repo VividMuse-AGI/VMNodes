@@ -115,7 +115,8 @@ class SchemaTests(unittest.TestCase):
             "ui_language", "canvas_preset", "width", "height", "bbox_ratio_sync", "scene_meta",
             "canvas_layout_type", "layer_order_mode", "global_prompt", "layout_data"])
         self.assertEqual(list(schema["optional"]), [
-            "ref_image", "external_layout_json", "external_sync_mode", "custom_meta_tags"])
+            "ref_image", "global_prompt_in", "box_texts_in", "external_layout_json",
+            "external_sync_mode", "custom_meta_tags"])
         self.assertEqual(M.RETURN_TYPES, ("STRING", "STRING", "IMAGE", "INT", "INT"))
         self.assertEqual(M.RETURN_NAMES, ("layout_prompt", "draft_json", "preview_image", "width", "height"))
         self.assertEqual(M.CATEGORY, "VMNodes/MOSS")
@@ -592,7 +593,8 @@ class FrontendParityTests(unittest.TestCase):
             encoding="utf-8")
         cases = Path(self.tmp.name) / "cases.json"
         cases.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
-        proc = subprocess.run(["node", str(script), str(cases)], capture_output=True, text=True)
+        proc = subprocess.run(["node", str(script), str(cases)], capture_output=True,
+                              text=True, encoding="utf-8")
         self.assertEqual(proc.returncode, 0, proc.stderr[-800:])
         return json.loads(proc.stdout)
 
@@ -656,7 +658,7 @@ class FrontendParityTests(unittest.TestCase):
 
     def test_frontend_suite_passes(self):
         proc = subprocess.run(["node", str(ROOT / "tests/moss_frontend.cjs")],
-                              capture_output=True, text=True, cwd=str(ROOT))
+                              capture_output=True, text=True, encoding="utf-8", cwd=str(ROOT))
         self.assertEqual(proc.returncode, 0, (proc.stdout + proc.stderr)[-1200:])
         self.assertIn("checks passed", proc.stdout)
 
@@ -793,3 +795,130 @@ class V21PaletteAndPreviewTests(unittest.TestCase):
         # Everything hidden -> caption-only prompt, but the editor state is intact.
         self.assertEqual(out["result"][0], "现代极简科技峰会海报")
         self.assertEqual(draft_of(out)["items"], [])
+
+
+class V23ExternalTextTests(unittest.TestCase):
+    """V2.3 §4: global_prompt_in / box_texts_in ports and their UI payloads."""
+
+    @staticmethod
+    def _boxes():
+        return [
+            box("box_1", "text", 0.5, 0.10, 0.80, 0.08, 10.0, True, "旧标题", "旧样式"),
+            box("box_2", "character", 0.5, 0.45, 0.50, 0.40, 0.87, True, "", "旧角色"),
+            box("box_3", "text", 0.5, 0.80, 0.70, 0.07, 9.0, True, "旧副标题", ""),
+            box("box_4", "object", 0.5, 0.50, 0.98, 0.98, 0.76, False, "", "旧背景"),
+        ]
+
+    def test_optional_ports_are_declared_as_forced_inputs(self):
+        optional = M.INPUT_TYPES()["optional"]
+        for name in ("global_prompt_in", "box_texts_in"):
+            self.assertIn(name, optional)
+            spec = optional[name]
+            self.assertEqual(spec[0], "STRING")
+            self.assertTrue(spec[1].get("forceInput"), name)
+            self.assertTrue(spec[1].get("tooltip"), name)
+
+    def test_global_prompt_in_overrides_caption_and_syncs_the_widget(self):
+        out = run(layout_data=layout(self._boxes(), 896, 1152), width=896, height=1152,
+                  global_prompt="widget 里的旧描述", global_prompt_in="外部连入的新描述")
+        self.assertEqual(prompt_of(out)["summary"]["caption"], "外部连入的新描述")
+        self.assertEqual(draft_of(out)["summary"]["caption"], "外部连入的新描述")
+        self.assertEqual(out["ui"].get("synced_caption"), ["外部连入的新描述"])
+
+    def test_empty_global_prompt_in_keeps_the_widget_caption(self):
+        out = run(layout_data=layout(self._boxes(), 896, 1152), width=896, height=1152,
+                  global_prompt="保留我", global_prompt_in="   ")
+        self.assertEqual(prompt_of(out)["summary"]["caption"], "保留我")
+        self.assertNotIn("synced_caption", out["ui"])
+        self.assertNotIn("synced_layout_data", out["ui"])
+
+    def test_labelled_mode_writes_text_caption_and_descriptions(self):
+        out = run(layout_data=layout(self._boxes(), 896, 1152), width=896, height=1152,
+                  box_texts_in="\n".join([
+                      "T1: 主标题 | 白色粗体居中",
+                      "C1: 赛博朋克女性机器人，蓝紫轮廓光",
+                      "O1: 深蓝色网格背景",
+                      "T2: 副标题二",
+                  ]))
+        boxes = json.loads(out["ui"]["synced_layout_data"][0])["boxes"]
+        self.assertEqual((boxes[0]["text"], boxes[0]["caption"]), ("主标题", "白色粗体居中"))
+        self.assertEqual(boxes[1]["caption"], "赛博朋克女性机器人，蓝紫轮廓光")
+        self.assertEqual(boxes[3]["caption"], "深蓝色网格背景")
+        self.assertEqual((boxes[2]["text"], boxes[2]["caption"]), ("副标题二", ""))
+        texts = [item.get("text") for item in prompt_of(out)["items"] if item["label"] == "text"]
+        self.assertIn("主标题", texts)
+        self.assertIn("副标题二", texts)
+
+    def test_positional_mode_fills_text_boxes_in_order(self):
+        out = run(layout_data=layout(self._boxes(), 896, 1152), width=896, height=1152,
+                  box_texts_in="第一行标题\n第二行副标题 | 细体小字")
+        boxes = json.loads(out["ui"]["synced_layout_data"][0])["boxes"]
+        self.assertEqual(boxes[0]["text"], "第一行标题")
+        self.assertEqual(boxes[1]["text"], "")            # character untouched
+        self.assertEqual(boxes[2]["text"], "第二行副标题")
+        self.assertEqual(boxes[2]["caption"], "细体小字")
+        self.assertEqual(boxes[1]["caption"], "旧角色")    # positional lines never hit C/O
+
+    def test_escaped_newlines_are_decoded(self):
+        out = run(layout_data=layout(self._boxes(), 896, 1152), width=896, height=1152,
+                  box_texts_in="T1: 第一行\\n第二行")
+        boxes = json.loads(out["ui"]["synced_layout_data"][0])["boxes"]
+        self.assertEqual(boxes[0]["text"], "第一行\n第二行")
+
+    def test_unknown_tags_and_comments_are_ignored(self):
+        out = run(layout_data=layout(self._boxes(), 896, 1152), width=896, height=1152,
+                  box_texts_in="# 说明行\nX9: 不存在\nT1: 有效标题")
+        boxes = json.loads(out["ui"]["synced_layout_data"][0])["boxes"]
+        self.assertEqual(boxes[0]["text"], "有效标题")
+        self.assertEqual(boxes[1]["caption"], "旧角色")
+        self.assertEqual(boxes[3]["caption"], "旧背景")
+
+    def test_unchanged_text_link_does_not_resync_the_canvas(self):
+        state = layout(self._boxes(), 1152, 896)   # deliberately stale canvas
+        first = run(layout_data=state, width=896, height=1152, box_texts_in="T1: 同样的标题")
+        self.assertIn("synced_layout_data", first["ui"])
+        settled = self._boxes()
+        settled[0]["text"] = "同样的标题"
+        second = run(layout_data=layout(settled, 896, 1152), width=896, height=1152,
+                     box_texts_in="T1: 同样的标题")
+        self.assertNotIn("synced_layout_data", second["ui"])
+        self.assertEqual(prompt_of(second)["summary"]["caption"], "现代极简科技峰会海报")
+
+    def test_box_texts_override_an_imported_layout(self):
+        external = {
+            "width": 896, "height": 1152, "bbox_coord_space": "abs", "bbox_format": "xyxy",
+            "summary": {"caption": "导入的全局描述"},
+            "items": [
+                {"label": "text", "caption": "导入样式", "text": "导入标题", "bbox": [80, 80, 800, 180]},
+                {"label": "object", "caption": "导入背景", "bbox": [10, 10, 880, 1140]},
+            ],
+        }
+        out = run(width=896, height=1152,
+                  external_layout_json=json.dumps(external, ensure_ascii=False),
+                  external_sync_mode=ML.EXTERNAL_REPLACE,
+                  box_texts_in="T1: 连线覆盖标题 | 连线样式",
+                  global_prompt_in="连线全局描述")
+        prompt = prompt_of(out)
+        texts = [item.get("text") for item in prompt["items"] if item["label"] == "text"]
+        self.assertEqual(texts, ["连线覆盖标题"])
+        self.assertEqual(prompt["summary"]["caption"], "连线全局描述")
+
+    def test_connected_box_text_is_authoritative_after_local_edit(self):
+        first = run(layout_data=layout(self._boxes(), 896, 1152), width=896, height=1152,
+                    box_texts_in="T1: 外部标题")
+        edited = json.loads(first["ui"]["synced_layout_data"][0])
+        edited["boxes"][0]["text"] = "本地改字"
+        second = run(layout_data=json.dumps(edited, ensure_ascii=False), width=896, height=1152,
+                     box_texts_in="T1: 外部标题")
+        self.assertEqual(json.loads(second["ui"]["synced_layout_data"][0])["boxes"][0]["text"], "外部标题")
+
+    def test_edit_after_backfill_survives_when_only_global_text_is_connected(self):
+        first = run(layout_data=layout(self._boxes(), 896, 1152), width=896, height=1152,
+                    global_prompt_in="外部全局描述")
+        edited = json.loads(first["ui"]["synced_layout_data"][0])
+        edited["boxes"][0].update(text="手动第一行\n第二行", caption="手动样式")
+        second = run(layout_data=json.dumps(edited, ensure_ascii=False), width=896, height=1152,
+                     global_prompt_in="外部全局描述")
+        for value in (prompt_of(second), draft_of(second)):
+            item = next(i for i in value["items"] if i.get("text") == "手动第一行\n第二行")
+            self.assertEqual(item["caption"], "手动样式")

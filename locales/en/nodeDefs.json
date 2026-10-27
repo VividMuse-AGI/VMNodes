@@ -1,10 +1,22 @@
 {
-  "VMImageEditBridge": {"display_name": "VM Image Edit"},
-  "VMImageResizeAlign": {"display_name": "VM Image Resize & Align"},
-  "VMImageEdit": {"display_name": "VM Image Edit"},
-  "VMFinalizeEdit": {"display_name": "VM Internal Composite"},
-  "VMEditPlan": {"display_name": "VM Internal Range Plan"},
-  "VMEditFinish": {"display_name": "VM Internal Preview & Composite"},
+  "VMImageEditBridge": {
+    "display_name": "VM Image Edit"
+  },
+  "VMImageResizeAlign": {
+    "display_name": "VM Image Resize & Align"
+  },
+  "VMImageEdit": {
+    "display_name": "VM Image Edit"
+  },
+  "VMFinalizeEdit": {
+    "display_name": "VM Internal Composite"
+  },
+  "VMEditPlan": {
+    "display_name": "VM Internal Range Plan"
+  },
+  "VMEditFinish": {
+    "display_name": "VM Internal Preview & Composite"
+  },
   "VMMOSSLayoutStudio": {
     "display_name": "VM MOSS Layout Studio",
     "description": "Draw and label a poster/infographic layout on an in-node canvas, import or export Skill JSON, and compile a MOSS-Image layout prompt.",
@@ -41,6 +53,14 @@
       },
       "ref_image": {
         "name": "Reference Image"
+      },
+      "global_prompt_in": {
+        "name": "Global Caption (link)",
+        "tooltip": "Feed an external text node as summary.caption; mirrored back after a run"
+      },
+      "box_texts_in": {
+        "name": "Box Texts (link)",
+        "tooltip": "Use 'T1: title | style' labels or plain lines for the Text boxes in order"
       },
       "external_layout_json": {
         "name": "External Layout JSON"

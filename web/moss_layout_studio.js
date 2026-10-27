@@ -133,6 +133,21 @@ export const I18N = {
     zoomTip: "滚轮缩放 · 中键 / 空格+左键拖动平移 · 点击徽章或按 0 复位",
     zoomBadge: "🔍 {p}% ↺",
     zoomResetTip: "复位到 100% 居中视图（快捷键 0）",
+    thirds: "三分线",
+    thirdsTip: "显示三分构图参考线（1/3、2/3，纯视觉参考，不写入提示词）",
+    golden: "黄金线",
+    goldenTip: "显示黄金分割参考线（0.382、0.618 与 4 个焦点，纯视觉参考）",
+    guidesSnapTip: "网格吸附开启时，拖动框靠近参考线会自动吸附",
+    inspector: "展开编辑",
+    inspectorTip: "展开全宽多行编辑（渲染文字与样式描述）",
+    inspectorTitle: "展开编辑区",
+    inspectorText: "渲染文字 (Exact Text)",
+    inspectorStyle: "样式 / 画面描述 (Style / Caption)",
+    inspectorTextTip: "要渲染的具体文字，支持回车换行",
+    inspectorStyleTip: "字体样式或该区域的画面描述",
+    inspectorCollapse: "收起",
+    inspectorFollow: "切换选中框时此处自动跟随",
+    textLink: "文案来自连线",
     hideAll: "👁 全部隐藏",
     showAll: "🚫 全部显示",
     hideAllTip: "一键隐藏所有框，观察底图与整体构图",
@@ -230,6 +245,21 @@ export const I18N = {
     zoomTip: "Wheel zooms · middle-drag or Space+drag pans · click the badge (or press 0) to reset",
     zoomBadge: "🔍 {p}% ↺",
     zoomResetTip: "Reset to 100% centred view (shortcut 0)",
+    thirds: "Thirds",
+    thirdsTip: "Show the rule-of-thirds guides (1/3, 2/3) — visual only, never compiled",
+    golden: "Golden",
+    goldenTip: "Show golden-ratio guides (0.382, 0.618 and the four power points) — visual only",
+    guidesSnapTip: "With snapping on, boxes snap to the enabled guides while dragging",
+    inspector: "Expand",
+    inspectorTip: "Open the full-width multi-line editor for text and style",
+    inspectorTitle: "Text inspector",
+    inspectorText: "Exact text",
+    inspectorStyle: "Style / Caption",
+    inspectorTextTip: "Literal characters to render; Enter starts a new line",
+    inspectorStyleTip: "Typography, or the visible description of this region",
+    inspectorCollapse: "Collapse",
+    inspectorFollow: "Follows the selected box",
+    textLink: "Copy from link",
     hideAll: "👁 Hide All",
     showAll: "🚫 Show All",
     hideAllTip: "Hide every box to inspect the backdrop and overall composition",
@@ -356,6 +386,53 @@ export function viewToCanvas(view, localX, localY, cw, ch) {
   const px = clamp((num(localX, 0) - num(view?.panX, 0)) / zoom, 0, width);
   const py = clamp((num(localY, 0) - num(view?.panY, 0)) / zoom, 0, height);
   return { x: px / width, y: py / height, px, py };
+}
+
+// ---------------------------------------------------------------------------
+// V2.3 composition guides (pure maths, mirrored by tests)
+// ---------------------------------------------------------------------------
+export const GUIDE_THIRDS = [1 / 3, 2 / 3];
+/** 1 − φ⁻¹ and φ⁻¹, φ = (√5 − 1) / 2. */
+export const GUIDE_GOLDEN = [1 - 0.6180339887498949, 0.6180339887498949];
+export const GUIDE_SNAP_PX = 6;
+
+/** Ratios (shared by both axes) for the enabled guides, with their kind. */
+export function guideRatios(guides) {
+  const out = [];
+  if (guides?.thirds) for (const ratio of GUIDE_THIRDS) out.push({ ratio, kind: "thirds" });
+  if (guides?.golden) for (const ratio of GUIDE_GOLDEN) out.push({ ratio, kind: "golden" });
+  return out;
+}
+
+/**
+ * Snap a box to the enabled guides: centre or either edge within `tolerance` px.
+ * Returns the adjusted centre in normalised coordinates.
+ */
+export function snapBoxToGuides(box, W, H, guides, tolerance = GUIDE_SNAP_PX) {
+  const cx = num(box?.cx, 0.5);
+  const cy = num(box?.cy, 0.5);
+  const width = Math.max(1, num(W, 1));
+  const height = Math.max(1, num(H, 1));
+  const w = num(box?.w, 0);
+  const h = num(box?.h, 0);
+  const ratios = guideRatios(guides).map((entry) => entry.ratio);
+  if (!ratios.length) return { cx, cy };
+
+  const nearest = (features, total) => {
+    let best = null;
+    for (const feature of features) {
+      const px = feature * total;
+      for (const ratio of ratios) {
+        const delta = ratio * total - px;
+        if (Math.abs(delta) <= tolerance && (!best || Math.abs(delta) < Math.abs(best))) best = delta;
+      }
+    }
+    return best;
+  };
+
+  const dx = nearest([cx, cx - w / 2, cx + w / 2], width);
+  const dy = nearest([cy, cy - h / 2, cy + h / 2], height);
+  return { cx: cx + (dx === null ? 0 : dx / width), cy: cy + (dy === null ? 0 : dy / height) };
 }
 
 // ---------------------------------------------------------------------------
@@ -1044,6 +1121,21 @@ const CSS = `
 .vmmoss-pop .bar input[type=color] { width:22px; height:18px; padding:0; border:1px solid #3a3a46;
   border-radius:4px; background:#131319; cursor:pointer; }
 .vmmoss-pop .hint { margin-top:4px; font-size:9.5px; color:#e0a34a; min-height:14px; }
+.vmmoss-inspector { display:none; flex:0 0 auto; flex-direction:column; gap:4px; width:100%;
+  box-sizing:border-box; padding:6px; border:1px solid #33415c; border-radius:6px; background:#1a1c24; }
+.vmmoss-inspector.show { display:flex; }
+.vmmoss-inspector .head { display:flex; align-items:center; gap:6px; font-size:10px; color:#a8b6cc; }
+.vmmoss-inspector .head .spacer { margin-left:auto; }
+.vmmoss-inspector .head .tag { font-size:9.5px; font-weight:700; padding:1px 4px; border-radius:3px;
+  background:#2b3a55; color:#cfe0ff; }
+.vmmoss-inspector .field { display:flex; flex-direction:column; gap:2px; }
+.vmmoss-inspector label { font-size:9.5px; color:#8b8b9c; }
+.vmmoss-inspector textarea { width:100%; box-sizing:border-box; font:inherit; font-size:12px;
+  line-height:1.45; min-height:42px; resize:vertical; padding:4px 6px; border-radius:5px;
+  border:1px solid #33333f; background:#131319; color:#e4e4ef; }
+.vmmoss-inspector textarea.vmmoss-insp-single { min-height:46px; }
+.vmmoss-inspector textarea:focus { outline:none; border-color:#4a90ff; background:#101018; }
+.vmmoss-ico.on { background:#2b4a7a; border-color:#4a90ff; }
 .vmmoss-pop .sub { font-size:9.5px; color:#8b8b9c; margin:6px 0 2px; }
 .vmmoss-empty { padding:9px 8px; color:#6f6f80; font-size:10.5px; line-height:1.5; }
 .vmmoss-insert { position:absolute; left:0; right:0; height:2px; background:#4a90ff; pointer-events:none; display:none; z-index:3; }
@@ -1122,6 +1214,9 @@ function setup(node) {
   hideWidget(W.data);
   dropUnlinkedInput(node, "layout_data");
 
+  // Declared before S: the S initializer reads it through loadGuides().
+  const GUIDE_PROP = "vmmoss_guides";
+
   const S = {
     state: normalizeState(W.data.value, num(W.width.value, 896), num(W.height.value, 1152)),
     sel: null,
@@ -1140,7 +1235,40 @@ function setup(node) {
     inside: false,
     pop: null,       // per-box colour popover
     eye: null,       // V2.2 canvas eyedropper: { target, boxId, hex, mx, my, moved }
+    guides: loadGuides(),   // V2.3 {thirds, golden} — visual only, persisted on node.properties
+    inspector: null,        // V2.3 expanded box id (text inspector drawer)
   };
+
+  /** Guides live on node.properties so they survive save / reload and never touch layout_data. */
+  function loadGuides() {
+    const raw = node.properties?.[GUIDE_PROP];
+    return { thirds: raw?.thirds == null ? true : !!raw.thirds, golden: !!raw?.golden };
+  }
+
+  function saveGuides() {
+    node.properties ||= {};
+    node.properties[GUIDE_PROP] = { thirds: !!S.guides.thirds, golden: !!S.guides.golden };
+    app.graph?.setDirtyCanvas?.(true, true);
+  }
+
+  function syncGuideButtons() {
+    btnThirds.textContent = `📐 ${t("thirds")}`;
+    btnGolden.textContent = `🔱 ${t("golden")}`;
+    btnThirds.title = `${t("thirdsTip")} · ${t("guidesSnapTip")}`;
+    btnGolden.title = `${t("goldenTip")} · ${t("guidesSnapTip")}`;
+    btnThirds.classList.toggle("on", !!S.guides.thirds);
+    btnGolden.classList.toggle("on", !!S.guides.golden);
+    btnThirds.setAttribute("aria-pressed", S.guides.thirds ? "true" : "false");
+    btnGolden.setAttribute("aria-pressed", S.guides.golden ? "true" : "false");
+  }
+
+  function toggleGuide(kind) {
+    if (kind !== "thirds" && kind !== "golden") return;
+    S.guides[kind] = !S.guides[kind];
+    saveGuides();
+    syncGuideButtons();
+    draw();
+  }
 
   const lang = () => (String(W.language?.value || "").startsWith("English") ? "en" : "zh");
   const t = (key, vars) => translate(lang(), key, vars);
@@ -1167,6 +1295,11 @@ function setup(node) {
   const btnExport = mkBtn("", "");
   const sep2 = document.createElement("div"); sep2.className = "vmmoss-sep";
   const btnSnap = mkBtn("", "", "on");
+  const btnThirds = mkBtn("", "", "");
+  const btnGolden = mkBtn("", "", "");
+  btnThirds.className += " vmmoss-guide-thirds";
+  btnGolden.className += " vmmoss-guide-golden";
+  const sepGuide = document.createElement("div"); sepGuide.className = "vmmoss-sep";
   const sep3 = document.createElement("div"); sep3.className = "vmmoss-sep";
   const btnCenterH = mkBtn("", "");
   const btnCenterV = mkBtn("", "");
@@ -1178,12 +1311,18 @@ function setup(node) {
   const btnToggleAll = mkBtn("", "");
   const btnLang = mkBtn("", "", "");
   btnLang.style.marginLeft = "auto";
-  bar.append(btnText, btnChar, btnObj, sep1, btnImport, btnExport, sep2, btnSnap, sep3,
+  bar.append(btnText, btnChar, btnObj, sep1, btnImport, btnExport, sep2, btnSnap,
+    btnThirds, btnGolden, sepGuide, sep3,
     btnCenterH, btnCenterV, btnMatchW, btnMatchH, btnDistH, btnDistV, btnToggleAll, btnClear, btnLang);
   btnLang.addEventListener("click", () => {
     setWidgetValue(W.language, lang() === "zh" ? "English (EN)" : "中文 (ZH)");
     applyLanguage(); rebuildRows(); draw(); updateFoot(); renderRefBar();
   });
+  btnThirds.addEventListener("click", (event) => { event.stopPropagation(); toggleGuide("thirds"); });
+  btnGolden.addEventListener("click", (event) => { event.stopPropagation(); toggleGuide("golden"); });
+  for (const button of [btnThirds, btnGolden]) {
+    button.addEventListener("pointerdown", (event) => event.stopPropagation());
+  }
 
   const pixelBar = document.createElement("div");
   pixelBar.className = "vmmoss-pixels";
@@ -1306,12 +1445,62 @@ function setup(node) {
   insert.className = "vmmoss-insert";
   rows.appendChild(insert);
 
+  // V2.3 expandable text inspector: one drawer shared by the selected box.
+  const inspector = document.createElement("div");
+  inspector.className = "vmmoss-inspector";
+
   const foot = document.createElement("div");
   foot.className = "vmmoss-foot";
 
-  root.append(bar, pixelBar, palBar, host, refBar, rows, foot);
+  root.append(bar, pixelBar, palBar, host, refBar, rows, inspector, foot);
   const ctx = canvas.getContext("2d");
   let observer = null;
+  const captionElement = W.caption?.inputEl || W.caption?.element;
+  const CAPTION_HEIGHT_PROP = "vmmoss_caption_height";
+  let captionHeight = 84;
+  let captionObserver = null;
+  let captionResizing = false;
+
+  // Keep the native STRING widget (and its serialization), but give its DOM
+  // textarea an explicit, resizable allocation in ComfyUI's widget layout.
+  function restoreCaptionHeight() {
+    captionHeight = Math.max(64, num(node.properties?.[CAPTION_HEIGHT_PROP], 84));
+    if (!captionElement || !W.caption) return;
+    Object.assign(captionElement.style, {
+      resize: "vertical", minHeight: "64px", height: `${captionHeight}px`,
+      boxSizing: "border-box", overflow: "auto",
+    });
+    W.caption.options ||= {};
+    // ComfyUI allocates the DOM wrapper inside the widget's top/bottom margin.
+    // Reserve that space too, otherwise the textarea covers the next widget.
+    const allocatedHeight = () => captionHeight + 2 * Math.max(0, num(W.caption.margin, 10));
+    W.caption.options.getMinHeight = allocatedHeight;
+    W.caption.options.getMaxHeight = allocatedHeight;
+    W.caption.options.getHeight = allocatedHeight;
+  }
+
+  function syncCaptionHeight() {
+    if (!captionResizing || !captionElement) return;
+    // offsetHeight is in local CSS pixels, independent of the outer graph zoom.
+    const height = Math.max(64, captionElement.offsetHeight || captionHeight);
+    if (Math.abs(height - captionHeight) < 1) return;
+    captionHeight = height;
+    node.properties ||= {};
+    node.properties[CAPTION_HEIGHT_PROP] = height;
+    applyLayout(true);
+    app.graph?.setDirtyCanvas?.(true, true);
+  }
+
+  const beginCaptionResize = (event) => {
+    if (event.button !== 0 || !captionElement) return;
+    const rect = captionElement.getBoundingClientRect();
+    captionResizing = event.clientX >= rect.right - 16 && event.clientY >= rect.bottom - 16;
+    if (captionResizing) event.stopPropagation();
+  };
+  const endCaptionResize = () => { syncCaptionHeight(); captionResizing = false; };
+  captionElement?.addEventListener("pointerdown", beginCaptionResize);
+  window.addEventListener("pointerup", endCaptionResize, { capture: true });
+  window.addEventListener("pointercancel", endCaptionResize, { capture: true });
 
   // --- sizes -------------------------------------------------------
   function liveSize() {
@@ -1353,7 +1542,9 @@ function setup(node) {
     const palH = palBar.offsetHeight || 24;
     const footH = foot.offsetHeight || 16;
     const refH = refBar.classList.contains("show") ? refBar.offsetHeight || 24 : 0;
-    return barH + (pixelBar.offsetHeight || 24) + 4 + palH + 4 + canvasHeight(w, h) + 8 + rowsBoxH() + (refH ? refH + 4 : 0) + 6 + footH + 2;
+    const inspH = inspector.classList.contains("show") ? (inspector.offsetHeight || 96) + 4 : 0;
+    return barH + (pixelBar.offsetHeight || 24) + 4 + palH + 4 + canvasHeight(w, h) + 8
+      + rowsBoxH() + (refH ? refH + 4 : 0) + inspH + 6 + footH + 2;
   }
 
   function applyLayout(resizeNode) {
@@ -1461,12 +1652,6 @@ function setup(node) {
       ctx.restore();
     }
 
-    ctx.strokeStyle = "rgba(255,255,255,0.07)";
-    ctx.lineWidth = inv;
-    for (let i = 1; i <= 2; i++) {
-      ctx.beginPath(); ctx.moveTo((cw * i) / 3, 0); ctx.lineTo((cw * i) / 3, ch); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(0, (ch * i) / 3); ctx.lineTo(cw, (ch * i) / 3); ctx.stroke();
-    }
     ctx.save();
     ctx.strokeStyle = "rgba(255,255,255,0.22)";
     ctx.lineWidth = inv;
@@ -1569,9 +1754,65 @@ function setup(node) {
         }
       }
     });
+
+    // V2.3: guides are drawn *after* every box so they can never be covered.
+    drawCompositionGuides(f);
+
     ctx.restore();
 
     if (includeLoupe) drawEyedropperLoupe();
+  }
+
+  /**
+   * V2.3 composition guides (top layer): a dark halo plus a white dashed line so
+   * the guides stay readable over white references and dark boxes alike.
+   */
+  function drawCompositionGuides(f) {
+    const ratios = guideRatios(S.guides);
+    if (!ratios.length) return;
+    const cw = S.canvasW;
+    const ch = S.canvasH;
+    ctx.save();
+    for (const { ratio, kind } of ratios) {
+      const golden = kind === "golden";
+      const x = cw * ratio;
+      const y = ch * ratio;
+      ctx.setLineDash(golden ? [f(3), f(3)] : [f(6), f(4)]);
+      // 1) dark anti-collision halo
+      ctx.lineWidth = f(3);
+      ctx.strokeStyle = "rgba(0, 0, 0, 0.38)";
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, ch); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(cw, y); ctx.stroke();
+      // 2) high-contrast dashed line
+      ctx.lineWidth = f(1.25);
+      ctx.strokeStyle = golden ? "rgba(255, 248, 220, 0.82)" : "rgba(255, 255, 255, 0.72)";
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, ch); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(cw, y); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    if (S.guides.golden) {
+      // 3) four power points (crosshairs) at the golden intersections
+      const arm = f(3.5);
+      for (const rx of GUIDE_GOLDEN) {
+        for (const ry of GUIDE_GOLDEN) {
+          const px = cw * rx;
+          const py = ch * ry;
+          ctx.lineWidth = f(3);
+          ctx.strokeStyle = "rgba(0, 0, 0, 0.38)";
+          ctx.beginPath();
+          ctx.moveTo(px - arm, py); ctx.lineTo(px + arm, py);
+          ctx.moveTo(px, py - arm); ctx.lineTo(px, py + arm);
+          ctx.stroke();
+          ctx.lineWidth = f(1.2);
+          ctx.strokeStyle = "rgba(255, 248, 220, 0.92)";
+          ctx.beginPath();
+          ctx.moveTo(px - arm, py); ctx.lineTo(px + arm, py);
+          ctx.moveTo(px, py - arm); ctx.lineTo(px, py + arm);
+          ctx.stroke();
+        }
+      }
+    }
+    ctx.restore();
   }
 
   function roundRectPath(context, x, y, w, h, r) {
@@ -1651,9 +1892,21 @@ function setup(node) {
   }
 
   // --- layer list --------------------------------------------------
+  /** Row lookup by box id — safer than interpolating ids into a selector. */
+  function rowFor(id) {
+    return [...rows.querySelectorAll(".vmmoss-row")].find((row) => row.dataset.id === id) || null;
+  }
+
   function refreshSelection() {
     for (const row of rows.querySelectorAll(".vmmoss-row")) {
       row.classList.toggle("sel", row.dataset.id === S.sel);
+    }
+    // V2.3: an open drawer follows the newly selected box (deferred so the
+    // pointer gesture is never interrupted by a node resize).
+    if (S.inspector && S.sel && S.inspector !== S.sel
+        && S.state.boxes.some((box) => box.id === S.sel)) {
+      S.inspector = S.sel;
+      requestAnimationFrame(() => renderInspector(true));
     }
   }
 
@@ -1769,6 +2022,18 @@ function setup(node) {
       caption.addEventListener("pointerdown", (event) => event.stopPropagation());
       row.appendChild(caption);
 
+      const expand = document.createElement("button");
+      expand.type = "button";
+      expand.className = "vmmoss-ico vmmoss-expand" + (S.inspector === box.id ? " on" : "");
+      expand.textContent = "⤢";
+      expand.title = t("inspectorTip");
+      expand.addEventListener("pointerdown", (event) => event.stopPropagation());
+      expand.addEventListener("click", (event) => {
+        event.stopPropagation();
+        toggleInspector(box.id);
+      });
+      row.appendChild(expand);
+
       const del = document.createElement("button");
       del.type = "button";
       del.className = "vmmoss-ico";
@@ -1785,6 +2050,12 @@ function setup(node) {
         event.stopPropagation();
       });
 
+      row.addEventListener("dblclick", (event) => {
+        if (event.target.closest("button, select, input, textarea")) return;
+        event.stopPropagation();
+        openInspector(box.id);
+      });
+
       setupGripDrag(grip, row, box);
       rows.appendChild(row);
     });
@@ -1797,8 +2068,146 @@ function setup(node) {
     }
     rows.style.height = `${rowsHeightFor(boxes.length)}px`;
     syncToggleAll();
+    renderInspector();
     if (!S.drag) applyLayout(true);
     rows.scrollTop = scrollTop;
+  }
+
+  // --- V2.3 expandable text inspector ---------------------------------
+  /** Mirror drawer edits back into the compact row inputs. */
+  function syncRowInputs(box) {
+    const row = rowFor(box.id);
+    if (!row) return;
+    // Each row holds at most one <textarea> (exact text) and one <input> (caption).
+    const textArea = row.querySelector("textarea");
+    const captionInput = row.querySelector("input");
+    if (textArea && textArea.value !== box.text) textArea.value = box.text;
+    if (captionInput && captionInput.value !== box.caption) captionInput.value = box.caption;
+  }
+
+  /** Push external changes (row edits, onExecuted, imports) into the open drawer. */
+  function syncInspectorValues(box) {
+    if (!inspector.classList.contains("show") || inspector.dataset.box !== box.id) return;
+    for (const field of ["text", "caption"]) {
+      const area = inspector.querySelector(`.vmmoss-insp-${field}`);
+      if (!area) continue;
+      if (document.activeElement !== area && area.value !== (box[field] || "")) area.value = box[field] || "";
+    }
+  }
+
+  function mkInspectorField(box, field, labelText, tip) {
+    const wrap = document.createElement("div");
+    wrap.className = "field";
+    const label = document.createElement("label");
+    label.textContent = labelText;
+    const area = document.createElement("textarea");
+    area.dataset.field = field;
+    area.className = `vmmoss-insp-${field}`;
+    if (field === "caption") area.classList.add("vmmoss-insp-single");
+    area.rows = 2;
+    area.value = box[field] || "";
+    area.placeholder = field === "text"
+      ? t("placeholderText")
+      : box.label === "text" ? t("placeholderStyle") : t("placeholderCaption");
+    area.title = tip;
+    area.addEventListener("input", () => {
+      // Execution, imports and canvas resizing can replace the box object while
+      // this drawer stays open. Resolve its current target instead of mutating
+      // the detached object captured when the textarea was created.
+      const current = S.state.boxes.find((candidate) => candidate.id === box.id);
+      if (!current) return;
+      current[field] = area.value;
+      commit();
+      draw();
+      updateFoot();
+      syncRowInputs(current);
+    });
+    area.addEventListener("pointerdown", (event) => event.stopPropagation());
+    area.addEventListener("keydown", (event) => event.stopPropagation());
+    wrap.append(label, area);
+    return wrap;
+  }
+
+  function buildInspector(box) {
+    inspector.innerHTML = "";
+    inspector.dataset.box = box.id;
+    const tags = displayTags(S.state.boxes);
+    const head = document.createElement("div");
+    head.className = "head";
+    const title = document.createElement("span");
+    title.textContent = `📝 ${t("inspectorTitle")}`;
+    const chip = document.createElement("span");
+    chip.className = "tag";
+    chip.textContent = tags[box.id] || "";
+    const hint = document.createElement("span");
+    hint.style.cssText = "font-size:9px;color:#6f7d92;";
+    hint.textContent = t("inspectorFollow");
+    const spacer = document.createElement("span");
+    spacer.className = "spacer";
+    const collapse = document.createElement("button");
+    collapse.type = "button";
+    collapse.className = "vmmoss-btn vmmoss-insp-close";
+    collapse.style.cssText = "padding:2px 6px;font-size:9.5px;";
+    collapse.textContent = `▴ ${t("inspectorCollapse")}`;
+    collapse.addEventListener("click", (event) => { event.stopPropagation(); closeInspector(); });
+    head.append(title, chip, hint, spacer, collapse);
+    inspector.appendChild(head);
+
+    if (box.label === "text") {
+      inspector.appendChild(mkInspectorField(box, "text", t("inspectorText"), t("inspectorTextTip")));
+    }
+    inspector.appendChild(mkInspectorField(box, "caption", t("inspectorStyle"), t("inspectorStyleTip")));
+  }
+
+  function renderInspector(force = false) {
+    const box = S.inspector ? S.state.boxes.find((b) => b.id === S.inspector) : null;
+    if (!box) {
+      S.inspector = null;
+      const wasShown = inspector.classList.contains("show");
+      if (wasShown) {
+        inspector.classList.remove("show");
+        inspector.innerHTML = "";
+        inspector.removeAttribute("data-box");
+        applyLayout(true);
+      } else if (force) {
+        inspector.innerHTML = "";
+        inspector.removeAttribute("data-box");
+      }
+      return;
+    }
+    const same = !force && inspector.dataset.box === box.id && inspector.classList.contains("show");
+    if (same) {
+      syncInspectorValues(box);
+      return;
+    }
+    buildInspector(box);
+    inspector.classList.add("show");
+    applyLayout(true);
+  }
+
+  function openInspector(id) {
+    if (!id || !S.state.boxes.some((box) => box.id === id)) return;
+    S.inspector = id;
+    S.sel = id;
+    buildInspector(S.state.boxes.find((box) => box.id === id));
+    inspector.classList.add("show");
+    rebuildRows();
+    refreshSelection();
+    draw();
+    updateFoot();
+  }
+
+  function closeInspector() {
+    if (!S.inspector) return;
+    S.inspector = null;
+    renderInspector(true);
+    rebuildRows();
+    draw();
+  }
+
+  function toggleInspector(id) {
+    if (S.inspector === id) closeInspector();
+    else openInspector(id);
   }
 
   function setupGripDrag(grip, row, box) {
@@ -1843,6 +2252,7 @@ function setup(node) {
     if (index < 0) return;
     S.state.boxes.splice(index, 1);
     if (S.sel === id) S.sel = null;
+    if (S.inspector === id) S.inspector = null;
     commit(); rebuildRows(); draw(); updateFoot();
   }
 
@@ -1872,6 +2282,9 @@ function setup(node) {
     if (externalLinked) {
       const mode = String(W.externalMode?.value || "");
       add(t("externalOn", { mode: mode.replace(/\s*\(.*\)$/, "") }), "warn");
+    }
+    if (node.inputs?.some((input) => input.name === "box_texts_in" && input.link != null)) {
+      add(t("textLink"), "warn");
     }
     const missing = boxes.filter((b) => b.label === "text" && !b.text.trim()).length;
     if (missing) add(t("noText", { n: missing }), "warn");
@@ -1950,6 +2363,12 @@ function setup(node) {
     const snapNorm = (v, total) => (snap ? Math.round(v / (SNAP_PX / total)) * (SNAP_PX / total) : v);
     box.cx = snapNorm(box.cx + dx, W);
     box.cy = snapNorm(box.cy + dy, H);
+    if (snap && (S.guides.thirds || S.guides.golden)) {
+      // Composition guides win over the grid when the box is close enough.
+      const snapped = snapBoxToGuides(box, W, H, S.guides);
+      box.cx = snapped.cx;
+      box.cy = snapped.cy;
+    }
     clampBox(box);
   }
 
@@ -2119,7 +2538,7 @@ function setup(node) {
     if (!hit.box) { addBox("text"); return; }
     S.sel = hit.box.id;
     rebuildRows(); draw();
-    const row = rows.querySelector(`.vmmoss-row[data-id="${hit.box.id}"]`);
+    const row = rowFor(hit.box.id);
     const input = row?.querySelector("input.vmmoss-inp, textarea.vmmoss-inp");
     input?.focus();
     input?.select?.();
@@ -2199,7 +2618,7 @@ function setup(node) {
     S.sel = box.id;
     commit(); rebuildRows(); draw(); updateFoot();
     rows.scrollTop = rows.scrollHeight;
-    rows.querySelector(`.vmmoss-row[data-id="${box.id}"] textarea, .vmmoss-row[data-id="${box.id}"] input`)?.focus();
+    rowFor(box.id)?.querySelector("textarea, input")?.focus();
   }
 
   function targets() {
@@ -2996,6 +3415,8 @@ function setup(node) {
     btnDistH.textContent = t("distH"); btnDistH.title = t("distHTip");
     btnDistV.textContent = t("distV"); btnDistV.title = t("distVTip");
     btnClear.textContent = t("clear"); btnClear.title = t("clearTip");
+    syncGuideButtons();
+    if (S.inspector) renderInspector(true);
     syncToggleAll();
     renderPaletteBar();
     renderZoomBadge();
@@ -3247,6 +3668,11 @@ function setup(node) {
   node.onConfigure = function () {
     const out = originalConfigure?.apply(this, arguments);
     restorePixelTarget();
+    restoreCaptionHeight();
+    // Guides live on node.properties, which LiteGraph restores just before onConfigure.
+    S.guides = loadGuides();
+    syncGuideButtons();
+    S.inspector = null;
     try {
       const { w, h } = liveSize();
       S.state = normalizeState(W.data.value, w, h);
@@ -3393,6 +3819,10 @@ function setup(node) {
   const originalRemoved = node.onRemoved;
   node.onRemoved = function () {
     observer?.disconnect();
+    captionObserver?.disconnect();
+    captionElement?.removeEventListener("pointerdown", beginCaptionResize);
+    window.removeEventListener("pointerup", endCaptionResize, { capture: true });
+    window.removeEventListener("pointercancel", endCaptionResize, { capture: true });
     closeModal();
     closePalettePop();
     if (palHintTimer) { clearTimeout(palHintTimer); palHintTimer = 0; }
@@ -3481,6 +3911,7 @@ function setup(node) {
     S.state = normalizeState(W.data.value, w, h);
     S.state.base_width = w;
     S.state.base_height = h;
+    restoreCaptionHeight();
     applyLanguage();
     node.setSize([Math.max(node.size?.[0] || 420, 520), node.size?.[1] || 300]);
     applyLayout(true);
@@ -3491,6 +3922,10 @@ function setup(node) {
     if (typeof ResizeObserver !== "undefined") {
       observer = new ResizeObserver(() => fitCanvas());
       observer.observe(host);
+      if (captionElement) {
+        captionObserver = new ResizeObserver(syncCaptionHeight);
+        captionObserver.observe(captionElement);
+      }
     }
   };
   requestAnimationFrame(start);
@@ -3499,6 +3934,9 @@ function setup(node) {
     S, commit, draw, rebuildRows, updateFoot, applyLayout, liveSize, t,
     resetView, renderZoomBadge, renderPaletteBar, openPalettePop, closePalettePop, syncToggleAll,
     renderRefBar,
+    // V2.3
+    toggleGuide, syncGuideButtons, saveGuides, loadGuides,
+    openInspector, closeInspector, toggleInspector, renderInspector,
     // V2.2
     enterEyedropper, exitEyedropper, pickAtPointer, requestPick, commitPickedColor,
     pickTargetFor, samplePixel, extractPaletteFromRef, sampleRefPixels, setGlobalPalette,

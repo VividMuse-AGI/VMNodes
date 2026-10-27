@@ -1,0 +1,1 @@
+{"passed":true,"checks":["single_registration","single_setup","single_timer_and_listeners","unrelated_prompt_unchanged","unrelated_node_untouched","idempotent_node_hooks","legacy_prefix_hidden_preserved","bilingual_saving_notice","external_final_routing_both_modes"]}
