@@ -1,8 +1,10 @@
 # Changelog / 更新记录
 
-## Unreleased
+## 0.3.0 — 2026-10-27 — MOSS V2.3
 
 ### 中文
+
+- 新增无需模型的 V2.3 示例工作流、中英文快速开始和实测截图；示例随安装包提供。
 
 - 修复 V2.3 抽屉在执行回填后继续改字未保存的问题；全局描述默认高 84px、可纵向拖高并保存高度；三分线默认开启且保留用户已保存的关闭状态。补充真实执行后编辑回归，修复浏览器关闭按钮定位与 Windows 子进程 UTF-8 解码。
 - MOSS 排版节点 V2.3：工具栏新增 `📐 三分线` / `🔱 黄金线` 独立开关，参考线改为在所有画框之后绘制的顶层白色虚线（带深色衬底），开启吸附时拖动框会自动吸附到参考线；状态持久化到 `node.properties`，不进入任何输出 JSON。
@@ -10,6 +12,8 @@
 - MOSS 排版节点 V2.3：新增 `global_prompt_in` 与 `box_texts_in` 外部文本端口，支持 `T1: 标题 | 样式` 标签语法与按行顺序注入文字框，运行后通过 `synced_caption` / `synced_layout_data` 回填画布与图层列表。
 
 ### English
+
+- Added a model-free V2.3 example workflow, bilingual quickstart and verified screenshots; the example is included in the installation ZIP.
 
 - Fixed inspector edits being lost after execution backfill. The global caption starts at 84px and supports persistent vertical resizing. Thirds are enabled by default while saved disabled settings remain intact. Added execution/edit round-trip regressions and fixed modal-close targeting and Windows UTF-8 subprocess decoding.
 - MOSS layout node V2.3: independent `📐 Thirds` / `🔱 Golden` toolbar toggles; guides are now a top-layer white dashed overlay with a dark halo, snap boxes onto them while dragging, persist in `node.properties` and never enter any output JSON.
