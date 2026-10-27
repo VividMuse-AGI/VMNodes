@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-27",
+  "comfyui": "0.43.0",
+  "frontend": "1.57.4",
+  "browser": "Chrome (Playwright, headless)",
+  "custom_nodes_enabled": [
+    "VMNodes"
+  ],
+  "workflow": "workflows/moss/MOSS-V2.3-Layout-Studio.json",
+  "workflow_sha256": "8947907a35ad4274834884c7ced4301764ac0191a52acd0b70c9c19e47880da6",
+  "browser_api_checks": {
+    "passed": 21,
+    "total": 21
+  },
+  "api_status": "success",
+  "diffusion_models_used": false,
+  "screenshot": "docs/images/moss-v23-workflow.jpg",
+  "unittest": {
+    "passed": 110,
+    "total": 110,
+    "exit_code": 0
+  },
+  "package_check": "passed, including reproducible ZIP test",
+  "workflow_sha256_lf": "8947907a35ad4274834884c7ced4301764ac0191a52acd0b70c9c19e47880da6"
+}

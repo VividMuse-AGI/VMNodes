@@ -1,0 +1,90 @@
+{
+  "passed": 21,
+  "total": 21,
+  "checks": [
+    {
+      "name": "Workflow imports all six nodes without unknown node types",
+      "ok": true
+    },
+    {
+      "name": "Five editable boxes restore at 896x1152",
+      "ok": true
+    },
+    {
+      "name": "Global caption and box text ports are connected",
+      "ok": true
+    },
+    {
+      "name": "Thirds start enabled and Golden disabled",
+      "ok": true
+    },
+    {
+      "name": "Executable graph needs only native nodes and VMNodes",
+      "ok": true
+    },
+    {
+      "name": "Real API accepts the imported graph",
+      "ok": true
+    },
+    {
+      "name": "Real API execution completes successfully",
+      "ok": true
+    },
+    {
+      "name": "Layout output has five items and the linked title",
+      "ok": true
+    },
+    {
+      "name": "Escaped multiline event text compiles to a real newline",
+      "ok": true
+    },
+    {
+      "name": "Global caption reaches summary.caption",
+      "ok": true
+    },
+    {
+      "name": "PreviewImage produces an actual image",
+      "ok": true
+    },
+    {
+      "name": "Browser Run renders the same layout JSON as the API",
+      "ok": true
+    },
+    {
+      "name": "Title row opens the multiline inspector",
+      "ok": true
+    },
+    {
+      "name": "Golden guide toggle works in the imported workflow",
+      "ok": true
+    },
+    {
+      "name": "Visual guide changes leave the compiled layout unchanged",
+      "ok": true
+    },
+    {
+      "name": "Editing the external multiline node updates the next real output",
+      "ok": true
+    },
+    {
+      "name": "Execution backfills the open inspector",
+      "ok": true
+    },
+    {
+      "name": "Connected external box text wins on the next run",
+      "ok": true
+    },
+    {
+      "name": "Disconnecting box_texts_in preserves inspector edits on execution",
+      "ok": true
+    },
+    {
+      "name": "Saved workflow reload retains the manually edited title",
+      "ok": true
+    },
+    {
+      "name": "No browser JavaScript exceptions",
+      "ok": true
+    }
+  ]
+}

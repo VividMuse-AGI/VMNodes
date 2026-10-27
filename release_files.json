@@ -45,5 +45,6 @@
   "web/moss_layout_studio.js",
   "web/unified.js",
   "workflows/image_edit/Qwen-Image-2.1-Single-Image-Edit.json",
-  "workflows/image_edit/VM_图像编辑.json"
+  "workflows/image_edit/VM_图像编辑.json",
+  "workflows/moss/MOSS-V2.3-Layout-Studio.json"
 ]

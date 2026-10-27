@@ -6,6 +6,8 @@ VMNodes 是一个持续扩展的 ComfyUI 节点工具包。整个包统一安装
 
 **v0.2.0 · MOSS 排版更新测试版（Pre-release）**。欢迎试用并反馈问题；不同 ComfyUI 版本、硬件和扩展组合仍可能需要兼容性调整。
 
+`main` 分支已加入 **MOSS V2.3**：顶层构图参考线、展开式文字编辑和外部文案连线。V2.3 是 MOSS 功能方案版本；这些更新尚未打包进 `v0.2.0` Release ZIP。
+
 ## 当前节点
 
 | 节点 | 用途 | 使用说明 |
@@ -21,6 +23,24 @@ VMNodes 是一个持续扩展的 ComfyUI 节点工具包。整个包统一安装
 MOSS 节点面向 **MOSS-Image**：`layout_prompt` 接 `CLIPTextEncode`，`width/height` 接潜空间节点。将海报改宽而保持人物、文字位置关系时，选择「Center Layout（居中扩展，缩小时整体适配）」。
 
 **MOSS 更新包含在 v0.2.0 中**。Git 安装可拉取更新；ZIP 安装请下载 `VMNodes-0.2.0.zip`。更新后重启 ComfyUI 并刷新页面；旧的 `0.1.0` ZIP 不包含 MOSS 节点。
+
+### MOSS V2.3：可直接导入的示例
+
+[下载示例 JSON](https://raw.githubusercontent.com/VividMuse-AGI/VMNodes/main/workflows/moss/MOSS-V2.3-Layout-Studio.json) · [查看工作流文件](workflows/moss/MOSS-V2.3-Layout-Studio.json) · [V2.3 验收报告](https://github.com/VividMuse-AGI/VMNodes/blob/main/tests/MOSS_V2.3_%E9%AA%8C%E6%94%B6%E6%8A%A5%E5%91%8A.md)
+
+示例预置一张 **896×1152、5 个框**的植物展海报布局，包含背景、人物、标题、副标题和活动时间。只使用 **VMNodes + ComfyUI 自带节点**，无需模型、参考图片或额外节点包；点击运行即可得到框位置预览和 `layout_prompt` JSON。预览是布局示意图，不是 AI 生成的海报。
+
+1. 更新到本仓库最新 `main`，重启 ComfyUI 并刷新页面。Git 安装可按下方更新说明操作；ZIP 安装请使用 [main 源码 ZIP](https://github.com/VividMuse-AGI/VMNodes/archive/refs/heads/main.zip)，按安装说明放置目录。已有 `v0.2.0` Release ZIP 不包含 V2.3。
+2. 下载示例 JSON，拖入 ComfyUI，或通过工作流“打开”导入。**这是完整工作流文件，请勿粘贴到 MOSS 工具栏的“导入 JSON”弹窗。**
+3. 点击运行。左侧两个 **Text (Multiline)** 节点分别连到 `global_prompt_in` 和 `box_texts_in`；右侧显示框位置预览和编译后的 JSON。
+4. 修改左侧 `T1: NIGHT GARDEN | ...`，再次运行，标题及样式会回填到画布。`T1/T2/T3` 对应文字框，`C1` 对应人物，`O1` 对应背景；文案中的字面 `\n` 会转换成换行。
+5. 点击图层行的 **⤢** 展开大号文字编辑区，拖动框调整排版；用 **📐 三分线 / 🔱 黄金线** 辅助对齐。参考线只用于编辑器，不进入输出 JSON 或后端预览图。顶部全局描述也可纵向拖高。
+
+**文案覆盖规则：** `box_texts_in` 保持连接时，每次执行都会以外部文案覆盖对应字段，即使上游内容没有变化。想保留抽屉里的手动改字，请先断开 `box_texts_in`，或同步修改左侧文本；`global_prompt_in` 的非空输入同样优先于节点内全局描述。拖动框的位置不受这两个文本输入影响。
+
+![MOSS V2.3 示例：外部文本连线、展开编辑、构图参考线及布局输出](https://raw.githubusercontent.com/VividMuse-AGI/VMNodes/main/docs/images/moss-v23-workflow.jpg)
+
+本示例已在 ComfyUI **0.43.0 / 前端 1.57.4** 完成浏览器导入、真实执行及编辑回填验证：[21 项检查结果](https://github.com/VividMuse-AGI/VMNodes/blob/main/tests/evidence/moss_v23_example_20261027/checks.json)。如缺少 `PrimitiveStringMultiline` 或 `PreviewAny`，请更新 ComfyUI。接入实际出图工作流时，将 `layout_prompt` 接到 MOSS 文本编码、`width/height` 接到对应潜空间尺寸，并另行准备 MOSS 模型与采样链。
 
 ### 将 layout prompt 还原为可编辑布局
 

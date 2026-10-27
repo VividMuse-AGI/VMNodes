@@ -6,6 +6,8 @@ VMNodes is a growing collection of ComfyUI nodes. Install and update the package
 
 **v0.2.0 · MOSS layout update (Pre-release)**. Try it and share feedback; compatibility may vary across ComfyUI versions, hardware and extension combinations.
 
+The `main` branch now includes **MOSS V2.3**: composition guides, an expanded text inspector and external text inputs. V2.3 names the MOSS feature iteration; these changes are not included in the `v0.2.0` Release ZIP.
+
 ## Available nodes
 
 | Node | Purpose | Guide |
@@ -21,6 +23,24 @@ Local editing preserves original pixels outside the permitted region, while deta
 The layout node targets **MOSS-Image**: connect `layout_prompt` to `CLIPTextEncode` and `width/height` to the latent node. Choose Center Layout to widen a poster while retaining the relative placement and size of its foreground elements.
 
 **MOSS is included in v0.2.0**. Pull updates or download `VMNodes-0.2.0.zip`, then restart ComfyUI and refresh the page. The older `0.1.0` ZIP does not include MOSS.
+
+### MOSS V2.3: ready-to-import example
+
+[Download example JSON](https://raw.githubusercontent.com/VividMuse-AGI/VMNodes/main/workflows/moss/MOSS-V2.3-Layout-Studio.json) · [View workflow file](workflows/moss/MOSS-V2.3-Layout-Studio.json) · [V2.3 acceptance report (Chinese)](https://github.com/VividMuse-AGI/VMNodes/blob/main/tests/MOSS_V2.3_%E9%AA%8C%E6%94%B6%E6%8A%A5%E5%91%8A.md)
+
+The example contains a **five-box, 896×1152** botanical exhibition poster layout: background, character, title, subtitle and event details. It uses only **VMNodes and built-in ComfyUI nodes**, with no model downloads, reference images or additional node packs. Run it to see the box preview and `layout_prompt` JSON. The preview is a layout diagram, not an AI-generated poster.
+
+1. Update to the latest `main`, restart ComfyUI and refresh the page. For Git, follow the update instructions below. For ZIP installations, use the [main source ZIP](https://github.com/VividMuse-AGI/VMNodes/archive/refs/heads/main.zip) and follow the installation directory instructions. The existing `v0.2.0` Release ZIP does not contain V2.3.
+2. Download the example JSON and drop it onto ComfyUI, or open it through the workflow menu. **This is a complete workflow file: do not paste it into the MOSS toolbar's Import JSON dialog.**
+3. Click Run. Two **Text (Multiline)** nodes on the left feed `global_prompt_in` and `box_texts_in`; the right side shows the layout preview and compiled JSON. Use **中文 | EN** in the layout toolbar to switch the editor to English.
+4. Edit `T1: NIGHT GARDEN | ...` on the left and run again to update the title and style in the canvas. `T1/T2/T3` address text boxes, `C1` the character and `O1` the background; a literal `\n` becomes a line break.
+5. Click a layer row's **⤢** to open the text inspector, drag boxes to adjust placement, and toggle **📐 Thirds / 🔱 Golden** for alignment. Guides are editor overlays and do not enter the output JSON or backend preview image. The top global caption field also supports vertical resizing.
+
+**Text precedence:** while `box_texts_in` is connected, every run replaces its corresponding fields with the external text, even when the upstream value has not changed. Disconnect `box_texts_in` to keep manual inspector edits, or make the same edits in the left text node. A nonempty `global_prompt_in` also overrides the node's local global caption. Neither text input changes box positions.
+
+![MOSS V2.3 example: external text inputs, expanded inspector, guides and layout output](https://raw.githubusercontent.com/VividMuse-AGI/VMNodes/main/docs/images/moss-v23-workflow.jpg)
+
+Verified with ComfyUI **0.43.0 / frontend 1.57.4**, including browser import, real execution and editing after backfill: [21 checks](https://github.com/VividMuse-AGI/VMNodes/blob/main/tests/evidence/moss_v23_example_20261027/checks.json). Update ComfyUI if `PrimitiveStringMultiline` or `PreviewAny` is missing. To generate an image, connect `layout_prompt` to your MOSS text encoder and `width/height` to the corresponding latent dimensions, and supply the MOSS models and sampling chain separately.
 
 ### Restore a layout prompt as editable boxes
 

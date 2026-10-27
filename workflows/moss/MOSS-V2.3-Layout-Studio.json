@@ -1,0 +1,463 @@
+{
+  "id": "ac708601-5efa-4f97-9b72-8722dbdaae87",
+  "revision": 0,
+  "last_node_id": 6,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        30,
+        70
+      ],
+      "size": [
+        390,
+        240
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "值",
+          "name": "value",
+          "type": "STRING",
+          "widget": {
+            "name": "value"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "字符串",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "title": "1 · 全局描述 / Global Caption",
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "An editorial poster for NIGHT GARDEN, an evening botanical exhibition. Deep midnight-blue background, mint foliage and warm ivory lettering. A single adult botanist stands in the central frame holding a fern. Keep the title above the portrait and the event details below it."
+      ],
+      "widgets_values_named": {
+        "value": "An editorial poster for NIGHT GARDEN, an evening botanical exhibition. Deep midnight-blue background, mint foliage and warm ivory lettering. A single adult botanist stands in the central frame holding a fern. Keep the title above the portrait and the event details below it."
+      }
+    },
+    {
+      "id": 2,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        30,
+        380
+      ],
+      "size": [
+        390,
+        320
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "值",
+          "name": "value",
+          "type": "STRING",
+          "widget": {
+            "name": "value"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "字符串",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "title": "2 · 各框文案 / Box Texts",
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "T1: NIGHT GARDEN | Large ivory serif title, centered\nT2: BOTANICAL NIGHTS | Mint uppercase sans-serif subtitle\nT3: 27 OCT 2026\\n18:00 - 22:00 | Small ivory event details, centered\nC1: An adult botanist holding a fern, waist-up portrait, soft green rim light\nO1: Deep midnight-blue backdrop with subtle botanical texture"
+      ],
+      "widgets_values_named": {
+        "value": "T1: NIGHT GARDEN | Large ivory serif title, centered\nT2: BOTANICAL NIGHTS | Mint uppercase sans-serif subtitle\nT3: 27 OCT 2026\\n18:00 - 22:00 | Small ivory event details, centered\nC1: An adult botanist holding a fern, waist-up portrait, soft green rim light\nO1: Deep midnight-blue backdrop with subtle botanical texture"
+      }
+    },
+    {
+      "id": 3,
+      "type": "VMMOSSLayoutStudio",
+      "pos": [
+        480,
+        70
+      ],
+      "size": [
+        560,
+        1125
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "参考图",
+          "name": "ref_image",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "localized_name": "全局描述（连线）",
+          "name": "global_prompt_in",
+          "shape": 7,
+          "type": "STRING",
+          "link": 1
+        },
+        {
+          "localized_name": "各框文案（连线）",
+          "name": "box_texts_in",
+          "shape": 7,
+          "type": "STRING",
+          "link": 2
+        },
+        {
+          "localized_name": "外部布局 JSON",
+          "name": "external_layout_json",
+          "shape": 7,
+          "type": "STRING",
+          "link": null
+        },
+        {
+          "localized_name": "界面语言",
+          "name": "ui_language",
+          "type": "COMBO",
+          "widget": {
+            "name": "ui_language"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "尺寸预设",
+          "name": "canvas_preset",
+          "type": "COMBO",
+          "widget": {
+            "name": "canvas_preset"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "宽 W",
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "高 H",
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "比例同步",
+          "name": "bbox_ratio_sync",
+          "type": "COMBO",
+          "widget": {
+            "name": "bbox_ratio_sync"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "体裁先验",
+          "name": "scene_meta",
+          "type": "COMBO",
+          "widget": {
+            "name": "scene_meta"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "画布结构",
+          "name": "canvas_layout_type",
+          "type": "COMBO",
+          "widget": {
+            "name": "canvas_layout_type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "图层排序",
+          "name": "layer_order_mode",
+          "type": "COMBO",
+          "widget": {
+            "name": "layer_order_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "全局描述",
+          "name": "global_prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "global_prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "外部同步方式",
+          "name": "external_sync_mode",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "external_sync_mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "自定义 meta 标签",
+          "name": "custom_meta_tags",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "custom_meta_tags"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "layout_prompt",
+          "name": "layout_prompt",
+          "type": "STRING",
+          "links": [
+            4
+          ]
+        },
+        {
+          "localized_name": "draft_json",
+          "name": "draft_json",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "preview_image",
+          "name": "preview_image",
+          "type": "IMAGE",
+          "links": [
+            3
+          ]
+        },
+        {
+          "localized_name": "width",
+          "name": "width",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "localized_name": "height",
+          "name": "height",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "title": "3 · MOSS V2.3 · Layout Studio",
+      "properties": {
+        "Node name for S&R": "VMMOSSLayoutStudio",
+        "vmmoss_guides": {
+          "thirds": true,
+          "golden": false
+        }
+      },
+      "widgets_values": [
+        "中文 (ZH)",
+        "Poster 3:4 Standard (896x1152)",
+        896,
+        1152,
+        "Smart (文字/主体保比例，背景铺满)",
+        "poster",
+        "single",
+        "Auto (背景->物体->角色->文字置顶)",
+        "An editorial poster for NIGHT GARDEN, an evening botanical exhibition. Deep midnight-blue background, mint foliage and warm ivory lettering. A single adult botanist stands in the central frame holding a fern. Keep the title above the portrait and the event details below it.",
+        "{\"version\":2,\"base_width\":896,\"base_height\":1152,\"next_id\":6,\"meta\":[\"poster\",\"botanical exhibition\"],\"canvas\":\"single\",\"palette\":[\"#101B2B\",\"#8FCDB2\",\"#F5E9D2\"],\"boxes\":[{\"id\":\"box_1\",\"label\":\"object\",\"cx\":0.5,\"cy\":0.5,\"w\":1,\"h\":1,\"text\":\"\",\"caption\":\"Deep midnight-blue backdrop with subtle botanical texture\",\"palette\":[\"#101B2B\"],\"visible\":true,\"lock_aspect\":true,\"orig_aspect\":0.7777777777777778},{\"id\":\"box_2\",\"label\":\"character\",\"cx\":0.5,\"cy\":0.52,\"w\":0.6,\"h\":0.47,\"text\":\"\",\"caption\":\"An adult botanist holding a fern, waist-up portrait, soft green rim light\",\"palette\":[\"#8FCDB2\"],\"visible\":true,\"lock_aspect\":true,\"orig_aspect\":0.9929078014184398},{\"id\":\"box_3\",\"label\":\"text\",\"cx\":0.5,\"cy\":0.15,\"w\":0.84,\"h\":0.12,\"text\":\"NIGHT GARDEN\",\"caption\":\"Large ivory serif title, centered\",\"palette\":[\"#F5E9D2\"],\"visible\":true,\"lock_aspect\":true,\"orig_aspect\":5.444444444444444},{\"id\":\"box_4\",\"label\":\"text\",\"cx\":0.5,\"cy\":0.83,\"w\":0.8,\"h\":0.07,\"text\":\"BOTANICAL NIGHTS\",\"caption\":\"Mint uppercase sans-serif subtitle\",\"palette\":[\"#8FCDB2\"],\"visible\":true,\"lock_aspect\":true,\"orig_aspect\":8.888888888888888},{\"id\":\"box_5\",\"label\":\"text\",\"cx\":0.5,\"cy\":0.93,\"w\":0.68,\"h\":0.07,\"text\":\"27 OCT 2026\\n18:00 - 22:00\",\"caption\":\"Small ivory event details, centered\",\"palette\":[\"#F5E9D2\"],\"visible\":true,\"lock_aspect\":true,\"orig_aspect\":7.555555555555555}]}",
+        "Replace Canvas (用外部 JSON 覆盖画布并回填)",
+        ""
+      ],
+      "widgets_values_named": {
+        "ui_language": "中文 (ZH)",
+        "canvas_preset": "Poster 3:4 Standard (896x1152)",
+        "width": 896,
+        "height": 1152,
+        "bbox_ratio_sync": "Smart (文字/主体保比例，背景铺满)",
+        "scene_meta": "poster",
+        "canvas_layout_type": "single",
+        "layer_order_mode": "Auto (背景->物体->角色->文字置顶)",
+        "global_prompt": "An editorial poster for NIGHT GARDEN, an evening botanical exhibition. Deep midnight-blue background, mint foliage and warm ivory lettering. A single adult botanist stands in the central frame holding a fern. Keep the title above the portrait and the event details below it.",
+        "layout_data": "{\"version\":2,\"base_width\":896,\"base_height\":1152,\"next_id\":6,\"meta\":[\"poster\",\"botanical exhibition\"],\"canvas\":\"single\",\"palette\":[\"#101B2B\",\"#8FCDB2\",\"#F5E9D2\"],\"boxes\":[{\"id\":\"box_1\",\"label\":\"object\",\"cx\":0.5,\"cy\":0.5,\"w\":1,\"h\":1,\"text\":\"\",\"caption\":\"Deep midnight-blue backdrop with subtle botanical texture\",\"palette\":[\"#101B2B\"],\"visible\":true,\"lock_aspect\":true,\"orig_aspect\":0.7777777777777778},{\"id\":\"box_2\",\"label\":\"character\",\"cx\":0.5,\"cy\":0.52,\"w\":0.6,\"h\":0.47,\"text\":\"\",\"caption\":\"An adult botanist holding a fern, waist-up portrait, soft green rim light\",\"palette\":[\"#8FCDB2\"],\"visible\":true,\"lock_aspect\":true,\"orig_aspect\":0.9929078014184398},{\"id\":\"box_3\",\"label\":\"text\",\"cx\":0.5,\"cy\":0.15,\"w\":0.84,\"h\":0.12,\"text\":\"NIGHT GARDEN\",\"caption\":\"Large ivory serif title, centered\",\"palette\":[\"#F5E9D2\"],\"visible\":true,\"lock_aspect\":true,\"orig_aspect\":5.444444444444444},{\"id\":\"box_4\",\"label\":\"text\",\"cx\":0.5,\"cy\":0.83,\"w\":0.8,\"h\":0.07,\"text\":\"BOTANICAL NIGHTS\",\"caption\":\"Mint uppercase sans-serif subtitle\",\"palette\":[\"#8FCDB2\"],\"visible\":true,\"lock_aspect\":true,\"orig_aspect\":8.888888888888888},{\"id\":\"box_5\",\"label\":\"text\",\"cx\":0.5,\"cy\":0.93,\"w\":0.68,\"h\":0.07,\"text\":\"27 OCT 2026\\n18:00 - 22:00\",\"caption\":\"Small ivory event details, centered\",\"palette\":[\"#F5E9D2\"],\"visible\":true,\"lock_aspect\":true,\"orig_aspect\":7.555555555555555}]}",
+        "external_sync_mode": "Replace Canvas (用外部 JSON 覆盖画布并回填)",
+        "custom_meta_tags": ""
+      }
+    },
+    {
+      "id": 4,
+      "type": "PreviewImage",
+      "pos": [
+        1110,
+        70
+      ],
+      "size": [
+        470,
+        650
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "title": "4 · 框位置预览 / Layout Preview",
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 5,
+      "type": "PreviewAny",
+      "pos": [
+        1110,
+        800
+      ],
+      "size": [
+        470,
+        340
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "源",
+          "name": "source",
+          "type": "*",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "字符串",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "5 · layout_prompt / JSON",
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 6,
+      "type": "Note",
+      "pos": [
+        30,
+        770
+      ],
+      "size": [
+        390,
+        370
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "使用说明 / Quick Start",
+      "properties": {},
+      "widgets_values": [
+        "V2.3 · 无需模型 / No models required\n\n1. 点击运行，右侧显示布局预览和 JSON。\n   Run to preview boxes and layout_prompt.\n2. 修改左侧 T1/T2/T3 文案后再次运行。\n   Edit the left Box Texts, then run again.\n3. 点击图层行 ⤢ 打开大号编辑抽屉。\n   Click a layer row’s ⤢ to open its inspector.\n4. 保留手动文案：先断开 box_texts_in！\n   Disconnect box_texts_in to keep local edits.\n   连线时每次执行以外部文案为准。\n   Connected text overrides local edits on each run.\n5. 切换三分线 / 黄金线；中文 | EN 切换界面。\n   Toggle Thirds / Golden; 中文 | EN changes UI.\n\n这是布局示意图，不是 AI 生成的海报。\nThis preview is a layout diagram, not a generated poster."
+      ],
+      "widgets_values_named": {
+        "text": "V2.3 · 无需模型 / No models required\n\n1. 点击运行，右侧显示布局预览和 JSON。\n   Run to preview boxes and layout_prompt.\n2. 修改左侧 T1/T2/T3 文案后再次运行。\n   Edit the left Box Texts, then run again.\n3. 点击图层行 ⤢ 打开大号编辑抽屉。\n   Click a layer row’s ⤢ to open its inspector.\n4. 保留手动文案：先断开 box_texts_in！\n   Disconnect box_texts_in to keep local edits.\n   连线时每次执行以外部文案为准。\n   Connected text overrides local edits on each run.\n5. 切换三分线 / 黄金线；中文 | EN 切换界面。\n   Toggle Thirds / Golden; 中文 | EN changes UI.\n\n这是布局示意图，不是 AI 生成的海报。\nThis preview is a layout diagram, not a generated poster."
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      3,
+      1,
+      "STRING"
+    ],
+    [
+      2,
+      2,
+      0,
+      3,
+      2,
+      "STRING"
+    ],
+    [
+      3,
+      3,
+      2,
+      4,
+      0,
+      "IMAGE"
+    ],
+    [
+      4,
+      3,
+      0,
+      5,
+      0,
+      "STRING"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.72,
+      "offset": [
+        100,
+        60
+      ]
+    }
+  },
+  "version": 0.4
+}
