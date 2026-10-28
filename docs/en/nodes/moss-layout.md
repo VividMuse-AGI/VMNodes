@@ -213,8 +213,10 @@ It remains the original `global_prompt` STRING widget and adds no prompt fields.
 Every layer row gains a `⤢` button (double-clicking the row works too):
 
 - It opens a **full-width** drawer under the list with large multi-line fields for
-  `Exact text` and `Style / Caption` (12px, Enter for new lines, vertical resize);
+  `Exact text` and `Style / Caption` (12 rows each by default, 12px, Enter for new lines, vertical resize);
   character/object boxes only show the description.
+- Text and caption heights are saved separately per node and reused across regions,
+  closing/reopening the drawer, and workflow reloads. These preferences do not change layout prompts.
 - Edits stay in sync with the compact row, the canvas preview and `layout_data`.
 - The drawer follows the selected box, always occupies a single panel height, and can be
   collapsed with `Collapse` or `⤢` again.

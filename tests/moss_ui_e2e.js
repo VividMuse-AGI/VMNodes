@@ -1423,6 +1423,11 @@ const stateOf = (page) => page.evaluate(() => {
       caption: caption?.value ?? null,
       resize: text ? getComputedStyle(text).resize : null,
       fontSize: text ? parseFloat(getComputedStyle(text).fontSize) : null,
+      panelHeight: d.offsetHeight,
+      visibleLines: [text, caption].map(el => {
+        const css = getComputedStyle(el);
+        return (el.clientHeight - parseFloat(css.paddingTop) - parseFloat(css.paddingBottom)) / parseFloat(css.lineHeight);
+      }),
       nodeH: window.__n.size[1],
       selected: window.__n._vmmoss.S.sel,
     };
@@ -1435,8 +1440,10 @@ const stateOf = (page) => page.evaluate(() => {
     inspOpen.fontSize >= 12 && inspOpen.resize === "vertical",
     `${inspOpen.text} / ${inspOpen.caption} / ${inspOpen.fontSize}px / ${inspOpen.resize}`);
   check("抽屉只增高一个面板的高度",
-    inspOpen.nodeH - inspBase.nodeH > 40 && inspOpen.nodeH - inspBase.nodeH < 260,
+    inspOpen.nodeH - inspBase.nodeH > 40 && Math.abs(inspOpen.nodeH - inspBase.nodeH - inspOpen.panelHeight) < 15,
     `+${inspOpen.nodeH - inspBase.nodeH}px`);
+  check("渲染文字和区域描述默认均可显示至少 12 行", inspOpen.visibleLines.every(n => n >= 11.9),
+    JSON.stringify(inspOpen.visibleLines));
 
   await page.fill(".vmmoss-insp-text", "第一行标题\n第二行副标题");
   await page.fill(".vmmoss-insp-caption", "白色粗体现代无衬线，两行居中");
@@ -1478,6 +1485,47 @@ const stateOf = (page) => page.evaluate(() => {
   check("角色框只显示描述字段，且抽屉高度不叠加",
     !inspFollow.hasText && inspFollow.nodeH <= inspOpen.nodeH + 40,
     `hasText=${inspFollow.hasText} nodeH=${inspFollow.nodeH}`);
+
+  await page.evaluate(() => {
+    const app = window.comfyAPI.app.app;
+    app.canvas.ds.scale = 0.6; app.canvas.ds.offset = [700, 80];
+    app.canvas.setDirty(true, true);
+  });
+  await page.waitForTimeout(250);
+  const areaBefore = await page.locator('.vmmoss-insp-caption').evaluate(el => el.offsetHeight);
+  const resizeArea = await page.locator('.vmmoss-insp-caption').boundingBox();
+  await page.mouse.move(resizeArea.x + resizeArea.width - 3, resizeArea.y + resizeArea.height - 3);
+  await page.mouse.down();
+  await page.mouse.move(resizeArea.x + resizeArea.width - 3, resizeArea.y + resizeArea.height + 75, { steps: 12 });
+  await page.mouse.up();
+  await page.waitForTimeout(350);
+  const resizedInspector = await page.evaluate(() => ({
+    height: document.querySelector('.vmmoss-insp-caption').offsetHeight,
+    saved: window.__n.properties.vmmoss_inspector_heights?.caption,
+    data: window.__n.widgets.find(w => w.name === 'layout_data').value,
+  }));
+  check("鼠标拉高区域描述后保存实际 CSS 高度", resizedInspector.height > areaBefore + 60 &&
+    resizedInspector.height === resizedInspector.saved, JSON.stringify({ before: areaBefore, ...resizedInspector, data: undefined }));
+  await page.click('.vmmoss-row[data-id="k1"] .vmmoss-tag');
+  await page.waitForTimeout(250);
+  check("切换角色和文字区域时保留描述高度，文字字段高度独立", await page.evaluate(height => {
+    return document.querySelector('.vmmoss-insp-caption').offsetHeight === height &&
+      document.querySelector('.vmmoss-insp-text').offsetHeight < height;
+  }, resizedInspector.height));
+  await page.click('.vmmoss-insp-close');
+  await page.click('.vmmoss-row[data-id="k1"] .vmmoss-expand');
+  check("收起并重新展开后仍保留区域描述高度",
+    await page.locator('.vmmoss-insp-caption').evaluate(el => el.offsetHeight) === resizedInspector.height);
+  await page.evaluate(async () => {
+    const app = window.comfyAPI.app.app, id = window.__n.id, saved = app.graph.serialize();
+    app.graph.clear(); app.graph.configure(saved); window.__n = app.graph.getNodeById(id);
+    await new Promise(r => setTimeout(r, 600));
+  });
+  await page.click('.vmmoss-row[data-id="k1"] .vmmoss-expand');
+  check("工作流重载保留高度且不改动布局提示词数据", await page.evaluate(previous => {
+    return document.querySelector('.vmmoss-insp-caption').offsetHeight === previous.height &&
+      window.__n.widgets.find(w => w.name === 'layout_data').value === previous.data;
+  }, resizedInspector));
 
   await page.click(".vmmoss-insp-close");
   await page.waitForTimeout(400);
@@ -1638,7 +1686,7 @@ const stateOf = (page) => page.evaluate(() => {
     JSON.stringify(editedAfterRun));
   await page.evaluate(async () => {
     const app = window.comfyAPI.app.app, n = window.__n;
-    const show = window.LiteGraph.createNode("ShowText|pysssss"); app.graph.add(show);
+    const show = window.LiteGraph.createNode("PreviewAny"); app.graph.add(show);
     n.connect(0, show, 0);
     window.__compiledAfterEdit = null;
     const original = show.onExecuted;

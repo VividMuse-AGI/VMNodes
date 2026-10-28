@@ -1450,6 +1450,45 @@ const MUG_COMPILED = {
     assert.strictEqual(buttons.length, 2);
     assert.strictEqual(buttons[0].textContent, '⤢');
   });
+  check('both inspector fields default to twelve rows, including character captions', () => {
+    const node = makeEditorWithBoxes();
+    node._vmmoss.openInspector('box_1');
+    for (const area of node.root.querySelector('.vmmoss-inspector').querySelectorAll('textarea')) {
+      assert.strictEqual(area.rows, 12);
+    }
+    node._vmmoss.openInspector('box_2');
+    assert.strictEqual(node.root.querySelector('.vmmoss-insp-caption').rows, 12);
+  });
+  check('manual inspector heights follow region switches and reopening without entering layout data', () => {
+    const node = makeEditorWithBoxes();
+    const before = node.getWidget('layout_data').value;
+    node._vmmoss.openInspector('box_1');
+    for (const [field, height] of [['text', 260], ['caption', 380]]) {
+      const area = node.root.querySelector(`.vmmoss-insp-${field}`);
+      area.handlers.pointerdown[0]({ button: 0, clientX: 479, clientY: 359, stopPropagation() {} });
+      area.offsetHeight = height;
+      for (const fn of window.handlers.pointerup) fn({});
+    }
+    assert.deepStrictEqual(node.properties.vmmoss_inspector_heights, { text: 260, caption: 380 });
+    node._vmmoss.openInspector('box_2');
+    assert.strictEqual(node.root.querySelector('.vmmoss-insp-caption').style.height, '380px');
+    node._vmmoss.closeInspector();
+    node._vmmoss.openInspector('box_1');
+    assert.strictEqual(node.root.querySelector('.vmmoss-insp-text').style.height, '260px');
+    assert.strictEqual(node.root.querySelector('.vmmoss-insp-caption').style.height, '380px');
+    assert.strictEqual(node.getWidget('layout_data').value, before);
+  });
+  check('saved inspector preferences restore on another node without leaking to a new node', () => {
+    const restored = makeEditorWithBoxes();
+    restored.properties = { vmmoss_inspector_heights: { text: 280, caption: 420 } };
+    restored.onConfigure({});
+    restored._vmmoss.openInspector('box_1');
+    assert.strictEqual(restored.root.querySelector('.vmmoss-insp-caption').style.height, '420px');
+    const fresh = makeEditorWithBoxes();
+    fresh._vmmoss.openInspector('box_1');
+    assert.strictEqual(fresh.root.querySelector('.vmmoss-insp-caption').rows, 12);
+    assert.ok(!fresh.root.querySelector('.vmmoss-insp-caption').style.height);
+  });
   check('expanding a text box shows both multi-line fields with its copy', () => {
     const node = makeEditorWithBoxes();
     node._vmmoss.openInspector('box_1');

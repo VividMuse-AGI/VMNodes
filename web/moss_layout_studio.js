@@ -1460,6 +1460,25 @@ function setup(node) {
   let captionHeight = 84;
   let captionObserver = null;
   let captionResizing = false;
+  const INSPECTOR_HEIGHTS_PROP = "vmmoss_inspector_heights";
+  let inspectorObserver = null;
+  let inspectorResizeTarget = null;
+
+  function syncInspectorHeight() {
+    if (!inspectorResizeTarget || !inspector.contains(inspectorResizeTarget)) return;
+    const height = inspectorResizeTarget.offsetHeight;
+    if (!height) return;
+    node.properties ||= {};
+    node.properties[INSPECTOR_HEIGHTS_PROP] = {
+      ...node.properties[INSPECTOR_HEIGHTS_PROP],
+      [inspectorResizeTarget.dataset.field]: height,
+    };
+    applyLayout(true);
+    app.graph?.setDirtyCanvas?.(true, true);
+  }
+  const endInspectorResize = () => { syncInspectorHeight(); inspectorResizeTarget = null; };
+  window.addEventListener("pointerup", endInspectorResize, { capture: true });
+  window.addEventListener("pointercancel", endInspectorResize, { capture: true });
 
   // Keep the native STRING widget (and its serialization), but give its DOM
   // textarea an explicit, resizable allocation in ComfyUI's widget layout.
@@ -2104,7 +2123,10 @@ function setup(node) {
     area.dataset.field = field;
     area.className = `vmmoss-insp-${field}`;
     if (field === "caption") area.classList.add("vmmoss-insp-single");
-    area.rows = 2;
+    area.rows = 12;
+    // Share each field's preferred height across regions, independently of prompts.
+    const savedHeight = num(node.properties?.[INSPECTOR_HEIGHTS_PROP]?.[field]);
+    if (savedHeight > 0) area.style.height = `${Math.max(field === "caption" ? 46 : 42, savedHeight)}px`;
     area.value = box[field] || "";
     area.placeholder = field === "text"
       ? t("placeholderText")
@@ -2122,13 +2144,19 @@ function setup(node) {
       updateFoot();
       syncRowInputs(current);
     });
-    area.addEventListener("pointerdown", (event) => event.stopPropagation());
+    area.addEventListener("pointerdown", (event) => {
+      event.stopPropagation();
+      if (event.button !== 0) return;
+      const rect = area.getBoundingClientRect();
+      if (event.clientX >= rect.right - 16 && event.clientY >= rect.bottom - 16) inspectorResizeTarget = area;
+    });
     area.addEventListener("keydown", (event) => event.stopPropagation());
     wrap.append(label, area);
     return wrap;
   }
 
   function buildInspector(box) {
+    endInspectorResize();
     inspector.innerHTML = "";
     inspector.dataset.box = box.id;
     const tags = displayTags(S.state.boxes);
@@ -2165,6 +2193,7 @@ function setup(node) {
       S.inspector = null;
       const wasShown = inspector.classList.contains("show");
       if (wasShown) {
+        endInspectorResize();
         inspector.classList.remove("show");
         inspector.innerHTML = "";
         inspector.removeAttribute("data-box");
@@ -3669,6 +3698,7 @@ function setup(node) {
     const out = originalConfigure?.apply(this, arguments);
     restorePixelTarget();
     restoreCaptionHeight();
+    inspectorResizeTarget = null;
     // Guides live on node.properties, which LiteGraph restores just before onConfigure.
     S.guides = loadGuides();
     syncGuideButtons();
@@ -3820,6 +3850,9 @@ function setup(node) {
   node.onRemoved = function () {
     observer?.disconnect();
     captionObserver?.disconnect();
+    inspectorObserver?.disconnect();
+    window.removeEventListener("pointerup", endInspectorResize, { capture: true });
+    window.removeEventListener("pointercancel", endInspectorResize, { capture: true });
     captionElement?.removeEventListener("pointerdown", beginCaptionResize);
     window.removeEventListener("pointerup", endCaptionResize, { capture: true });
     window.removeEventListener("pointercancel", endCaptionResize, { capture: true });
@@ -3922,6 +3955,12 @@ function setup(node) {
     if (typeof ResizeObserver !== "undefined") {
       observer = new ResizeObserver(() => fitCanvas());
       observer.observe(host);
+      inspectorObserver = new ResizeObserver(() => {
+        if (!inspector.classList.contains("show")) return;
+        syncInspectorHeight();
+        applyLayout(true);
+      });
+      inspectorObserver.observe(inspector);
       if (captionElement) {
         captionObserver = new ResizeObserver(syncCaptionHeight);
         captionObserver.observe(captionElement);

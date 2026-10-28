@@ -1,5 +1,10 @@
 # Changelog / 更新记录
 
+## Unreleased
+
+- 区域展开编辑的文字和描述输入框默认各 12 行；手动调整的高度按字段保存，切换区域、收起再展开、保存工作流后重载均保持，节点高度随输入框调整。
+- Region inspector text and caption fields now default to 12 rows each. Resized heights persist independently across region switches, reopening and workflow reloads, with the node adapting to the drawer height.
+
 ## 0.3.0 — 2026-10-27 — MOSS V2.3
 
 ### 中文
