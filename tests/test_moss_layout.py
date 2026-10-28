@@ -576,6 +576,12 @@ class FrontendParityTests(unittest.TestCase):
         source = source.replace(
             'import { app } from "../../../scripts/app.js";',
             "const app = { registerExtension() {} };")
+        source = source.replace(
+            'import { api } from "../../../scripts/api.js";',
+            "const api = { getExtensions: async () => [] };")
+        source = source.replace('"./moss_autocomplete.js"', '"./moss_autocomplete.mjs"')
+        (Path(cls.tmp.name) / "moss_autocomplete.mjs").write_text(
+            (ROOT / "web/moss_autocomplete.js").read_text(encoding="utf-8"), encoding="utf-8")
         cls.module = Path(cls.tmp.name) / "moss.mjs"
         cls.module.write_text(source, encoding="utf-8")
 

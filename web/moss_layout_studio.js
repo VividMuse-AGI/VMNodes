@@ -13,6 +13,12 @@
  */
 
 import { app } from "../../../scripts/app.js";
+import { api } from "../../../scripts/api.js";
+import { createPromptAutocomplete, createAutocompleteLoader } from "./moss_autocomplete.js";
+
+const loadAutocomplete = createAutocompleteLoader(
+  () => api.getExtensions(), (url) => import(url), globalThis.location?.href,
+);
 
 export const NODE_ID = "VMMOSSLayoutStudio";
 
@@ -144,7 +150,7 @@ export const I18N = {
     inspectorText: "渲染文字 (Exact Text)",
     inspectorStyle: "样式 / 画面描述 (Style / Caption)",
     inspectorTextTip: "要渲染的具体文字，支持回车换行",
-    inspectorStyleTip: "字体样式或该区域的画面描述",
+    inspectorStyleTip: "字体样式或该区域的画面描述；英文候选词需安装并启用 Custom Scripts 的 Text Autocomplete 和词库",
     inspectorCollapse: "收起",
     inspectorFollow: "切换选中框时此处自动跟随",
     textLink: "文案来自连线",
@@ -256,7 +262,7 @@ export const I18N = {
     inspectorText: "Exact text",
     inspectorStyle: "Style / Caption",
     inspectorTextTip: "Literal characters to render; Enter starts a new line",
-    inspectorStyleTip: "Typography, or the visible description of this region",
+    inspectorStyleTip: "Typography or region description; word suggestions require Custom Scripts Text Autocomplete and a word list",
     inspectorCollapse: "Collapse",
     inspectorFollow: "Follows the selected box",
     textLink: "Copy from link",
@@ -1275,6 +1281,7 @@ function setup(node) {
 
   // --- DOM ---------------------------------------------------------
   const root = document.createElement("div");
+  const autocomplete = createPromptAutocomplete(loadAutocomplete);
   root.className = "vmmoss";
 
   const bar = document.createElement("div");
@@ -1931,6 +1938,7 @@ function setup(node) {
 
   function rebuildRows() {
     const scrollTop = rows.scrollTop;
+    autocomplete.clear(rows);
     [...rows.querySelectorAll(".vmmoss-row, .vmmoss-empty")].forEach((row) => row.remove());
     const boxes = S.state.boxes;
     boxes.forEach((box) => {
@@ -2039,6 +2047,7 @@ function setup(node) {
       caption.value = box.caption;
       caption.addEventListener("input", () => { box.caption = caption.value; commit(); draw(); });
       caption.addEventListener("pointerdown", (event) => event.stopPropagation());
+      autocomplete.bind(caption);
       row.appendChild(caption);
 
       const expand = document.createElement("button");
@@ -2151,12 +2160,14 @@ function setup(node) {
       if (event.clientX >= rect.right - 16 && event.clientY >= rect.bottom - 16) inspectorResizeTarget = area;
     });
     area.addEventListener("keydown", (event) => event.stopPropagation());
+    if (field === "caption") autocomplete.bind(area);
     wrap.append(label, area);
     return wrap;
   }
 
   function buildInspector(box) {
     endInspectorResize();
+    autocomplete.clear(inspector);
     inspector.innerHTML = "";
     inspector.dataset.box = box.id;
     const tags = displayTags(S.state.boxes);
@@ -2191,6 +2202,7 @@ function setup(node) {
     const box = S.inspector ? S.state.boxes.find((b) => b.id === S.inspector) : null;
     if (!box) {
       S.inspector = null;
+      autocomplete.clear(inspector);
       const wasShown = inspector.classList.contains("show");
       if (wasShown) {
         endInspectorResize();
@@ -3848,6 +3860,7 @@ function setup(node) {
 
   const originalRemoved = node.onRemoved;
   node.onRemoved = function () {
+    autocomplete.clear();
     observer?.disconnect();
     captionObserver?.disconnect();
     inspectorObserver?.disconnect();

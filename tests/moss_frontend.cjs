@@ -87,8 +87,12 @@ const MUG_COMPILED = {
 (async () => {
   let extension;
   globalThis.__mossTestApp = { registerExtension(value) { extension = value; }, graph: { setDirtyCanvas() {} } };
+  const autocompleteUrl = 'data:text/javascript;base64,' + Buffer.from(
+    fs.readFileSync(path.join(ROOT, 'web/moss_autocomplete.js'), 'utf8')).toString('base64');
   const source = fs.readFileSync(path.join(ROOT, 'web/moss_layout_studio.js'), 'utf8')
-    .replace(/^import .*$/m, 'const app = globalThis.__mossTestApp;');
+    .replace(/^import \{ app \}.*$/m, 'const app = globalThis.__mossTestApp;')
+    .replace(/^import \{ api \}.*$/m, 'const api = { getExtensions: async () => [] };')
+    .replace('"./moss_autocomplete.js"', JSON.stringify(autocompleteUrl));
   const mod = await import('data:text/javascript;base64,' + Buffer.from(source).toString('base64'));
   const {
     I18N, PRESETS, PRESET_CUSTOM, SYNC_SMART, SYNC_KEEP, SYNC_STRETCH, LAYER_AUTO, LAYER_MANUAL,

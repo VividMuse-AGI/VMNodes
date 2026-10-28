@@ -1,5 +1,14 @@
 # Changelog / 更新记录
 
+## 0.3.2 — 2026-10-29 — MOSS prompt autocomplete
+
+- MOSS 图层行与展开编辑区的描述/样式输入支持 ComfyUI-Custom-Scripts Text Autocomplete，复用其词库、开关、分隔符和选词快捷键；实际海报文字保持原样输入。未安装可选扩展时仍可正常编辑。
+- 保护中文输入法合成，切换区域或删除节点时清理候选框；补全结果写入布局，保留原生撤销和输入回退。12 行默认高度、手动高度与工作流保存恢复继续有效。
+- 补充适配单元/浏览器回归、中英文启用及词库配置说明，并将适配模块加入发布清单。
+- MOSS layer-row and expanded caption/style fields now integrate with optional ComfyUI-Custom-Scripts Text Autocomplete, reusing its dictionaries, settings, separators and selection keys. Exact poster text remains literal, and editing works without the extension.
+- Added IME protection, popup cleanup when switching regions/removing nodes, committed insertions and an input fallback. Native undo, twelve-row defaults and saved editor heights remain supported.
+- Added unit/browser regressions, bilingual setup instructions and the adapter to the release manifest.
+
 ## 0.3.1 — 2026-10-28 — Inspector height persistence
 
 - 区域展开编辑的文字和描述输入框默认各 12 行；手动调整的高度按字段保存，切换区域、收起再展开、保存工作流后重载均保持，节点高度随输入框调整。

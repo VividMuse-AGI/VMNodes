@@ -2,7 +2,7 @@
 
 [返回首页](../../README.md)
 
-VMNodes 当前发布版本为 **0.3.1**，包含 MOSS V2.3。首次安装请按[首页安装步骤](../../README.md#安装)操作；后续更新整个包即可，不需要分别更新节点。更新前将自己的工作流保存在用户目录，并关闭相关 ComfyUI 实例。
+VMNodes 当前发布版本为 **0.3.2**，包含 MOSS V2.3。首次安装请按[首页安装步骤](../../README.md#安装)操作；后续更新整个包即可，不需要分别更新节点。更新前将自己的工作流保存在用户目录，并关闭相关 ComfyUI 实例。
 
 ## Git 更新
 
@@ -24,7 +24,7 @@ python custom_nodes/VMNodes/install.py
 
 ## ZIP 更新或替换已有安装
 
-1. 在[本仓库 Releases](https://github.com/VividMuse-AGI/VMNodes/releases)的 **Assets** 中下载所需版本的安装包，例如 `VMNodes-0.3.1.zip`；同名 `.zip.sha256` 文件提供 SHA-256 校验值。
+1. 在[本仓库 Releases](https://github.com/VividMuse-AGI/VMNodes/releases)的 **Assets** 中下载所需版本的安装包，例如 `VMNodes-0.3.2.zip`；同名 `.zip.sha256` 文件提供 SHA-256 校验值。
 2. 将已有 `custom_nodes/VMNodes` 备份到 `custom_nodes` **之外**，不要在扫描目录中保留 `VMNodes_old` 等副本。
 3. 解压新版，将包目录命名为 `VMNodes`，放到 `custom_nodes/VMNodes`。确认目录内直接存在 `__init__.py` 和 `pyproject.toml`，不要叠加覆盖旧文件。
 4. 使用 ComfyUI 的 Python 运行上面的依赖安装命令，重启并刷新页面，再打开自己的工作流。
