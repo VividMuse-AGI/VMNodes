@@ -66,7 +66,8 @@
         "name": "外部布局 JSON"
       },
       "external_sync_mode": {
-        "name": "外部同步方式"
+        "name": "外部同步方式",
+        "tooltip": "On Change：首次导入，之后仅上游 JSON 内容变化时重新覆盖，保留手动编辑；Replace / Merge 每次执行都会同步。已有工作流请手动选择 On Change。"
       },
       "custom_meta_tags": {
         "name": "自定义 meta 标签"

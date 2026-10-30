@@ -93,7 +93,8 @@ CANVAS_TYPES = ["single", "multi_panel", "collage"]
 EXTERNAL_IGNORE = "Ignore (仅使用画布)"
 EXTERNAL_REPLACE = "Replace Canvas (用外部 JSON 覆盖画布并回填)"
 EXTERNAL_MERGE = "Merge into Canvas (追加到当前画布并回填)"
-EXTERNAL_MODES = [EXTERNAL_IGNORE, EXTERNAL_REPLACE, EXTERNAL_MERGE]
+EXTERNAL_ON_CHANGE = "On Change (仅外部 JSON 变化时同步)"
+EXTERNAL_MODES = [EXTERNAL_IGNORE, EXTERNAL_REPLACE, EXTERNAL_MERGE, EXTERNAL_ON_CHANGE]
 
 UI_LANGUAGES = ["中文 (ZH)", "English (EN)"]
 
@@ -379,6 +380,9 @@ def parse_layout_data(raw: Any, width: int, height: int) -> Dict[str, Any]:
     }
     if valid_reference_size(data.get("reference_size")):
         state["reference_size"] = list(data["reference_size"])
+    signature = data.get("external_sync_signature")
+    if isinstance(signature, str) and re.fullmatch(r"[0-9a-f]{64}", signature):
+        state["external_sync_signature"] = signature
     # Import transport fields (they let the frontend restore widgets after onExecuted).
     for key in ("caption", "canvas"):
         if key in data and data[key] is not None:
@@ -1039,7 +1043,7 @@ class VMMOSSLayoutStudio:
                     "tooltip": "Draft JSON (abs/xyxy) or compiled JSON (abs_centralized/yxyx) "
                                "from the moss-image-prompt-enhancer Skill or an LLM.",
                 }),
-                "external_sync_mode": (EXTERNAL_MODES, {"default": EXTERNAL_REPLACE}),
+                "external_sync_mode": (EXTERNAL_MODES, {"default": EXTERNAL_ON_CHANGE}),
                 "custom_meta_tags": ("STRING", {
                     "default": "",
                     "multiline": False,
@@ -1087,7 +1091,7 @@ class VMMOSSLayoutStudio:
                        scene_meta, canvas_layout_type, layer_order_mode, global_prompt,
                        layout_data, ref_image=None, global_prompt_in=None, box_texts_in=None,
                        external_layout_json=None,
-                       external_sync_mode=EXTERNAL_REPLACE, custom_meta_tags=""):
+                       external_sync_mode=EXTERNAL_ON_CHANGE, custom_meta_tags=""):
         mode = bbox_ratio_sync if bbox_ratio_sync in SYNC_MODES else SYNC_SMART
         order_mode = layer_order_mode if layer_order_mode in LAYER_MODES else LAYER_AUTO
         canvas_type = canvas_layout_type if canvas_layout_type in CANVAS_TYPES else "single"
@@ -1097,8 +1101,17 @@ class VMMOSSLayoutStudio:
         # 1) External Skill JSON (parsed before sizing so Replace may adopt its canvas).
         imported: Optional[Dict[str, Any]] = None
         external_text = strip_fences(external_layout_json)
-        if external_text and external_mode != EXTERNAL_IGNORE:
-            current_w, current_h = self.resolve_canvas(canvas_preset, width, height, None)
+        current_w, current_h = self.resolve_canvas(canvas_preset, width, height, None)
+        previous = parse_layout_data(layout_data, current_w, current_h)
+        # Persist successful imports per canvas, including workflow save/reload.
+        source_object = _json_object(external_text) if external_text else None
+        canonical_source = (json.dumps(source_object, sort_keys=True, ensure_ascii=False,
+                                       separators=(",", ":"))
+                            if source_object is not None else external_text)
+        signature = hashlib.sha256(canonical_source.encode("utf-8")).hexdigest()
+        unchanged = (external_mode == EXTERNAL_ON_CHANGE
+                     and previous.get("external_sync_signature") == signature)
+        if external_text and external_mode != EXTERNAL_IGNORE and not unchanged:
             parsed = parse_skill_json(external_text, current_w, current_h, mode)
             if parsed is None:
                 print(f"[{NODE_ID}] external_layout_json 无法识别为布局 JSON，已忽略。")
@@ -1106,7 +1119,7 @@ class VMMOSSLayoutStudio:
                 imported = parsed
 
         replace_import = bool(imported and imported["kind"] != "caption"
-                              and external_mode == EXTERNAL_REPLACE)
+                              and external_mode in (EXTERNAL_REPLACE, EXTERNAL_ON_CHANGE))
         imported_size = (imported["width"], imported["height"]) if replace_import else None
         W, H = self.resolve_canvas(canvas_preset, width, height, imported_size)
 
@@ -1141,6 +1154,9 @@ class VMMOSSLayoutStudio:
             else:
                 caption = imported["caption"]
             state["caption"] = caption
+            state["external_sync_signature"] = signature
+            if external_mode == EXTERNAL_ON_CHANGE:
+                synced = True  # Caption-only sources also need persistent import history.
 
         # 3.5) External text links override the on-node copy (V2.3). Text wins over
         # an imported layout, but never rewrites the canvas unless something changed.

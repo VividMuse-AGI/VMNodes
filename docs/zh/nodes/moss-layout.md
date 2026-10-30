@@ -35,7 +35,7 @@
 | `global_prompt_in`（可选） | 连线输入全局描述：非空时覆盖 `summary.caption`，运行后自动回填节点输入框 |
 | `box_texts_in`（可选） | 连线输入各框文案：支持 `T1: 标题 \| 样式` 标签语法或按行顺序填充文字框 |
 | `external_layout_json`（可选） | 连线输入 Skill Draft / 编译后 JSON / 纯 caption |
-| `external_sync_mode`（可选） | `Ignore` / `Replace Canvas`（覆盖画布并回填）/ `Merge into Canvas`（追加并回填） |
+| `external_sync_mode`（可选） | `On Change`（新节点默认，仅上游内容变化时覆盖）/ `Ignore` / `Replace Canvas`（每次覆盖）/ `Merge into Canvas`（每次合并） |
 | `custom_meta_tags`（可选） | 追加体裁标签，逗号分隔，自动合入 `summary.meta` |
 
 | 输出 | 说明 |
@@ -223,7 +223,7 @@ O1: 深蓝色科技感几何网格背景底板
 1. **画布工具栏** `📥 导入 JSON`：粘贴后立即回填画布、图层列表、全局描述、体裁与画布结构；
    可选择「覆盖画布」或「追加到画布」。
 2. **连线 `external_layout_json`**：由 LLM / Skill 节点输出 JSON，运行后把解析结果通过
-   `onExecuted` 回填到画布（`Replace` 覆盖、`Merge` 追加），修改上游后再运行即可刷新。
+   `onExecuted` 回填到画布。推荐 **On Change（仅外部 JSON 变化时同步）**：首次导入后，重复运行保留手动修改、增删框与画布尺寸，只有上游内容改变才重新覆盖。记录随工作流保存；缩进、键顺序和代码围栏变化不触发覆盖。旧工作流需手动切换此模式。`Replace` 每次覆盖，`Merge` 每次合并并更新已有导入框，`Ignore` 只使用画布。需要强制重新导入时，临时用 `Replace` 执行一次再切回 `On Change`。
 
 支持三种格式，自动识别：
 

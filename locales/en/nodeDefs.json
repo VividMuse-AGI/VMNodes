@@ -66,7 +66,8 @@
         "name": "External Layout JSON"
       },
       "external_sync_mode": {
-        "name": "External Sync"
+        "name": "External Sync",
+        "tooltip": "On Change imports once, then replaces the canvas only when the upstream JSON changes, preserving local edits. Replace / Merge sync on every execution. Select On Change manually in existing workflows."
       },
       "custom_meta_tags": {
         "name": "Custom Meta Tags"

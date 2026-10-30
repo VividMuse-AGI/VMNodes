@@ -37,7 +37,7 @@ when you actually want an image.
 | `global_prompt_in` (optional) | External global caption: overrides `summary.caption` when non-empty and is mirrored back into the widget |
 | `box_texts_in` (optional) | External per-box copy: `T1: title \| style` labels or plain lines for the Text boxes in order |
 | `external_layout_json` (optional) | Skill draft / compiled JSON / plain caption |
-| `external_sync_mode` (optional) | `Ignore` / `Replace Canvas` / `Merge into Canvas` |
+| `external_sync_mode` (optional) | `On Change` (new-node default) / `Ignore` / `Replace Canvas` / `Merge into Canvas` |
 | `custom_meta_tags` (optional) | Extra comma-separated meta tags |
 
 | Output | Description |
@@ -252,8 +252,7 @@ Two routes:
 1. **Toolbar** `📥 Import JSON`: paste and the canvas, layer list, caption, medium and
    canvas structure are filled immediately; choose *Replace canvas* or *Merge into canvas*.
 2. **`external_layout_json` link**: feed JSON from an LLM/Skill node; after a run the
-   parsed layout is pushed back through `onExecuted` (`Replace` or `Merge`). Change the
-   upstream and run again to refresh.
+   parsed layout is pushed back through `onExecuted`. Recommended: **On Change**, which imports once and preserves edits, additions, deletions and canvas size on reruns until the upstream content changes. Changed content replaces the canvas. Import history survives workflow saves; formatting, object key order and code fences do not trigger reimport. Select this mode manually in existing workflows. `Replace` always overwrites; `Merge` always merges and updates existing imported boxes; `Ignore` uses only the canvas. To force reimport, run once with `Replace`, then return to `On Change`.
 
 Three formats are auto-detected:
 

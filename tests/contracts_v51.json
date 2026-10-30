@@ -592,10 +592,11 @@
             [
               "Ignore (仅使用画布)",
               "Replace Canvas (用外部 JSON 覆盖画布并回填)",
-              "Merge into Canvas (追加到当前画布并回填)"
+              "Merge into Canvas (追加到当前画布并回填)",
+              "On Change (仅外部 JSON 变化时同步)"
             ],
             {
-              "default": "Replace Canvas (用外部 JSON 覆盖画布并回填)"
+              "default": "On Change (仅外部 JSON 变化时同步)"
             }
           ],
           "custom_meta_tags": [

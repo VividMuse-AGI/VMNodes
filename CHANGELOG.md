@@ -1,5 +1,12 @@
 # Changelog / 更新记录
 
+## 0.3.3 — 2026-10-30 — Preserve canvas edits with external JSON
+
+- 新增 `On Change（仅外部 JSON 变化时同步）`，作为新节点默认模式：同一份外部 JSON 重复执行时保留画布手动编辑，只有内容改变才重新覆盖。同步记录随工作流保存，缩进、键顺序和代码围栏变化不触发覆盖。已有工作流保留原同步设置，可手动切换。
+- Added `On Change` as the default for new nodes. Repeated execution preserves local canvas edits until the upstream JSON content changes. Import history survives workflow save/reload; formatting-only changes do not replace the layout. Existing workflows retain their selected sync mode.
+- 保留 Replace / Merge / Ignore 的原行为；补充后端、前端和真实浏览器执行回归。
+- Preserved legacy Replace / Merge / Ignore behavior and added backend, frontend and real browser execution regressions.
+
 ## 0.3.2 — 2026-10-29 — MOSS prompt autocomplete
 
 - MOSS 图层行与展开编辑区的描述/样式输入支持 ComfyUI-Custom-Scripts Text Autocomplete，复用其词库、开关、分隔符和选词快捷键；实际海报文字保持原样输入。未安装可选扩展时仍可正常编辑。

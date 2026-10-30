@@ -402,6 +402,24 @@ const MUG_COMPILED = {
       cx: 0.375, cy: 0.375, w: 0.25, h: 0.25, orig_aspect: 1, text: 'Original', caption: 'title' }],
   };
   const payload = { resolved_size: [[1024, 1024]], synced_layout_data: [JSON.stringify(returnedState)] };
+  check('external import history survives UI backfill, manual edits, clear and workflow reload', () => {
+    const node = createEditor();
+    const signature = 'a'.repeat(64);
+    node.onExecuted({ ...payload, synced_layout_data: [JSON.stringify({ ...returnedState, external_sync_signature: signature })] });
+    node._vmmoss.S.state.boxes[0].text = 'Edited';
+    node._vmmoss.S.state.boxes[0].cx = 0.6;
+    node._vmmoss.commit();
+    node.onExecuted({ resolved_size: [[1024, 1024]] });
+    let saved = node.getWidget('layout_data').serializeValue();
+    assert.strictEqual(JSON.parse(saved).boxes[0].text, 'Edited');
+    assert.strictEqual(mod.normalizeState(saved, 1024, 1024).external_sync_signature, signature);
+    node._vmmoss.S.state.boxes = [];
+    node._vmmoss.commit();
+    saved = node.getWidget('layout_data').serializeValue();
+    assert.strictEqual(mod.normalizeState(saved, 1024, 1024).external_sync_signature, signature);
+    assert.deepStrictEqual(mod.normalizeState(saved, 1024, 1024).boxes, []);
+    assert.strictEqual(mod.normalizeState({ external_sync_signature: {} }, 1024, 1024).external_sync_signature, undefined);
+  });
   check('repeated onExecuted payload overwrites stale local edits and restores widgets', () => {
     const node = createEditor();
     node.onExecuted(payload);

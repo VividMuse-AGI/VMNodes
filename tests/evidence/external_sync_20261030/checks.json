@@ -1,0 +1,47 @@
+{
+  "passed": 10,
+  "total": 10,
+  "checks": [
+    {
+      "name": "New node defaults to On Change with a real text-node connection",
+      "ok": true
+    },
+    {
+      "name": "First real execution imports source and backfills fingerprint",
+      "ok": true
+    },
+    {
+      "name": "Physical mouse drag changes box coordinates",
+      "ok": true
+    },
+    {
+      "name": "Rerun preserves dragged coordinates and edited text in output and canvas",
+      "ok": true
+    },
+    {
+      "name": "Formatting-only source changes keep local edits",
+      "ok": true
+    },
+    {
+      "name": "Save, page refresh, reopen and run preserve local edits",
+      "ok": true
+    },
+    {
+      "name": "Changed upstream JSON replaces the layout and backfills UI",
+      "ok": true
+    },
+    {
+      "name": "Clear all then rerun keeps an empty canvas",
+      "ok": true
+    },
+    {
+      "name": "Legacy Replace still supports force-reimport of unchanged JSON",
+      "ok": true
+    },
+    {
+      "name": "No browser JavaScript exceptions",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

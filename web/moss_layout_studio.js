@@ -112,6 +112,7 @@ export const I18N = {
     footCanvas: "画布", footBase: "基准", footBoxes: "{n} 框 / {v} 可见",
     footOrder: "输出顺序", linked: "尺寸来自连线", emptyPrompt: "空画布 → 输出 global_prompt 纯文本",
     externalOn: "外部 JSON：{mode}", noText: "{n} 个文字框缺少渲染文字",
+    externalChangeHint: "上游内容未变时保留画布编辑；上游改变后重新覆盖",
     labelText: "文字", labelChar: "角色", labelObj: "物体",
     rowText: "渲染文字", rowStyle: "字体/样式描述", rowCaption: "画面描述",
     rowTextTip: "要渲染的具体文字，支持 \\n 换行",
@@ -224,6 +225,7 @@ export const I18N = {
     footCanvas: "Canvas", footBase: "Base", footBoxes: "{n} boxes / {v} visible",
     footOrder: "Order", linked: "Size from link", emptyPrompt: "Empty canvas → outputs global_prompt text",
     externalOn: "External JSON: {mode}", noText: "{n} text boxes have no literal text",
+    externalChangeHint: "Keep canvas edits until the upstream content changes, then replace",
     labelText: "Text", labelChar: "Character", labelObj: "Object",
     rowText: "Exact text", rowStyle: "Style caption", rowCaption: "Caption",
     rowTextTip: "Literal characters to render; \\n starts a new line",
@@ -887,6 +889,9 @@ export function normalizeState(raw, width, height) {
     boxes.push(box);
   });
   const state = { version: 2, base_width: baseW, base_height: baseH, boxes };
+  if (typeof data.external_sync_signature === "string" && /^[0-9a-f]{64}$/.test(data.external_sync_signature)) {
+    state.external_sync_signature = data.external_sync_signature;
+  }
   if (validReferenceSize(data.reference_size)) state.reference_size = data.reference_size.slice();
   for (const key of ["caption", "canvas", "meta", "palette"]) {
     const value = data[key];
@@ -2323,6 +2328,7 @@ function setup(node) {
     if (externalLinked) {
       const mode = String(W.externalMode?.value || "");
       add(t("externalOn", { mode: mode.replace(/\s*\(.*\)$/, "") }), "warn");
+      if (mode.startsWith("On Change")) add(t("externalChangeHint"));
     }
     if (node.inputs?.some((input) => input.name === "box_texts_in" && input.link != null)) {
       add(t("textLink"), "warn");
